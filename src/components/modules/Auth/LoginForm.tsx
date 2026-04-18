@@ -1,8 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+
+import { loginAction } from "@/app/(auth)/login/_actions";
 import AppField from "@/components/shared/form/AppField";
 import AppSubmitButton from "@/components/shared/form/AppSubmitButton";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { ILoginPayload, loginZodSchema } from "@/zod/auth.validation";
 import { useForm } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { Eye, EyeOff } from "lucide-react";
@@ -18,10 +22,7 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
 	const [showPassword, setShowPassword] = useState(false);
 
 	const { mutateAsync, isPending } = useMutation({
-		mutationFn: async (payload: { email: string; password: string }) => {
-			// TODO: loginAction(payload, redirectPath)
-			console.log(payload, redirectPath);
-		},
+		mutationFn: (payload: ILoginPayload) => loginAction(payload, redirectPath),
 	});
 
 	const form = useForm({
@@ -29,7 +30,11 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
 		onSubmit: async ({ value }) => {
 			setServerError(null);
 			try {
-				await mutateAsync(value);
+				const result = (await mutateAsync(value)) as any;
+				if (!result?.success) {
+					setServerError(result?.message || "Login failed");
+					return;
+				}
 			} catch (error: any) {
 				setServerError(error.message || "Login failed");
 			}
@@ -41,19 +46,16 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
 			{/* Left — Branding */}
 			<div className="hidden lg:flex flex-col justify-between bg-[#0f0f0f] p-12">
 				<div>
-					{/* Logo */}
 					<div className="text-2xl font-medium tracking-wide mb-12">
 						<span className="text-white">Cine</span>
 						<span className="text-destructive">Tube</span>
 					</div>
 
-					{/* Badge */}
 					<div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-xs text-white/50 mb-6">
 						<span className="w-1.5 h-1.5 rounded-full bg-destructive" />
 						New releases every week
 					</div>
 
-					{/* Headline */}
 					<h2 className="text-4xl font-semibold text-white leading-tight mb-4">
 						Rate, Review &amp; <br />
 						Stream your <br />
@@ -66,7 +68,6 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
 					</p>
 				</div>
 
-				{/* Stats */}
 				<div className="grid grid-cols-2 gap-4">
 					{[
 						{ value: "12K+", label: "Movies & Series" },
@@ -106,11 +107,11 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
 						}}
 						className="space-y-4"
 					>
-						<form.Field name="email">
+						<form.Field name="email" validators={{ onChange: loginZodSchema.shape.email }}>
 							{(field) => <AppField field={field} label="Email" type="email" placeholder="Enter your email" />}
 						</form.Field>
 
-						<form.Field name="password">
+						<form.Field name="password" validators={{ onChange: loginZodSchema.shape.password }}>
 							{(field) => (
 								<AppField
 									field={field}
@@ -157,14 +158,12 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
 						</form.Subscribe>
 					</form>
 
-					{/* Divider */}
 					<div className="flex items-center gap-3 my-6">
 						<div className="flex-1 h-px bg-border" />
 						<span className="text-xs text-muted-foreground">or continue with</span>
 						<div className="flex-1 h-px bg-border" />
 					</div>
 
-					{/* Google */}
 					<Button
 						variant="outline"
 						className="w-full"
