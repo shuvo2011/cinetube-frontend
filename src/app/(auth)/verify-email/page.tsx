@@ -1,7 +1,12 @@
-import React from "react";
+import VerifyEmailForm from "@/components/modules/Auth/VerifyEmailForm";
+import { Suspense } from "react";
 
 const VerifyEmailPage = () => {
-	return <div>VerifyEEmailPage</div>;
+	return (
+		<Suspense>
+			<VerifyEmailForm />
+		</Suspense>
+	);
 };
 
 export default VerifyEmailPage;

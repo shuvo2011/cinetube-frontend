@@ -88,8 +88,9 @@ export async function proxy(request: NextRequest) {
 		// Rule-5: enforce email verification
 		if (accessToken) {
 			const userInfo = await getUserInfo();
-
+			console.log("userInfo:", userInfo);
 			if (userInfo) {
+				console.log("emailVerified:", userInfo.emailVerified);
 				if (userInfo.emailVerified === false) {
 					if (pathname !== "/verify-email") {
 						const verifyEmailUrl = new URL("/verify-email", request.url);
