@@ -1,7 +1,12 @@
-import React from "react";
+// src/app/(auth)/reset-password/page.tsx
+import ResetPasswordForm from "@/components/modules/Auth/ResetPasswordForm";
+import { Suspense } from "react";
 
 const ResetPasswordPage = () => {
-	return <div>ResetPasswordPage</div>;
+	return (
+		<Suspense>
+			<ResetPasswordForm />
+		</Suspense>
+	);
 };
-
 export default ResetPasswordPage;
