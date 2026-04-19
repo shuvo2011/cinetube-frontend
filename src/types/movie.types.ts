@@ -14,6 +14,7 @@ export interface IMovie {
 	averageRating?: number;
 	totalReviews?: number;
 	createdAt: string;
+	totalLikes?: number;
 	genres: {
 		genre: {
 			id: string;
@@ -27,3 +28,17 @@ export interface IMovie {
 		};
 	}[];
 }
+interface IPlatform {
+	id: string;
+	name: string;
+}
+interface IGenre {
+	id: string;
+	name: string;
+}
+
+export type MovieFilters = {
+	genres: IGenre[];
+	platforms: IPlatform[];
+	availableYears: number[];
+};

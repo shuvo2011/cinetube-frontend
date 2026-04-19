@@ -1,8 +1,9 @@
 "use server";
 
 import { httpClient } from "@/lib/axios/httpClient";
-import { ApiResponse } from "@/types/api.types";
 import { IMovie } from "@/types/movie.types";
+import { IPlatform } from "./platform.services";
+import { IGenre } from "./genre.services";
 
 export const getMovies = async (queryString?: string) => {
 	try {
@@ -10,7 +11,7 @@ export const getMovies = async (queryString?: string) => {
 		return result;
 	} catch (error) {
 		console.log("Error fetching movies:", error);
-		throw error;
+		return null;
 	}
 };
 
@@ -30,5 +31,18 @@ export const getTopRatedMovies = async (limit = 5): Promise<IMovie[]> => {
 	} catch (error) {
 		console.log("Error fetching top rated movies:", error);
 		return [];
+	}
+};
+export const getMovieFilters = async () => {
+	try {
+		const result = await httpClient.get<{
+			genres: IGenre[];
+			platforms: IPlatform[];
+			availableYears: number[];
+		}>("/movies/filters");
+		return result.data ?? { genres: [], platforms: [], availableYears: [] };
+	} catch (error) {
+		console.log("Error fetching movie filters:", error);
+		return { genres: [], platforms: [], availableYears: [] };
 	}
 };
