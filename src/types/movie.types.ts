@@ -20,4 +20,10 @@ export interface IMovie {
 			name: string;
 		};
 	}[];
+	platforms?: {
+		platform: {
+			id: string;
+			name: string;
+		};
+	}[];
 }
