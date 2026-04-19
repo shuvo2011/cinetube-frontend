@@ -47,8 +47,13 @@ const MoviesFilter = ({ genres, platforms, availableYears }: MoviesFilterProps) 
 
 	const setSort = (sortBy: string, sortOrder: string) => {
 		const params = new URLSearchParams(searchParams.toString());
-		params.set("sortBy", sortBy);
-		params.set("sortOrder", sortOrder);
+		if (currentSortBy === sortBy && currentSortOrder === sortOrder) {
+			params.delete("sortBy");
+			params.delete("sortOrder");
+		} else {
+			params.set("sortBy", sortBy);
+			params.set("sortOrder", sortOrder);
+		}
 		push(params);
 	};
 
