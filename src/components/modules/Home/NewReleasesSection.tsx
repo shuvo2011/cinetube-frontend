@@ -18,6 +18,7 @@ interface NewReleasesSectionProps {
 }
 
 const NewReleasesSection = ({ movies }: NewReleasesSectionProps) => {
+	console.log("Rendering NewReleasesSection with movies:", movies);
 	return (
 		<section className="py-16 md:py-20 bg-bg-2">
 			<div className="max-w-350 mx-auto px-6 md:px-10">

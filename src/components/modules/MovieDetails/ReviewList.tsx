@@ -15,12 +15,12 @@ const ReviewList = ({ reviews, currentUser }: Props) => {
 		if (currentUser && r.userId === currentUser.id) return true;
 		return false;
 	});
-
+	const publishedCount = reviews.filter((r) => r.status === "PUBLISHED").length;
 	return (
 		<div className="bg-white rounded-[14px] border border-line-2 p-6">
 			<div className="mb-6">
 				<h2 className="text-[18px] font-bold text-ink">Community Reviews</h2>
-				<p className="text-[13px] text-text-muted mt-1">{visibleReviews.length} reviews</p>
+				<p className="text-[13px] text-text-muted mt-1">{publishedCount} reviews</p>
 			</div>
 
 			{visibleReviews.length === 0 ? (

@@ -37,3 +37,33 @@ export const getReviewsByMovie = async (movieId: string) => {
 		return [];
 	}
 };
+
+export const approveReview = async (id: string, status: string) => {
+	try {
+		const result = await httpClient.patch(`/reviews/${id}/status`, { status });
+		return result.data;
+	} catch (error) {
+		console.log("Error updating review status:", error);
+		return null;
+	}
+};
+
+export const deleteReview = async (id: string) => {
+	try {
+		const result = await httpClient.delete(`/reviews/${id}`);
+		return result.data;
+	} catch (error) {
+		console.log("Error deleting review:", error);
+		return null;
+	}
+};
+
+export const updateReviewStatus = async (id: string, status: string) => {
+	try {
+		const result = await httpClient.patch(`/reviews/${id}/status`, { status });
+		return result.data;
+	} catch (error) {
+		console.log("Error updating review status:", error);
+		return null;
+	}
+};
