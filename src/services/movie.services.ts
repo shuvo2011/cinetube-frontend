@@ -23,12 +23,12 @@ export const getMovieById = async (id: string) => {
 		throw error;
 	}
 };
-export const getTopRatedMovies = async (limit = 5) => {
+export const getTopRatedMovies = async (limit = 5): Promise<IMovie[]> => {
 	try {
-		const result = await httpClient.get(`/movies/top-rated?limit=${limit}`);
-		return result;
+		const result = await httpClient.get<IMovie[]>(`/movies/top-rated?limit=${limit}`);
+		return result.data ?? [];
 	} catch (error) {
 		console.log("Error fetching top rated movies:", error);
-		return null;
+		return [];
 	}
 };
