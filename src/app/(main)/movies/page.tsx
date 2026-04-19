@@ -20,7 +20,7 @@ const MoviesPage = async ({ searchParams }: MoviesPageProps) => {
 	return (
 		<>
 			<Suspense>
-				<MoviesHero total={total} />
+				<MoviesHero key={params.searchTerm ?? params.search ?? ""} total={total} />
 			</Suspense>
 
 			<MoviesLayout

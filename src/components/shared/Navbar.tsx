@@ -38,7 +38,7 @@ const Navbar = ({ userInfo }: NavbarProps) => {
 	const handleSearch = (e: React.FormEvent) => {
 		e.preventDefault();
 		if (searchQuery.trim()) {
-			router.push(`/movies?search=${encodeURIComponent(searchQuery.trim())}`);
+			router.push(`/movies?searchTerm=${encodeURIComponent(searchQuery.trim())}`);
 			setSearchOpen(false);
 			setSearchQuery("");
 		}

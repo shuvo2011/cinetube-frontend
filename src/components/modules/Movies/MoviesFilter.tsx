@@ -1,8 +1,10 @@
 "use client";
 
+import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { IGenre, IPlatform } from "@/types/movie.types";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 
 const sortOptions = [
 	{ label: "Highest Rated", sortBy: "averageRating", sortOrder: "desc" },
@@ -63,6 +65,31 @@ const MoviesFilter = ({ genres, platforms, availableYears }: MoviesFilterProps) 
 		push(params);
 	};
 
+	// availableYears থেকে min/max বের করো — hooks এর পরে
+	const minYear = availableYears.length > 0 ? Math.min(...availableYears) : 2000;
+	const maxYear = availableYears.length > 0 ? Math.max(...availableYears) : new Date().getFullYear();
+
+	const currentYearFrom = parseInt(searchParams.get("releaseYearFrom") ?? String(minYear));
+	const currentYearTo = parseInt(searchParams.get("releaseYearTo") ?? String(maxYear));
+
+	const [yearRange, setYearRange] = useState<[number, number]>([currentYearFrom, currentYearTo]);
+
+	const handleYearChange = (values: number[]) => {
+		setYearRange(values);
+	};
+
+	const handleYearCommit = (values: number[]) => {
+		const params = new URLSearchParams(searchParams.toString());
+		if (values[0] === minYear && values[1] === maxYear) {
+			params.delete("releaseYearFrom");
+			params.delete("releaseYearTo");
+		} else {
+			params.set("releaseYearFrom", String(values[0]));
+			params.set("releaseYearTo", String(values[1]));
+		}
+		push(params);
+	};
+
 	return (
 		<aside className="flex-3 shrink-0 pr-2">
 			{/* Sort By */}
@@ -119,27 +146,26 @@ const MoviesFilter = ({ genres, platforms, availableYears }: MoviesFilterProps) 
 			)}
 
 			{/* Release Year */}
+
 			{availableYears.length > 0 && (
 				<div className="mb-9">
 					<p className="text-[11px] font-bold text-ink tracking-[0.12em] uppercase mb-3.5">Release Year</p>
-					<div className="flex flex-wrap gap-2">
-						{availableYears.map((year) => {
-							const isActive = currentYear === String(year);
-							return (
-								<button
-									key={year}
-									onClick={() => toggleParam("releaseYear", String(year))}
-									className={cn(
-										"text-[13px] font-medium px-3.5 py-1.5 rounded-full border transition-all",
-										isActive
-											? "bg-brand text-white border-brand"
-											: "bg-white border-line text-text-base hover:border-brand hover:text-brand",
-									)}
-								>
-									{year}
-								</button>
-							);
-						})}
+					<div className="flex items-center justify-between mb-3">
+						<span className="text-[15px] font-bold text-ink">{yearRange[0]}</span>
+						<span className="text-[15px] font-bold text-ink">{yearRange[1]}</span>
+					</div>
+					<Slider
+						min={minYear}
+						max={maxYear}
+						step={1}
+						value={yearRange}
+						onValueChange={handleYearChange}
+						onValueCommit={handleYearCommit}
+						className="mb-2"
+					/>
+					<div className="flex items-center justify-between mt-1">
+						<span className="text-[11px] text-text-subtle">{minYear}</span>
+						<span className="text-[11px] text-text-subtle">{maxYear}</span>
 					</div>
 				</div>
 			)}

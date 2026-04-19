@@ -184,3 +184,11 @@
     @apply font-sans;
   }
 }
+
+[data-slot="slider-range"] {
+  background-color: var(--brand);
+}
+
+[data-slot="slider-thumb"] {
+  border-color: var(--brand);
+}

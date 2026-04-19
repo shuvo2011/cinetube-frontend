@@ -11,7 +11,9 @@ interface MoviesHeroProps {
 const MoviesHero = ({ total }: MoviesHeroProps) => {
 	const router = useRouter();
 	const searchParams = useSearchParams();
-	const [search, setSearch] = useState(searchParams.get("searchTerm") ?? "");
+
+	const searchValue = searchParams.get("searchTerm") ?? searchParams.get("search") ?? "";
+	const [search, setSearch] = useState(searchValue);
 
 	const handleSearch = (e: React.FormEvent) => {
 		e.preventDefault();
