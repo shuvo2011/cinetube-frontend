@@ -23,3 +23,12 @@ export const getMovieById = async (id: string) => {
 		throw error;
 	}
 };
+export const getTopRatedMovies = async (limit = 5) => {
+	try {
+		const result = await httpClient.get(`/movies/top-rated?limit=${limit}`);
+		return result;
+	} catch (error) {
+		console.log("Error fetching top rated movies:", error);
+		return null;
+	}
+};

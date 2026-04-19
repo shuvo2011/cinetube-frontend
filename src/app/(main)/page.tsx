@@ -1,13 +1,15 @@
-import { HOME_HERO_LIMIT, HOME_NEW_RELEASES_LIMIT } from "@/constants/home.constants";
-import { getMovies } from "@/services/movie.services";
+import { HOME_HERO_LIMIT, HOME_NEW_RELEASES_LIMIT, HOME_TOP_RATED_LIMIT } from "@/constants/home.constants";
+import { getMovies, getTopRatedMovies } from "@/services/movie.services";
 import HeroSection from "@/components/modules/Home/HeroSection";
 import WhatWeOfferSection from "@/components/modules/Home/WhatWeOfferSection";
 import NewReleasesSection from "@/components/modules/Home/NewReleasesSection";
+import TopRatedSection from "@/components/modules/Home/TopRatedSection";
 
 const HomePage = async () => {
-	const [featuredRes, latestRes] = await Promise.all([
+	const [featuredRes, latestRes, topRatedRes] = await Promise.all([
 		getMovies(`isFeatured=true&limit=${HOME_HERO_LIMIT}`),
 		getMovies(`limit=${HOME_NEW_RELEASES_LIMIT}&sortBy=createdAt&sortOrder=desc`),
+		getTopRatedMovies(HOME_TOP_RATED_LIMIT),
 	]);
 
 	const heroMovies =
@@ -20,6 +22,7 @@ const HomePage = async () => {
 			<HeroSection movies={heroMovies} />
 			<WhatWeOfferSection />
 			<NewReleasesSection movies={latestRes?.data ?? []} />
+			<TopRatedSection movies={topRatedRes?.data ?? []} />
 		</main>
 	);
 };
