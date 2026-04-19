@@ -5,6 +5,7 @@ import WhatWeOfferSection from "@/components/modules/Home/WhatWeOfferSection";
 import NewReleasesSection from "@/components/modules/Home/NewReleasesSection";
 import TopRatedSection from "@/components/modules/Home/TopRatedSection";
 import PricingSection from "@/components/modules/Home/PricingSection";
+import CTASection from "@/components/modules/Home/CTASection";
 
 const HomePage = async () => {
 	const [featuredRes, latestRes, topRatedRes] = await Promise.all([
@@ -25,6 +26,7 @@ const HomePage = async () => {
 			<NewReleasesSection movies={latestRes?.data ?? []} />
 			<TopRatedSection movies={topRatedRes ?? []} />
 			<PricingSection />
+			<CTASection />
 		</main>
 	);
 };
