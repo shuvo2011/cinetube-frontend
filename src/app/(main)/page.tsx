@@ -1,5 +1,6 @@
 import { getMovies } from "@/services/movie.services";
 import HeroSection from "@/components/modules/Home/HeroSection";
+import WhatWeOfferSection from "@/components/modules/Home/WhatWeOfferSection";
 
 const HomePage = async () => {
 	const [featuredRes, latestRes] = await Promise.all([
@@ -12,6 +13,7 @@ const HomePage = async () => {
 	return (
 		<main>
 			<HeroSection movies={heroMovies} />
+			<WhatWeOfferSection />
 		</main>
 	);
 };
