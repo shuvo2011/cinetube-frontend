@@ -46,6 +46,29 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+
+  /* CineTube Brand Colors */
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-softer: var(--brand-softer);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-text-base: var(--text-base);
+  --color-text-muted: var(--text-muted);
+  --color-text-subtle: var(--text-subtle);
+  --color-line: var(--line);
+  --color-line-2: var(--line-2);
+  --color-bg: var(--ct-bg);
+  --color-bg-2: var(--ct-bg-2);
+  --color-cream: var(--cream);
+
+  /* Semantic */
+  --color-accent-orange: #F97316;
+  --color-yellow: #F5A623;
+  --color-green: #16A34A;
+  --color-green-soft: #DCFCE7;
 }
 
 :root {
@@ -81,6 +104,21 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  --brand: #EF4C5C;
+  --brand-hover: #DC3545;
+  --brand-soft: #FEF2F2;
+  --brand-softer: #FDE7EA;
+  --ink: #0F0F10;
+  --ink-2: #1F2024;
+  --text-base: #2B2B30;
+  --text-muted: #6B6B73;
+  --text-subtle: #9CA0A8;
+  --line: #EAEAEE;
+  --line-2: #F2F2F5;
+  --ct-bg: #FFFFFF;
+  --ct-bg-2: #FAFAFA;
+  --cream: #FEF2F2;
 }
 
 .dark {
@@ -115,6 +153,22 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+
+  --brand: #FF6B78;
+  --brand-hover: #EF4C5C;
+  --brand-soft: #2D1518;
+  --brand-softer: #3D1A1E;
+  --ink: #F5F5F5;
+  --ink-2: #E0E0E0;
+  --text-base: #D1D1D6;
+  --text-muted: #8E8E93;
+  --text-subtle: #636366;
+  --line: #2C2C2E;
+  --line-2: #1C1C1E;
+  --ct-bg: #0F0F10;
+  --ct-bg-2: #1C1C1E;
+  --cream: #2D1518;
 }
 
 @layer base {

@@ -4,6 +4,7 @@
 import { registerAction } from "@/app/(auth)/register/_actions";
 import AppField from "@/components/shared/form/AppField";
 import AppSubmitButton from "@/components/shared/form/AppSubmitButton";
+import Logo from "@/components/shared/Logo/Logo";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { IRegisterPayload, registerZodSchema } from "@/zod/auth.validation";
@@ -42,9 +43,8 @@ const RegisterForm = () => {
 			{/* Left — Branding */}
 			<div className="hidden lg:flex flex-col justify-between bg-[#0f0f0f] p-12">
 				<div>
-					<div className="text-2xl font-medium tracking-wide mb-12">
-						<span className="text-white">Cine</span>
-						<span className="text-destructive">Tube</span>
+					<div className="mb-12">
+						<Logo className="text-white" />
 					</div>
 
 					<div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-xs text-white/50 mb-6">
@@ -53,9 +53,8 @@ const RegisterForm = () => {
 					</div>
 
 					<h2 className="text-4xl font-semibold text-white leading-tight mb-4">
-						Your Cinema <br />
-						Experience <br />
-						<span className="text-destructive">Starts Here</span>
+						Your Cinema Experience
+						<span className="text-destructive block">Starts Here</span>
 					</h2>
 
 					<p className="text-sm text-white/40 leading-relaxed max-w-sm">

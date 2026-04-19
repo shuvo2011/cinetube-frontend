@@ -4,6 +4,7 @@
 import { forgotPasswordAction } from "@/app/(auth)/forgot-password/_actions";
 import AppField from "@/components/shared/form/AppField";
 import AppSubmitButton from "@/components/shared/form/AppSubmitButton";
+import Logo from "@/components/shared/Logo/Logo";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { forgotPasswordZodSchema } from "@/zod/auth.validation";
 import { useForm } from "@tanstack/react-form";
@@ -38,9 +39,8 @@ const ForgotPasswordForm = () => {
 		<div className="min-h-screen flex items-center justify-center px-6 py-12">
 			<div className="w-full max-w-sm bg-card border border-border rounded-2xl p-10">
 				<div className="text-center mb-6">
-					<div className="text-xl font-medium tracking-wide mb-5">
-						<span className="text-foreground">Cine</span>
-						<span className="text-destructive">Tube</span>
+					<div className="flex justify-center mb-8">
+						<Logo />
 					</div>
 
 					<div className="w-14 h-14 rounded-full bg-destructive/10 border border-destructive/20 flex items-center justify-center mx-auto mb-4">

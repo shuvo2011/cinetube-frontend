@@ -3,11 +3,12 @@
 
 import { resendOtpAction, verifyEmailAction } from "@/app/(auth)/verify-email/_actions";
 import AppSubmitButton from "@/components/shared/form/AppSubmitButton";
+import Logo from "@/components/shared/Logo/Logo";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { useMutation } from "@tanstack/react-query";
 import { Mail } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState, KeyboardEvent } from "react";
 
 const RESEND_COOLDOWN = 120; // 2 minutes
@@ -15,7 +16,7 @@ const RESEND_COOLDOWN = 120; // 2 minutes
 const VerifyEmailForm = () => {
 	const searchParams = useSearchParams();
 	const email = searchParams.get("email") || "";
-
+	const router = useRouter();
 	const [otp, setOtp] = useState<string[]>(["", "", "", "", "", ""]);
 	const [serverError, setServerError] = useState<string | null>(null);
 	const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -24,6 +25,12 @@ const VerifyEmailForm = () => {
 
 	const [countdown, setCountdown] = useState(0);
 	const canResend = countdown <= 0;
+
+	useEffect(() => {
+		if (!email) {
+			router.replace("/register");
+		}
+	}, [email, router]);
 
 	useEffect(() => {
 		if (countdown <= 0) return;
@@ -48,7 +55,7 @@ const VerifyEmailForm = () => {
 	const { mutateAsync: resendMutate, isPending: isResending } = useMutation({
 		mutationFn: () => resendOtpAction(email),
 	});
-
+	if (!email) return null;
 	const handleChange = (index: number, value: string) => {
 		if (!/^\d*$/.test(value)) return;
 		const newOtp = [...otp];
@@ -99,7 +106,7 @@ const VerifyEmailForm = () => {
 			const result = await resendMutate();
 			if (result.success) {
 				setSuccessMessage("OTP sent! Check your inbox.");
-				setCountdown(RESEND_COOLDOWN); // ← এখানে countdown শুরু হবে
+				setCountdown(RESEND_COOLDOWN);
 				setOtp(["", "", "", "", "", ""]);
 				inputRefs.current[0]?.focus();
 			} else {
@@ -115,9 +122,8 @@ const VerifyEmailForm = () => {
 			<div className="w-full max-w-sm bg-card border border-border rounded-2xl p-10">
 				{/* Logo */}
 				<div className="text-center mb-6">
-					<div className="text-xl font-medium tracking-wide mb-5">
-						<span className="text-foreground">Cine</span>
-						<span className="text-destructive">Tube</span>
+					<div className="flex justify-center mb-8">
+						<Logo />
 					</div>
 
 					{/* Icon */}
@@ -170,7 +176,6 @@ const VerifyEmailForm = () => {
 					</AppSubmitButton>
 				</form>
 
-				{/* Resend */}
 				<div className="border-t border-border mt-6 pt-5 text-center">
 					<p className="text-sm text-muted-foreground mb-2">Didn&apos;t receive the code?</p>
 					<div className="flex items-center justify-center gap-2">
