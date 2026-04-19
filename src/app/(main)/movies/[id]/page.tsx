@@ -9,6 +9,8 @@ import { getReviewsByMovie } from "@/services/review.services";
 import { getUserInfo } from "@/services/auth.services";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { getTags } from "@/services/tag.services";
+import EditReviewForm from "@/components/modules/MovieDetails/EditReviewForm";
 
 interface MovieDetailsPageProps {
 	params: Promise<{ id: string }>;
@@ -17,16 +19,24 @@ interface MovieDetailsPageProps {
 const MovieDetailsPage = async ({ params }: MovieDetailsPageProps) => {
 	const { id } = await params;
 
-	const [movieRes, reviewsRes, user] = await Promise.all([getMovieById(id), getReviewsByMovie(id), getUserInfo()]);
+	const [movieRes, reviewsRes, user, tags] = await Promise.all([
+		getMovieById(id),
+		getReviewsByMovie(id),
+		getUserInfo(),
+		getTags(),
+	]);
 
 	if (!movieRes?.data) return notFound();
 
 	const movie = movieRes.data;
 	const reviews = reviewsRes ?? [];
 
+	const existingReview = reviews.find((r: any) => r.userId === user?.id);
+	const hasReviewed = !!existingReview;
+
 	return (
 		<div className="bg-bg-2 min-h-screen">
-			<div className="max-w-[1400px] mx-auto px-6 md:px-10">
+			<div className="max-w-350 mx-auto px-6 md:px-10">
 				{/* Breadcrumb */}
 				<div className="py-5 text-[13px] text-text-muted">
 					<Link href="/movies" className="hover:text-brand transition-colors">
@@ -43,8 +53,12 @@ const MovieDetailsPage = async ({ params }: MovieDetailsPageProps) => {
 				<div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_300px] gap-8 pb-20">
 					{/* Main */}
 					<div className="space-y-6">
-						<WriteReviewForm movieId={movie.id} user={user} />
-						<ReviewList reviews={reviews} />
+						{hasReviewed ? (
+							<EditReviewForm review={existingReview} tags={tags ?? []} />
+						) : (
+							<WriteReviewForm movieId={movie.id} user={user} tags={tags ?? []} />
+						)}
+						<ReviewList reviews={reviews} currentUser={user} />
 					</div>
 
 					{/* Sidebar */}

@@ -2,30 +2,22 @@
 
 import { cn } from "@/lib/utils";
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ITag } from "@/services/tag.services";
 
-interface IUser {
-	id: string;
-	name: string;
-	email: string;
-	role: string;
-}
-
 interface Props {
-	movieId: string;
-	user: IUser | null;
+	review: any;
 	tags: ITag[];
 }
 
-const WriteReviewForm = ({ movieId, user, tags }: Props) => {
+const EditReviewForm = ({ review, tags }: Props) => {
 	const router = useRouter();
-	const [rating, setRating] = useState(0);
+	const [isEditing, setIsEditing] = useState(false);
+	const [rating, setRating] = useState(review?.rating ?? 0);
 	const [hovered, setHovered] = useState(0);
-	const [content, setContent] = useState("");
-	const [hasSpoiler, setHasSpoiler] = useState(false);
-	const [selectedTags, setSelectedTags] = useState<string[]>([]);
+	const [content, setContent] = useState(review?.content ?? "");
+	const [hasSpoiler, setHasSpoiler] = useState(review?.hasSpoiler ?? false);
+	const [selectedTags, setSelectedTags] = useState<string[]>(review?.tags?.map((t: any) => t.tagId) ?? []);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 	const [success, setSuccess] = useState(false);
@@ -34,32 +26,34 @@ const WriteReviewForm = ({ movieId, user, tags }: Props) => {
 		setSelectedTags((prev) => (prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]));
 	};
 
-	if (!user) {
-		return (
-			<div className="bg-white rounded-[14px] border border-line-2 p-6 flex flex-col items-center text-center gap-4">
-				<div className="w-12 h-12 rounded-full bg-brand-softer flex items-center justify-center text-2xl">✍️</div>
-				<div>
-					<h2 className="text-[17px] font-bold text-ink mb-1">Want to write a review?</h2>
-					<p className="text-[13px] text-text-muted">Login to share your thoughts with the community.</p>
-				</div>
-				<Link
-					href="/login"
-					className="bg-brand hover:bg-brand/90 text-white text-[14px] font-semibold px-6 py-3 rounded-[10px] transition-colors"
-				>
-					Login to Review
-				</Link>
-			</div>
-		);
-	}
-
 	if (success) {
 		return (
 			<div className="bg-white rounded-[14px] border border-line-2 p-6 flex flex-col items-center text-center gap-3">
 				<div className="w-12 h-12 rounded-full bg-green-soft flex items-center justify-center text-xl text-green font-bold">
 					✓
 				</div>
-				<h2 className="text-[17px] font-bold text-ink">Review Submitted!</h2>
+				<h2 className="text-[17px] font-bold text-ink">Review Updated!</h2>
 				<p className="text-[13px] text-text-muted">Your review is pending admin approval.</p>
+			</div>
+		);
+	}
+
+	if (!isEditing) {
+		return (
+			<div className="bg-white rounded-[14px] border border-line-2 p-6 flex flex-col items-center text-center gap-3">
+				<div className="w-12 h-12 rounded-full bg-brand-softer flex items-center justify-center text-2xl">✏️</div>
+				<h2 className="text-[17px] font-bold text-ink">You've already reviewed this movie</h2>
+				<p className="text-[13px] text-text-muted">
+					Your review is {review?.status === "PENDING" ? "pending admin approval" : "published"}.
+				</p>
+				{review?.status === "PENDING" && (
+					<button
+						onClick={() => setIsEditing(true)}
+						className="border border-brand text-brand text-[14px] font-semibold px-6 py-2.5 rounded-[10px] hover:bg-brand-softer transition-colors"
+					>
+						Edit Review
+					</button>
+				)}
 			</div>
 		);
 	}
@@ -71,11 +65,11 @@ const WriteReviewForm = ({ movieId, user, tags }: Props) => {
 		setLoading(true);
 
 		try {
-			const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews`, {
-				method: "POST",
+			const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/${review.id}`, {
+				method: "PATCH",
 				credentials: "include",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ movieId, rating, content, hasSpoiler, tagIds: selectedTags }),
+				body: JSON.stringify({ rating, content, hasSpoiler, tagIds: selectedTags }),
 			});
 
 			const data = await res.json();
@@ -95,8 +89,16 @@ const WriteReviewForm = ({ movieId, user, tags }: Props) => {
 
 	return (
 		<div className="bg-white rounded-[14px] border border-line-2 p-6">
-			<h2 className="text-[18px] font-bold text-ink mb-1">Write Your Review</h2>
-			<p className="text-[13px] text-text-muted mb-5">Share your thoughts with the community</p>
+			<div className="flex items-center justify-between mb-1">
+				<h2 className="text-[18px] font-bold text-ink">Edit Your Review</h2>
+				<button
+					onClick={() => setIsEditing(false)}
+					className="text-[13px] text-text-muted hover:text-ink transition-colors"
+				>
+					Cancel
+				</button>
+			</div>
+			<p className="text-[13px] text-text-muted mb-5">Update your thoughts about this movie</p>
 
 			<form onSubmit={handleSubmit} className="space-y-4">
 				<div className="flex items-center gap-3 flex-wrap">
@@ -169,11 +171,11 @@ const WriteReviewForm = ({ movieId, user, tags }: Props) => {
 					disabled={loading || !rating || content.trim().length < 10}
 					className="bg-brand hover:bg-brand/90 disabled:opacity-50 text-white text-[14px] font-semibold px-6 py-3 rounded-[10px] transition-colors"
 				>
-					{loading ? "Submitting..." : "Submit Review"}
+					{loading ? "Saving..." : "Update Review"}
 				</button>
 			</form>
 		</div>
 	);
 };
 
-export default WriteReviewForm;
+export default EditReviewForm;

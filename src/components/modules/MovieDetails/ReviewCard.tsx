@@ -8,18 +8,25 @@ const AVATAR_COLORS = ["#F472B6", "#60A5FA", "#A78BFA", "#34D399", "#FBBF24", "#
 
 interface Props {
 	review: any;
+	currentUser?: any;
 }
 
-const ReviewCard = ({ review }: Props) => {
+const ReviewCard = ({ review, currentUser }: Props) => {
 	const [showReplies, setShowReplies] = useState(false);
 	const isPending = review.status === "PENDING";
-	const initials = review.user?.name?.slice(0, 2).toUpperCase() ?? "??";
-	const colorIndex = review.user?.name?.charCodeAt(0) % AVATAR_COLORS.length ?? 0;
+	const isAdmin = currentUser?.role === "ADMIN" || currentUser?.role === "SUPER_ADMIN";
+
+	// Pending review শুধু admin দেখবে
+	if (isPending && !isAdmin) return null;
+
+	const name = review.user?.name ?? "Anonymous";
+	const initials = name.slice(0, 2).toUpperCase();
+	const colorIndex = name.charCodeAt(0) % AVATAR_COLORS.length;
 
 	return (
-		<div className={cn("py-5 first:pt-0 last:pb-0", isPending && "opacity-80")}>
-			{/* Pending badge */}
-			{isPending && (
+		<div className="py-5 first:pt-0 last:pb-0">
+			{/* Pending badge — only admin */}
+			{isPending && isAdmin && (
 				<div className="flex items-center gap-2 text-[12px] text-yellow font-semibold mb-3">
 					● Pending admin approval
 				</div>
@@ -34,6 +41,7 @@ const ReviewCard = ({ review }: Props) => {
 
 			{/* Head */}
 			<div className="flex items-start gap-3 mb-3">
+				{/* Avatar */}
 				<div
 					className="w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold text-white shrink-0"
 					style={{ background: AVATAR_COLORS[colorIndex] }}
@@ -41,23 +49,27 @@ const ReviewCard = ({ review }: Props) => {
 					{initials}
 				</div>
 				<div className="flex-1 min-w-0">
-					<p className="text-[14px] font-semibold text-ink">{review.user?.name ?? "Anonymous"}</p>
+					<p className="text-[14px] font-semibold text-ink">{name}</p>
 					<p className="text-[12px] text-text-muted">
-						{new Date(review.createdAt).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
+						{new Date(review.createdAt).toLocaleDateString("en-US", {
+							month: "long",
+							day: "numeric",
+							year: "numeric",
+						})}
 					</p>
 				</div>
 				<span className="text-[15px] font-black text-ink shrink-0">{review.rating}/10</span>
 			</div>
 
 			{/* Body */}
-			<p className="text-[14px] text-text-base leading-relaxed mb-3">{review.reviewText}</p>
+			<p className="text-[14px] text-text-base leading-relaxed mb-3">{review.content}</p>
 
 			{/* Tags */}
 			{review.tags?.length > 0 && (
 				<div className="flex flex-wrap gap-1.5 mb-3">
-					{review.tags.map((tag: string) => (
-						<span key={tag} className="text-[11px] text-brand bg-brand-softer px-2.5 py-1 rounded-full">
-							#{tag}
+					{review.tags.map((t: any) => (
+						<span key={t.id} className="text-[11px] text-brand bg-brand-softer px-2.5 py-1 rounded-full">
+							#{t.tag?.name ?? t.name}
 						</span>
 					))}
 				</div>
@@ -77,15 +89,17 @@ const ReviewCard = ({ review }: Props) => {
 					{review.comments?.length ?? 0} Comments
 				</button>
 
-				{/* Admin actions */}
-				<div className="ml-auto flex items-center gap-3">
-					{isPending ? (
-						<button className="text-green font-semibold hover:opacity-80 transition-opacity">✓ Approve</button>
-					) : (
-						<button className="hover:text-ink transition-colors">⊘ Unpublish</button>
-					)}
-					<button className="text-red-500 hover:opacity-80 transition-opacity">✕ Delete</button>
-				</div>
+				{/* Admin only actions */}
+				{isAdmin && (
+					<div className="ml-auto flex items-center gap-3">
+						{isPending ? (
+							<button className="text-green font-semibold hover:opacity-80 transition-opacity">✓ Approve</button>
+						) : (
+							<button className="hover:text-ink transition-colors">⊘ Unpublish</button>
+						)}
+						<button className="text-red-500 hover:opacity-80 transition-opacity">✕ Delete</button>
+					</div>
+				)}
 			</div>
 
 			{/* Replies */}
@@ -94,7 +108,10 @@ const ReviewCard = ({ review }: Props) => {
 					{review.comments.map((comment: any) => (
 						<div key={comment.id}>
 							<div className="flex items-center gap-2 mb-1">
-								<div className="w-7 h-7 rounded-full bg-brand-softer text-brand flex items-center justify-center text-[10px] font-bold">
+								<div
+									className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-white"
+									style={{ background: AVATAR_COLORS[comment.user?.name?.charCodeAt(0) % AVATAR_COLORS.length ?? 0] }}
+								>
 									{comment.user?.name?.slice(0, 2).toUpperCase()}
 								</div>
 								<span className="text-[13px] font-semibold text-ink">{comment.user?.name}</span>
