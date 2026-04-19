@@ -6,9 +6,10 @@ import { cn } from "@/lib/utils";
 import { Menu, Search, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Logo from "./Logo/Logo";
+import { logout } from "@/services/auth.services";
 
 const navLinks = [
 	{ label: "Home", href: "/" },
@@ -31,7 +32,8 @@ const Navbar = ({ userInfo }: NavbarProps) => {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [mobileOpen, setMobileOpen] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
-
+	const [dropdownOpen, setDropdownOpen] = useState(false);
+	const dropdownRef = useRef<HTMLDivElement>(null);
 	const dashboardRoute =
 		userInfo?.role === "ADMIN" || userInfo?.role === "SUPER_ADMIN" ? "/admin/dashboard" : "/dashboard";
 
@@ -43,12 +45,26 @@ const Navbar = ({ userInfo }: NavbarProps) => {
 			setSearchQuery("");
 		}
 	};
-
+	useEffect(() => {
+		const handleClickOutside = (e: MouseEvent) => {
+			if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+				setDropdownOpen(false);
+			}
+		};
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => document.removeEventListener("mousedown", handleClickOutside);
+	}, []);
 	const allLinks = [...navLinks, ...(userInfo ? [{ label: "Dashboard", href: dashboardRoute }] : [])];
+
+	const handleLogout = async () => {
+		await logout();
+		router.push("/login");
+		router.refresh();
+	};
 
 	return (
 		<>
-			<header className="sticky top-0 z-30 bg-bg">
+			<header className="sticky top-0 z-9999 bg-bg">
 				<div className="max-w-350 mx-auto px-6 md:px-10 flex items-center justify-between h-18">
 					{/* Logo */}
 					<Logo />
@@ -93,15 +109,54 @@ const Navbar = ({ userInfo }: NavbarProps) => {
 						</button>
 
 						{userInfo ? (
-							<Link href={dashboardRoute}>
-								<div className="w-8.5 h-8.5 rounded-full bg-brand-soft border-[1.5px] border-brand flex items-center justify-center overflow-hidden cursor-pointer hover:bg-brand-softer transition-colors">
+							<div className="relative" ref={dropdownRef}>
+								<div
+									onClick={() => setDropdownOpen((v) => !v)}
+									className="w-8.5 h-8.5 rounded-full bg-brand-soft border-[1.5px] border-brand flex items-center justify-center overflow-hidden cursor-pointer hover:bg-brand-softer transition-colors"
+								>
 									{userInfo.image ? (
 										<Image src={userInfo.image} alt={userInfo.name} width={34} height={34} className="object-cover" />
 									) : (
 										<span className="text-sm font-bold text-brand">{userInfo.name.charAt(0).toUpperCase()}</span>
 									)}
 								</div>
-							</Link>
+
+								{dropdownOpen && (
+									<div className="absolute right-0 top-[calc(100%+8px)] w-52 bg-white rounded-[12px] border border-line-2 shadow-[0_8px_30px_rgba(15,15,16,0.10)] py-1.5 z-50">
+										{/* User info */}
+										<div className="px-4 py-3 border-b border-line-2">
+											<p className="text-[13px] font-semibold text-ink truncate">{userInfo.name}</p>
+											<p className="text-[11px] text-text-muted capitalize">{userInfo.role.toLowerCase()}</p>
+										</div>
+										{/* Links */}
+										<div className="py-1">
+											<Link
+												href={dashboardRoute}
+												onClick={() => setDropdownOpen(false)}
+												className="flex items-center gap-2.5 px-4 py-2 text-[13px] text-text-base hover:bg-line-2 hover:text-ink transition-colors"
+											>
+												Dashboard
+											</Link>
+											<Link
+												href="/profile"
+												onClick={() => setDropdownOpen(false)}
+												className="flex items-center gap-2.5 px-4 py-2 text-[13px] text-text-base hover:bg-line-2 hover:text-ink transition-colors"
+											>
+												Profile
+											</Link>
+										</div>
+										{/* Logout */}
+										<div className="border-t border-line-2 py-1">
+											<button
+												onClick={() => handleLogout()}
+												className="w-full flex items-center gap-2.5 px-4 py-2 text-[13px] text-red-500 hover:bg-red-50 transition-colors"
+											>
+												Logout
+											</button>
+										</div>
+									</div>
+								)}
+							</div>
 						) : (
 							<>
 								<Link

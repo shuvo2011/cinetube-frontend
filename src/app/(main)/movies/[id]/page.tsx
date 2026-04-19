@@ -1,7 +1,62 @@
-import React from "react";
+import MovieDetailHero from "@/components/modules/MovieDetails/MovieDetailHero";
+import MovieInfo from "@/components/modules/MovieDetails/MovieInfo";
+import MovieStats from "@/components/modules/MovieDetails/MovieStats";
+import SimilarMovies from "@/components/modules/MovieDetails/SimilarMovies";
+import WriteReviewForm from "@/components/modules/MovieDetails/WriteReviewForm";
+import ReviewList from "@/components/modules/MovieDetails/ReviewList";
+import { getMovieById } from "@/services/movie.services";
+import { getReviewsByMovie } from "@/services/review.services";
+import { getUserInfo } from "@/services/auth.services";
+import { notFound } from "next/navigation";
+import Link from "next/link";
 
-const MovieDetailsPage = () => {
-	return <div>Movie Details Page</div>;
+interface MovieDetailsPageProps {
+	params: Promise<{ id: string }>;
+}
+
+const MovieDetailsPage = async ({ params }: MovieDetailsPageProps) => {
+	const { id } = await params;
+
+	const [movieRes, reviewsRes, user] = await Promise.all([getMovieById(id), getReviewsByMovie(id), getUserInfo()]);
+
+	if (!movieRes?.data) return notFound();
+
+	const movie = movieRes.data;
+	const reviews = reviewsRes ?? [];
+
+	return (
+		<div className="bg-bg-2 min-h-screen">
+			<div className="max-w-[1400px] mx-auto px-6 md:px-10">
+				{/* Breadcrumb */}
+				<div className="py-5 text-[13px] text-text-muted">
+					<Link href="/movies" className="hover:text-brand transition-colors">
+						Movies
+					</Link>
+					<span className="mx-2">·</span>
+					<span className="text-ink font-medium">{movie.title}</span>
+				</div>
+
+				{/* Hero */}
+				<MovieDetailHero movie={movie} />
+
+				{/* Body */}
+				<div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_300px] gap-8 pb-20">
+					{/* Main */}
+					<div className="space-y-6">
+						<WriteReviewForm movieId={movie.id} user={user} />
+						<ReviewList reviews={reviews} />
+					</div>
+
+					{/* Sidebar */}
+					<div className="space-y-5">
+						<MovieInfo movie={movie} />
+						<MovieStats movie={movie} />
+						<SimilarMovies genres={movie.genres} currentId={movie.id} />
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default MovieDetailsPage;

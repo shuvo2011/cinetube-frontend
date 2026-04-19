@@ -27,6 +27,13 @@ export interface IMovie {
 			name: string;
 		};
 	}[];
+	movieCasts?: {
+		id: string;
+		castMember: {
+			id: string;
+			name: string;
+		};
+	}[];
 }
 interface IPlatform {
 	id: string;

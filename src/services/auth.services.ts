@@ -77,3 +77,27 @@ export async function getUserInfo() {
 		return null;
 	}
 }
+
+export async function logout() {
+	try {
+		const cookieStore = await cookies();
+		const accessToken = cookieStore.get("accessToken")?.value;
+		const sessionToken = cookieStore.get("better-auth.session_token")?.value;
+
+		await fetch(`${BASE_API_URL}/auth/logout`, {
+			method: "POST",
+			headers: {
+				Cookie: `accessToken=${accessToken}; better-auth.session_token=${sessionToken}`,
+			},
+		});
+	} catch (error) {
+		console.error("Logout error:", error);
+	} finally {
+		// সব cookie clear করো
+		const cookieStore = await cookies();
+		cookieStore.delete("accessToken");
+		cookieStore.delete("refreshToken");
+		cookieStore.delete("better-auth.session_token");
+		cookieStore.delete("better-auth.session_data");
+	}
+}
