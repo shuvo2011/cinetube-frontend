@@ -106,10 +106,7 @@ export const userNavSections: NavSection[] = [
 	},
 	{
 		title: "Billing",
-		items: [
-			{ title: "My Payments", href: "/dashboard/my-payments", icon: Receipt },
-			{ title: "Subscription", href: "/dashboard/subscription", icon: BadgeDollarSign },
-		],
+		items: [{ title: "My Payments", href: "/dashboard/my-payments", icon: Receipt }],
 	},
 	{
 		title: "Account",

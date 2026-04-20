@@ -79,26 +79,6 @@ export default function AppHeader({ role, userName, userEmail, onMenuClick }: Pr
 					<span className="ml-2 hidden text-[13px] font-normal text-gray-400 sm:inline">{sub}</span>
 				</h1>
 			</div>
-
-			{/* Search — hidden on small screens */}
-			<div className="relative hidden md:block">
-				<Search className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-gray-400" />
-				<Input
-					value={search}
-					onChange={(e) => setSearch(e.target.value)}
-					placeholder="Search..."
-					className="h-9 w-44 rounded-lg border-gray-200 bg-gray-50 pl-9 text-[13px] lg:w-56"
-				/>
-			</div>
-
-			{/* Notification */}
-			<div className="relative">
-				<Button variant="ghost" size="icon" className="h-9 w-9 rounded-lg bg-gray-50 hover:bg-gray-100">
-					<Bell className="h-4 w-4 text-gray-500" />
-				</Button>
-				<span className={cn("absolute right-1.5 top-1.5 h-2 w-2 rounded-full border-2 border-white", dotColor)} />
-			</div>
-
 			{/* Settings — hidden on mobile */}
 			<Button
 				variant="ghost"
