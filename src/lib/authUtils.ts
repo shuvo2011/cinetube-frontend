@@ -17,7 +17,7 @@ export const commonProtectedRoutes: RouteConfig = {
 };
 
 export const adminProtectedRoutes: RouteConfig = {
-	pattern: [/^\/dashboard\/admin/],
+	pattern: [/^\/admin\/dashboard/],
 	exact: [],
 };
 
@@ -39,7 +39,7 @@ export const getRouteOwner = (pathname: string): "ADMIN" | "USER" | "COMMON" | n
 };
 
 export const getDefaultDashboardRoute = (role: UserRole) => {
-	if (role === "ADMIN" || role === "SUPER_ADMIN") return "/dashboard/admin";
+	if (role === "ADMIN" || role === "SUPER_ADMIN") return "/admin/dashboard";
 	return "/dashboard";
 };
 
