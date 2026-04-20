@@ -9,6 +9,7 @@ import { getMovieById } from "@/services/movie.services";
 import { getReviewsByMovie } from "@/services/review.services";
 import { getUserInfo } from "@/services/auth.services";
 import { checkMovieAccess } from "@/services/payment.services";
+import { isMovieInWatchlist } from "@/services/watchlist.services";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getTags } from "@/services/tag.services";
@@ -42,7 +43,10 @@ const MovieDetailsPage = async ({ params, searchParams }: MovieDetailsPageProps)
 	const existingReview = reviews.find((r: any) => r.userId === user?.id);
 	const hasReviewed = !!existingReview;
 
-	const access = movie.pricingType === "PREMIUM" && user ? await checkMovieAccess(id) : null;
+	const [access, inWatchlist] = await Promise.all([
+		movie.pricingType === "PREMIUM" && user ? checkMovieAccess(id) : Promise.resolve(null),
+		user ? isMovieInWatchlist(id) : Promise.resolve(false),
+	]);
 
 	// console.log("movie", movie);
 
@@ -59,7 +63,7 @@ const MovieDetailsPage = async ({ params, searchParams }: MovieDetailsPageProps)
 				</div>
 
 				{/* Hero */}
-				<MovieDetailHero movie={movie} access={access} />
+				<MovieDetailHero movie={movie} access={access} isLoggedIn={!!user} initialInWatchlist={inWatchlist} />
 
 				{/* Body */}
 				<div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_300px] gap-8 pb-20">

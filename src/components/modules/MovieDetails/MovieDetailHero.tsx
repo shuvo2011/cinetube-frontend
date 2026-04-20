@@ -2,20 +2,43 @@
 
 import { IMovie } from "@/types/movie.types";
 import { IMovieAccess } from "@/services/payment.services";
-import { Bookmark, Play } from "lucide-react";
+import { Bookmark, BookmarkCheck, Play } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const AVATAR_COLORS = ["#F472B6", "#60A5FA", "#A78BFA", "#FBBF24", "#34D399", "#FB923C"];
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 interface Props {
 	movie: IMovie;
 	access: IMovieAccess | null;
+	isLoggedIn: boolean;
+	initialInWatchlist: boolean;
 }
 
-const MovieDetailHero = ({ movie, access }: Props) => {
+const MovieDetailHero = ({ movie, access, isLoggedIn, initialInWatchlist }: Props) => {
+	const router = useRouter();
 	const isFree = movie.pricingType === "FREE";
 	const canStream = isFree || (access?.hasAccess ?? false);
+	const [inWatchlist, setInWatchlist] = useState(initialInWatchlist);
+	const [watchlistLoading, setWatchlistLoading] = useState(false);
+
+	const handleWatchlist = async () => {
+		if (!isLoggedIn) { router.push("/login"); return; }
+		setWatchlistLoading(true);
+		try {
+			const method = inWatchlist ? "DELETE" : "POST";
+			const res = await fetch(`${API_BASE}/watchlist/${movie.id}`, {
+				method,
+				credentials: "include",
+			});
+			if (res.ok) setInWatchlist((v) => !v);
+		} finally {
+			setWatchlistLoading(false);
+		}
+	};
 	return (
 		<section className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[360px_1fr] gap-8 md:gap-10 pb-12">
 			{/* Poster */}
@@ -102,9 +125,18 @@ const MovieDetailHero = ({ movie, access }: Props) => {
 
 				{/* Actions */}
 				<div className="flex flex-wrap gap-3 mb-8">
-					<button className="flex items-center gap-2 px-5 py-3 rounded-[10px] border border-line text-[14px] font-semibold text-ink hover:border-ink transition-colors">
-						<Bookmark size={16} />
-						Add to Watchlist
+					<button
+						onClick={handleWatchlist}
+						disabled={watchlistLoading}
+						className={cn(
+							"flex items-center gap-2 px-5 py-3 rounded-[10px] border text-[14px] font-semibold transition-colors disabled:opacity-60",
+							inWatchlist
+								? "bg-brand/10 border-brand text-brand"
+								: "border-line text-ink hover:border-ink",
+						)}
+					>
+						{inWatchlist ? <BookmarkCheck size={16} /> : <Bookmark size={16} />}
+						{inWatchlist ? "Saved" : "Add to Watchlist"}
 					</button>
 					{movie.trailerUrl && (
 						<a
