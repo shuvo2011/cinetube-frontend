@@ -3,6 +3,7 @@ import MovieCard from "@/components/modules/Movies/MovieCard";
 import MoviesHero from "@/components/modules/Movies/MoviesHero";
 import { getMovieFilters, getMovies } from "@/services/movie.services";
 import { Suspense } from "react";
+import MoviesPagination from "@/components/modules/Movies/MoviesPagination";
 
 interface MoviesPageProps {
 	searchParams: Promise<Record<string, string>>;
@@ -10,9 +11,10 @@ interface MoviesPageProps {
 
 const MoviesPage = async ({ searchParams }: MoviesPageProps) => {
 	const params = await searchParams;
-	const queryString = new URLSearchParams(params).toString();
+	const page = params.page ?? "1";
+	const queryString = new URLSearchParams({ ...params, limit: "12" }).toString();
 
-	const [moviesRes, filters] = await Promise.all([getMovies(queryString || "limit=12"), getMovieFilters()]);
+	const [moviesRes, filters] = await Promise.all([getMovies(queryString), getMovieFilters()]);
 
 	const movies = moviesRes?.data ?? [];
 	const total = moviesRes?.meta?.total ?? 0;
@@ -35,11 +37,18 @@ const MoviesPage = async ({ searchParams }: MoviesPageProps) => {
 						<p className="text-sm text-text-muted">Try adjusting your filters or search term.</p>
 					</div>
 				) : (
-					<div className="grid grid-cols-2 md:grid-cols-3 gap-[22px]">
-						{movies.map((movie, index) => (
-							<MovieCard key={movie.id} movie={movie} index={index} />
-						))}
-					</div>
+					<>
+						<div className="grid grid-cols-2 md:grid-cols-3 gap-[22px]">
+							{movies.map((movie, index) => (
+								<MovieCard key={movie.id} movie={movie} index={index} />
+							))}
+						</div>
+						{moviesRes?.meta && moviesRes.meta.totalPages > 1 && (
+							<Suspense>
+								<MoviesPagination meta={moviesRes.meta} />
+							</Suspense>
+						)}
+					</>
 				)}
 			</MoviesLayout>
 		</>
