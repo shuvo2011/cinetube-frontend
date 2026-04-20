@@ -15,6 +15,7 @@ export interface IMovie {
 	totalReviews?: number;
 	createdAt: string;
 	totalLikes?: number;
+	rentDuration: string | null;
 	genres: {
 		genre: {
 			id: string;
@@ -37,12 +38,12 @@ export interface IMovie {
 	}[];
 }
 
-interface IPlatform {
+export interface IPlatform {
 	id: string;
 	name: string;
 }
 
-interface IGenre {
+export interface IGenre {
 	id: string;
 	name: string;
 }

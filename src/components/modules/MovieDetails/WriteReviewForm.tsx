@@ -4,7 +4,8 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ITag } from "@/services/tag.services";
+import { ITag } from "@/types/tag.types";
+import { createReviewZodSchema } from "@/zod/review.validation";
 
 interface IUser {
 	id: string;
@@ -33,6 +34,9 @@ const WriteReviewForm = ({ movieId, user, tags }: Props) => {
 	const toggleTag = (tagId: string) => {
 		setSelectedTags((prev) => (prev.includes(tagId) ? prev.filter((id) => id !== tagId) : [...prev, tagId]));
 	};
+
+	const minReviewLength = 10;
+	const contentLength = content.trim().length;
 
 	if (!user) {
 		return (
@@ -66,9 +70,30 @@ const WriteReviewForm = ({ movieId, user, tags }: Props) => {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!rating || !content.trim()) return;
 		setError("");
 		setLoading(true);
+
+		const parsed = createReviewZodSchema.safeParse({
+			movieId,
+			rating,
+			content,
+			hasSpoiler,
+			tagIds: selectedTags,
+		});
+
+		if (!parsed.success) {
+			const formatted = parsed.error.format();
+			const errorMessage =
+				formatted.movieId?._errors?.[0] ||
+				formatted.rating?._errors?.[0] ||
+				formatted.content?._errors?.[0] ||
+				formatted.hasSpoiler?._errors?.[0] ||
+				formatted.tagIds?._errors?.[0] ||
+				"Please fix the review form errors.";
+			setError(errorMessage);
+			setLoading(false);
+			return;
+		}
 
 		try {
 			const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews`, {
@@ -121,13 +146,37 @@ const WriteReviewForm = ({ movieId, user, tags }: Props) => {
 					{rating > 0 && <span className="text-[14px] font-bold text-ink">{rating}/10</span>}
 				</div>
 
-				<textarea
-					value={content}
-					onChange={(e) => setContent(e.target.value)}
-					placeholder="Share your thoughts about this movie..."
-					rows={5}
-					className="w-full border border-line rounded-[10px] px-4 py-3 text-[14px] text-ink placeholder:text-text-subtle outline-none focus:border-brand resize-none transition-colors"
-				/>
+				<div className="relative">
+					<textarea
+						value={content}
+						onChange={(e) => setContent(e.target.value)}
+						placeholder="Share your thoughts about this movie..."
+						rows={5}
+						className={cn(
+							"w-full border rounded-[10px] px-4 py-3 text-[14px] text-ink placeholder:text-text-subtle outline-none resize-none transition-colors",
+							contentLength > 0 && contentLength < minReviewLength
+								? "border-red-400 focus:border-red-400"
+								: "border-line focus:border-brand",
+						)}
+					/>
+					<div className="flex items-center justify-between mt-1 px-1">
+						<span
+							className={cn("text-[11px]", contentLength >= minReviewLength ? "text-green-500" : "text-text-subtle")}
+						>
+							{contentLength < minReviewLength
+								? `Minimum ${minReviewLength - contentLength} more character${minReviewLength - contentLength === 1 ? "" : "s"} required`
+								: "Minimum length reached"}
+						</span>
+						<span
+							className={cn(
+								"text-[11px] tabular-nums",
+								contentLength >= minReviewLength ? "text-green-500" : "text-text-subtle",
+							)}
+						>
+							{contentLength} / {minReviewLength} min
+						</span>
+					</div>
+				</div>
 
 				{tags.length > 0 && (
 					<div>

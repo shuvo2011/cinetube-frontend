@@ -17,21 +17,18 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { createPlatformAction } from "@/app/(dashboard)/admin/dashboard/platforms/_action";
+import { createTagAction } from "@/app/(dashboard)/admin/dashboard/tags/_action";
 
-const CreatePlatformModal = () => {
+const CreateTagModal = () => {
 	const [open, setOpen] = useState(false);
 	const [name, setName] = useState("");
-	const [logo, setLogo] = useState("");
-	const [website, setWebsite] = useState("");
 	const queryClient = useQueryClient();
 	const router = useRouter();
 
 	const { mutateAsync, isPending } = useMutation({
-		mutationFn: createPlatformAction,
+		mutationFn: createTagAction,
 		onError: (error: unknown) => {
-			const message = error instanceof Error ? error.message : "Something went wrong.";
-			toast.error(message);
+			toast.error(error instanceof Error ? error.message : "Something went wrong.");
 		},
 	});
 
@@ -42,25 +39,19 @@ const CreatePlatformModal = () => {
 			return;
 		}
 		try {
-			const result = await mutateAsync({
-				name: name.trim(),
-				logo: logo.trim() || undefined,
-				website: website.trim() || undefined,
-			});
+			const result = await mutateAsync(name.trim());
 			if (!result.success) {
-				toast.error(result.message || "Failed to create platform.");
+				toast.error(result.message || "Failed to create tag.");
 				return;
 			}
-			toast.success(result.message || "Platform created successfully.");
+			toast.success(result.message || "Tag created successfully.");
 			setOpen(false);
 			setName("");
-			setLogo("");
-			setWebsite("");
-			void queryClient.invalidateQueries({ queryKey: ["platforms"] });
-			void queryClient.refetchQueries({ queryKey: ["platforms"], type: "active" });
+			void queryClient.invalidateQueries({ queryKey: ["tags"] });
+			void queryClient.refetchQueries({ queryKey: ["tags"], type: "active" });
 			router.refresh();
 		} catch {
-			// onError handles it
+			/* onError handles it */
 		}
 	};
 
@@ -69,45 +60,21 @@ const CreatePlatformModal = () => {
 			<DialogTrigger asChild>
 				<Button className="gap-2">
 					<Plus className="h-4 w-4" />
-					Add Platform
+					Add Tag
 				</Button>
 			</DialogTrigger>
 			<DialogContent onInteractOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
 				<DialogHeader>
-					<DialogTitle>Add Platform</DialogTitle>
-					<DialogDescription>Add a new streaming platform to the library.</DialogDescription>
+					<DialogTitle>Add Tag</DialogTitle>
+					<DialogDescription>Add a new tag to the media library.</DialogDescription>
 				</DialogHeader>
 				<form onSubmit={handleSubmit} method="POST" action="#" noValidate className="space-y-4">
 					<div className="space-y-1.5">
-						<Label>
-							Name <span className="text-destructive">*</span>
-						</Label>
+						<Label>Name</Label>
 						<Input
-							placeholder="e.g. Netflix"
+							placeholder="e.g. Classic"
 							value={name}
 							onChange={(e) => setName(e.target.value)}
-							disabled={isPending}
-						/>
-					</div>
-					<div className="space-y-1.5">
-						<Label>
-							Logo URL <span className="text-muted-foreground text-xs">(optional)</span>
-						</Label>
-						<Input
-							placeholder="https://..."
-							value={logo}
-							onChange={(e) => setLogo(e.target.value)}
-							disabled={isPending}
-						/>
-					</div>
-					<div className="space-y-1.5">
-						<Label>
-							Website <span className="text-muted-foreground text-xs">(optional)</span>
-						</Label>
-						<Input
-							placeholder="https://netflix.com"
-							value={website}
-							onChange={(e) => setWebsite(e.target.value)}
 							disabled={isPending}
 						/>
 					</div>
@@ -127,4 +94,4 @@ const CreatePlatformModal = () => {
 	);
 };
 
-export default CreatePlatformModal;
+export default CreateTagModal;

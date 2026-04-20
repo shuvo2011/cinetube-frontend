@@ -17,18 +17,18 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
-import { createPlatformAction } from "@/app/(dashboard)/admin/dashboard/platforms/_action";
+import { createGenreAction } from "@/app/(dashboard)/admin/dashboard/genres/_action";
+import { createGenreZodSchema } from "@/zod/genre.validation";
 
-const CreatePlatformModal = () => {
+const CreateGenreModal = () => {
 	const [open, setOpen] = useState(false);
 	const [name, setName] = useState("");
-	const [logo, setLogo] = useState("");
-	const [website, setWebsite] = useState("");
+	const [nameError, setNameError] = useState("");
 	const queryClient = useQueryClient();
 	const router = useRouter();
 
 	const { mutateAsync, isPending } = useMutation({
-		mutationFn: createPlatformAction,
+		mutationFn: createGenreAction,
 		onError: (error: unknown) => {
 			const message = error instanceof Error ? error.message : "Something went wrong.";
 			toast.error(message);
@@ -37,27 +37,27 @@ const CreatePlatformModal = () => {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (!name.trim()) {
-			toast.error("Name is required.");
+		setNameError("");
+
+		const parsed = createGenreZodSchema.safeParse({ name: name.trim() });
+		if (!parsed.success) {
+			const errorMessage = parsed.error.format().name?._errors?.[0] || "Name is required.";
+			setNameError(errorMessage);
+			toast.error(errorMessage);
 			return;
 		}
+
 		try {
-			const result = await mutateAsync({
-				name: name.trim(),
-				logo: logo.trim() || undefined,
-				website: website.trim() || undefined,
-			});
+			const result = await mutateAsync(parsed.data.name);
 			if (!result.success) {
-				toast.error(result.message || "Failed to create platform.");
+				toast.error(result.message || "Failed to create genre.");
 				return;
 			}
-			toast.success(result.message || "Platform created successfully.");
+			toast.success(result.message || "Genre created successfully.");
 			setOpen(false);
 			setName("");
-			setLogo("");
-			setWebsite("");
-			void queryClient.invalidateQueries({ queryKey: ["platforms"] });
-			void queryClient.refetchQueries({ queryKey: ["platforms"], type: "active" });
+			void queryClient.invalidateQueries({ queryKey: ["genres"] });
+			void queryClient.refetchQueries({ queryKey: ["genres"], type: "active" });
 			router.refresh();
 		} catch {
 			// onError handles it
@@ -69,47 +69,27 @@ const CreatePlatformModal = () => {
 			<DialogTrigger asChild>
 				<Button className="gap-2">
 					<Plus className="h-4 w-4" />
-					Add Platform
+					Add Genre
 				</Button>
 			</DialogTrigger>
 			<DialogContent onInteractOutside={(e) => e.preventDefault()} onEscapeKeyDown={(e) => e.preventDefault()}>
 				<DialogHeader>
-					<DialogTitle>Add Platform</DialogTitle>
-					<DialogDescription>Add a new streaming platform to the library.</DialogDescription>
+					<DialogTitle>Add Genre</DialogTitle>
+					<DialogDescription>Add a new genre to the media library.</DialogDescription>
 				</DialogHeader>
 				<form onSubmit={handleSubmit} method="POST" action="#" noValidate className="space-y-4">
 					<div className="space-y-1.5">
-						<Label>
-							Name <span className="text-destructive">*</span>
-						</Label>
+						<Label>Name</Label>
 						<Input
-							placeholder="e.g. Netflix"
+							placeholder="e.g. Action"
 							value={name}
-							onChange={(e) => setName(e.target.value)}
+							onChange={(e) => {
+								setName(e.target.value);
+								setNameError("");
+							}}
 							disabled={isPending}
 						/>
-					</div>
-					<div className="space-y-1.5">
-						<Label>
-							Logo URL <span className="text-muted-foreground text-xs">(optional)</span>
-						</Label>
-						<Input
-							placeholder="https://..."
-							value={logo}
-							onChange={(e) => setLogo(e.target.value)}
-							disabled={isPending}
-						/>
-					</div>
-					<div className="space-y-1.5">
-						<Label>
-							Website <span className="text-muted-foreground text-xs">(optional)</span>
-						</Label>
-						<Input
-							placeholder="https://netflix.com"
-							value={website}
-							onChange={(e) => setWebsite(e.target.value)}
-							disabled={isPending}
-						/>
+						{nameError ? <p className="text-sm text-red-600">{nameError}</p> : null}
 					</div>
 					<div className="flex items-center justify-end gap-3 border-t pt-4">
 						<DialogClose asChild>
@@ -127,4 +107,4 @@ const CreatePlatformModal = () => {
 	);
 };
 
-export default CreatePlatformModal;
+export default CreateGenreModal;

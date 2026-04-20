@@ -2,10 +2,7 @@
 
 import { httpClient } from "@/lib/axios/httpClient";
 
-export interface ITag {
-	id: string;
-	name: string;
-}
+import { ITag } from "@/types/tag.types";
 
 export const getTags = async () => {
 	try {
@@ -14,5 +11,14 @@ export const getTags = async () => {
 	} catch (error) {
 		console.log("Error fetching tags:", error);
 		return [];
+	}
+};
+
+export const getTagsForAdmin = async (queryString: string) => {
+	try {
+		return await httpClient.get<ITag[]>(queryString ? `/tags?${queryString}` : "/tags");
+	} catch (error) {
+		console.log("Error fetching tags:", error);
+		throw error;
 	}
 };

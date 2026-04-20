@@ -12,16 +12,9 @@ if (!API_BASE_URL) {
 }
 
 async function tryRefreshToken(accessToken: string, refreshToken: string): Promise<void> {
-	if (!(await isTokenExpiringSoon(accessToken))) {
-		return;
-	}
-
+	if (!(await isTokenExpiringSoon(accessToken))) return;
 	const requestHeader = await headers();
-
-	if (requestHeader.get("x-token-refreshed") === "1") {
-		return;
-	}
-
+	if (requestHeader.get("x-token-refreshed") === "1") return;
 	try {
 		await getNewTokens(refreshToken);
 	} catch (error: any) {
@@ -29,7 +22,7 @@ async function tryRefreshToken(accessToken: string, refreshToken: string): Promi
 	}
 }
 
-const axiosInstance = async () => {
+const axiosInstance = async (contentType = "application/json") => {
 	const cookieStore = await cookies();
 	const accessToken = cookieStore.get("accessToken")?.value;
 	const refreshToken = cookieStore.get("refreshToken")?.value;
@@ -47,7 +40,8 @@ const axiosInstance = async () => {
 		baseURL: `${API_BASE_URL}`,
 		timeout: 30000,
 		headers: {
-			"Content-Type": "application/json",
+			// FormData হলে Content-Type বাদ দাও — axios নিজেই multipart boundary সেট করে
+			...(contentType !== "multipart/form-data" && { "Content-Type": contentType }),
 			Cookie: cookieHeader,
 		},
 	});
@@ -58,6 +52,7 @@ const axiosInstance = async () => {
 export interface ApiRequestOptions {
 	params?: Record<string, unknown>;
 	headers?: Record<string, string>;
+	isFormData?: boolean;
 }
 
 const httpGet = async <TData>(endpoint: string, options?: ApiRequestOptions): Promise<ApiResponse<TData>> => {
@@ -80,7 +75,7 @@ const httpPost = async <TData>(
 	options?: ApiRequestOptions,
 ): Promise<ApiResponse<TData>> => {
 	try {
-		const instance = await axiosInstance();
+		const instance = await axiosInstance(options?.isFormData ? "multipart/form-data" : "application/json");
 		const response = await instance.post<ApiResponse<TData>>(endpoint, data, {
 			params: options?.params,
 			headers: options?.headers,
@@ -98,7 +93,7 @@ const httpPut = async <TData>(
 	options?: ApiRequestOptions,
 ): Promise<ApiResponse<TData>> => {
 	try {
-		const instance = await axiosInstance();
+		const instance = await axiosInstance(options?.isFormData ? "multipart/form-data" : "application/json");
 		const response = await instance.put<ApiResponse<TData>>(endpoint, data, {
 			params: options?.params,
 			headers: options?.headers,
@@ -116,7 +111,7 @@ const httpPatch = async <TData>(
 	options?: ApiRequestOptions,
 ): Promise<ApiResponse<TData>> => {
 	try {
-		const instance = await axiosInstance();
+		const instance = await axiosInstance(options?.isFormData ? "multipart/form-data" : "application/json");
 		const response = await instance.patch<ApiResponse<TData>>(endpoint, data, {
 			params: options?.params,
 			headers: options?.headers,
