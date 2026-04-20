@@ -47,6 +47,14 @@ const CommentSection = ({ reviewId, currentUser, initialCount }: Props) => {
 		if (open) setShowForm(false);
 	};
 
+	const handleAddComment = () => {
+		if (!open) {
+			if (!loaded) loadComments();
+			setOpen(true);
+		}
+		setShowForm(true);
+	};
+
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (!newComment.trim()) return;
@@ -125,9 +133,9 @@ const CommentSection = ({ reviewId, currentUser, initialCount }: Props) => {
 					{count} {count === 1 ? "Comment" : "Comments"}
 				</button>
 
-				{currentUser && open && !showForm && (
+				{currentUser && (
 					<button
-						onClick={() => setShowForm(true)}
+						onClick={handleAddComment}
 						className="flex items-center gap-1 text-[12px] font-medium text-brand hover:opacity-80 transition-opacity"
 					>
 						<Plus size={13} />

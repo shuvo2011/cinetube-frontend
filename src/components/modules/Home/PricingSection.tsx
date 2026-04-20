@@ -1,8 +1,14 @@
 import { Check, X } from "lucide-react";
-import Link from "next/link";
+import SubscribePlanButton from "./SubscribePlanButton";
+
+interface Props {
+	isLoggedIn: boolean;
+	hasActiveSub: boolean;
+}
 
 const plans = [
 	{
+		planType: null,
 		name: "FREE",
 		price: "৳0",
 		period: "Forever free",
@@ -12,11 +18,10 @@ const plans = [
 			{ label: "Stream content", included: false },
 			{ label: "Offline downloads", included: false },
 		],
-		cta: "Get Started",
-		href: "/register",
 		highlighted: false,
 	},
 	{
+		planType: "MONTHLY" as const,
 		name: "MONTHLY",
 		price: "৳299",
 		period: "Per month, cancel anytime",
@@ -26,12 +31,11 @@ const plans = [
 			{ label: "HD quality · 2 devices", included: true },
 			{ label: "Ad-free experience", included: true },
 		],
-		cta: "Subscribe Now",
-		href: "/register",
 		highlighted: true,
 		badge: "MOST POPULAR",
 	},
 	{
+		planType: "YEARLY" as const,
 		name: "YEARLY",
 		price: "৳2,499",
 		period: "Per year · Save 30%",
@@ -41,13 +45,11 @@ const plans = [
 			{ label: "4 devices", included: true },
 			{ label: "Offline downloads", included: true },
 		],
-		cta: "Subscribe Yearly",
-		href: "/register",
 		highlighted: false,
 	},
 ];
 
-const PricingSection = () => {
+const PricingSection = ({ isLoggedIn, hasActiveSub }: Props) => {
 	return (
 		<section className="py-16 md:py-20 bg-bg-2">
 			<div className="max-w-350 mx-auto px-6 md:px-10">
@@ -121,7 +123,7 @@ const PricingSection = () => {
 										}`}
 									>
 										{feature.included ? (
-											<Check size={15} className={plan.highlighted ? "text-green shrink-0" : "text-green shrink-0"} />
+											<Check size={15} className="text-green shrink-0" />
 										) : (
 											<X size={15} className="shrink-0 opacity-40" />
 										)}
@@ -131,16 +133,12 @@ const PricingSection = () => {
 							</ul>
 
 							{/* CTA */}
-							<Link
-								href={plan.href}
-								className={`block text-center font-semibold text-sm py-3.5 rounded-[10px] transition-colors ${
-									plan.highlighted
-										? "bg-brand hover:bg-brand-hover text-white"
-										: "bg-bg border border-line hover:bg-line-2 text-ink"
-								}`}
-							>
-								{plan.cta}
-							</Link>
+							<SubscribePlanButton
+								planType={plan.planType}
+								isLoggedIn={isLoggedIn}
+								hasActiveSub={hasActiveSub}
+								highlighted={plan.highlighted}
+							/>
 						</div>
 					))}
 				</div>

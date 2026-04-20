@@ -4,9 +4,11 @@ import MovieStats from "@/components/modules/MovieDetails/MovieStats";
 import SimilarMovies from "@/components/modules/MovieDetails/SimilarMovies";
 import WriteReviewForm from "@/components/modules/MovieDetails/WriteReviewForm";
 import ReviewList from "@/components/modules/MovieDetails/ReviewList";
+import RentBuyCard from "@/components/modules/MovieDetails/RentBuyCard";
 import { getMovieById } from "@/services/movie.services";
 import { getReviewsByMovie } from "@/services/review.services";
 import { getUserInfo } from "@/services/auth.services";
+import { checkMovieAccess } from "@/services/payment.services";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { getTags } from "@/services/tag.services";
@@ -40,6 +42,8 @@ const MovieDetailsPage = async ({ params, searchParams }: MovieDetailsPageProps)
 	const existingReview = reviews.find((r: any) => r.userId === user?.id);
 	const hasReviewed = !!existingReview;
 
+	const access = movie.pricingType === "PREMIUM" && user ? await checkMovieAccess(id) : null;
+
 	// console.log("movie", movie);
 
 	return (
@@ -71,6 +75,9 @@ const MovieDetailsPage = async ({ params, searchParams }: MovieDetailsPageProps)
 
 					{/* Sidebar */}
 					<div className="space-y-5">
+						{movie.pricingType === "PREMIUM" && (
+							<RentBuyCard movie={movie} access={access} isLoggedIn={!!user} />
+						)}
 						<MovieInfo movie={movie} />
 						<MovieStats movie={movie} />
 						<SimilarMovies genres={movie.genres} currentId={movie.id} />

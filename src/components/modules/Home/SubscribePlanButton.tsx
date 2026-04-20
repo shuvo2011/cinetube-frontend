@@ -1,0 +1,102 @@
+"use client";
+
+import { cn } from "@/lib/utils";
+import { BadgeCheck, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+interface Props {
+	planType: "MONTHLY" | "YEARLY" | null;
+	isLoggedIn: boolean;
+	hasActiveSub: boolean;
+	highlighted: boolean;
+}
+
+const SubscribePlanButton = ({ planType, isLoggedIn, hasActiveSub, highlighted }: Props) => {
+	const [loading, setLoading] = useState(false);
+
+	// Free plan
+	if (!planType) {
+		return (
+			<Link
+				href="/register"
+				className={cn(
+					"block text-center font-semibold text-sm py-3.5 rounded-[10px] transition-colors",
+					"bg-bg border border-line hover:bg-line-2 text-ink",
+				)}
+			>
+				Get Started
+			</Link>
+		);
+	}
+
+	// Already subscribed
+	if (hasActiveSub) {
+		return (
+			<div
+				className={cn(
+					"flex items-center justify-center gap-2 font-semibold text-sm py-3.5 rounded-[10px]",
+					highlighted ? "bg-white/10 text-white/60" : "bg-green-50 text-green-600 border border-green-200",
+				)}
+			>
+				<BadgeCheck size={15} />
+				Subscribed
+			</div>
+		);
+	}
+
+	// Not logged in
+	if (!isLoggedIn) {
+		return (
+			<Link
+				href="/login"
+				className={cn(
+					"block text-center font-semibold text-sm py-3.5 rounded-[10px] transition-colors",
+					highlighted
+						? "bg-brand hover:bg-brand/90 text-white"
+						: "bg-bg border border-line hover:bg-line-2 text-ink",
+				)}
+			>
+				{planType === "MONTHLY" ? "Subscribe Now" : "Subscribe Yearly"}
+			</Link>
+		);
+	}
+
+	const handleSubscribe = async () => {
+		setLoading(true);
+		try {
+			const res = await fetch(`${API_BASE}/payments/subscribe`, {
+				method: "POST",
+				credentials: "include",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ planType }),
+			});
+			const data = await res.json();
+			if (res.ok && data.data?.checkoutUrl) {
+				window.location.href = data.data.checkoutUrl;
+			}
+		} finally {
+			setLoading(false);
+		}
+	};
+
+	return (
+		<button
+			onClick={handleSubscribe}
+			disabled={loading}
+			className={cn(
+				"w-full flex items-center justify-center gap-2 font-semibold text-sm py-3.5 rounded-[10px] transition-colors disabled:opacity-70",
+				highlighted
+					? "bg-brand hover:bg-brand/90 text-white"
+					: "bg-bg border border-line hover:bg-line-2 text-ink",
+			)}
+		>
+			{loading && <Loader2 size={14} className="animate-spin" />}
+			{planType === "MONTHLY" ? "Subscribe Now" : "Subscribe Yearly"}
+		</button>
+	);
+};
+
+export default SubscribePlanButton;
