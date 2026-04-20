@@ -1,7 +1,9 @@
-import React from "react";
+import UserDashboardClient from "@/components/modules/UserDashboardClient/UserDashboardClient";
+
+export const dynamic = "force-dynamic";
 
 const DashboardPage = () => {
-	return <div>DashboardPage</div>;
+	return <UserDashboardClient />;
 };
 
 export default DashboardPage;

@@ -23,6 +23,16 @@ export default function AppSidebar({ role, userName, userEmail, open, onClose }:
 
 	const navSections = role === "ADMIN" ? adminNavSections : userNavSections;
 
+	// Compute the most specific active href (longest matching) so parent items
+	// don't remain active when a more specific child route is selected.
+	const allHrefs = navSections.flatMap((s) => s.items.map((i) => i.href));
+	const activeHref = (() => {
+		const matches = allHrefs.filter((h) => pathname === h || (h.length > 1 && pathname.startsWith(h + "/")));
+		if (matches.length === 0) return null;
+		matches.sort((a, b) => b.length - a.length);
+		return matches[0];
+	})();
+
 	const initials = userName
 		.split(" ")
 		.map((n) => n[0])
@@ -97,8 +107,7 @@ export default function AppSidebar({ role, userName, userEmail, open, onClose }:
 								{section.title}
 							</p>
 							{section.items.map((item) => {
-								const isActive =
-									pathname === item.href || (item.href.length > 1 && pathname.startsWith(item.href + "/"));
+								const isActive = activeHref === item.href;
 
 								return (
 									<Link

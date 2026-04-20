@@ -12,3 +12,13 @@ export const getDashboardStats = async () => {
 		return null;
 	}
 };
+
+export const getUserStats = async () => {
+	try {
+		const result = await httpClient.get<any>("/stats/me");
+		return result;
+	} catch (error) {
+		console.log("Error fetching user stats:", error);
+		return null;
+	}
+};

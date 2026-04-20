@@ -28,10 +28,13 @@ type Props = {
 function getPageTitle(pathname: string, role: "ADMIN" | "USER"): { title: string; sub: string } {
 	const sections = role === "ADMIN" ? adminNavSections : userNavSections;
 	const allItems = sections.flatMap((s) => s.items);
-	const match = allItems.find(
+	// Find the most specific (longest) matching item so parent titles aren't chosen when a child route is active.
+	const matches = allItems.filter(
 		(item) => pathname === item.href || (item.href.length > 1 && pathname.startsWith(item.href + "/")),
 	);
-	if (match) {
+	if (matches.length > 0) {
+		matches.sort((a, b) => b.href.length - a.href.length);
+		const match = matches[0];
 		const section = sections.find((s) => s.items.some((i) => i.href === match.href));
 		return { title: match.title, sub: section?.title ?? "" };
 	}
