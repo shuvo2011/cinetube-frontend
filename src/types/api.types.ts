@@ -9,7 +9,12 @@ export interface ApiResponse<T> {
 		totalPages: number;
 	};
 }
-
+export interface PaginationMeta {
+	page: number;
+	limit: number;
+	total: number;
+	totalPages: number;
+}
 export interface ApiErrorResponse {
 	success: false;
 	message: string;
