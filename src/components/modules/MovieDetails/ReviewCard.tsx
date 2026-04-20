@@ -1,10 +1,11 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { Heart, MessageCircle } from "lucide-react";
+import { Heart } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { approveReview, deleteReview, updateReviewStatus } from "@/services/review.services";
+import CommentSection from "@/components/modules/Comments/CommentSection";
 
 const AVATAR_COLORS = ["#F472B6", "#60A5FA", "#A78BFA", "#34D399", "#FBBF24", "#FB923C"];
 
@@ -13,13 +14,18 @@ interface Props {
 	currentUser?: any;
 }
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 const ReviewCard = ({ review, currentUser }: Props) => {
 	const router = useRouter();
 	const [deleted, setDeleted] = useState(false);
-	const [showReplies, setShowReplies] = useState(false);
 	const [expanded, setExpanded] = useState(false);
+	const [likeCount, setLikeCount] = useState<number>(review.totalLikes ?? 0);
+	const [liked, setLiked] = useState(false);
+	const [likeLoading, setLikeLoading] = useState(false);
 	const isPending = review.status === "PENDING";
 	const isAdmin = currentUser?.role === "ADMIN" || currentUser?.role === "SUPER_ADMIN";
+	const isOwnReview = currentUser?.id === review.userId;
 
 	if (deleted) return null;
 
@@ -37,6 +43,24 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 		await deleteReview(review.id);
 		setDeleted(true);
 		router.refresh();
+	};
+
+	const handleLike = async () => {
+		if (!currentUser || isOwnReview || likeLoading) return;
+		setLikeLoading(true);
+		try {
+			const res = await fetch(`${API_BASE}/review-likes/${review.id}`, {
+				method: "POST",
+				credentials: "include",
+			});
+			const data = await res.json();
+			if (res.ok) {
+				setLiked(data.data.liked);
+				setLikeCount((c) => (data.data.liked ? c + 1 : c - 1));
+			}
+		} finally {
+			setLikeLoading(false);
+		}
 	};
 
 	return (
@@ -104,16 +128,17 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 
 			{/* Actions */}
 			<div className="flex items-center gap-4 text-[13px] text-text-muted">
-				<button className="flex items-center gap-1.5 hover:text-brand transition-colors">
-					<Heart size={14} />
-					{review.totalLikes ?? 0} Likes
-				</button>
 				<button
-					onClick={() => setShowReplies(!showReplies)}
-					className="flex items-center gap-1.5 hover:text-brand transition-colors"
+					onClick={handleLike}
+					disabled={likeLoading || !currentUser || isOwnReview}
+					className={cn(
+						"flex items-center gap-1.5 transition-colors disabled:cursor-not-allowed",
+						liked ? "text-red-500" : "hover:text-red-500 text-text-muted",
+					)}
+					title={isOwnReview ? "Cannot like your own review" : !currentUser ? "Login to like" : undefined}
 				>
-					<MessageCircle size={14} />
-					{review.comments?.length ?? 0} Comments
+					<Heart size={14} className={liked ? "fill-red-500" : ""} />
+					{likeCount} Likes
 				</button>
 
 				{/* Admin only */}
@@ -147,26 +172,14 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 				)}
 			</div>
 
-			{/* Replies */}
-			{showReplies && review.comments?.length > 0 && (
-				<div className="mt-4 ml-10 space-y-4 border-l-2 border-line-2 pl-4">
-					{review.comments.map((comment: any) => (
-						<div key={comment.id}>
-							<div className="flex items-center gap-2 mb-1">
-								<div
-									className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-white"
-									style={{ background: AVATAR_COLORS[comment.user?.name?.charCodeAt(0) % AVATAR_COLORS.length ?? 0] }}
-								>
-									{comment.user?.name?.slice(0, 2).toUpperCase()}
-								</div>
-								<span className="text-[13px] font-semibold text-ink">{comment.user?.name}</span>
-								<span className="text-[11px] text-text-muted">· Reply</span>
-							</div>
-							<p className="text-[13px] text-text-base">{comment.content}</p>
-						</div>
-					))}
-				</div>
-			)}
+			{/* Comments */}
+			<div className="mt-3">
+				<CommentSection
+					reviewId={review.id}
+					currentUser={currentUser}
+					initialCount={review._count?.comments ?? review.comments?.length ?? 0}
+				/>
+			</div>
 		</div>
 	);
 };
