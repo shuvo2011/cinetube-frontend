@@ -1,6 +1,7 @@
 "use client";
 
 import { IMovie } from "@/types/movie.types";
+import { IMovieAccess } from "@/services/payment.services";
 import { Bookmark, Play } from "lucide-react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -9,11 +10,12 @@ const AVATAR_COLORS = ["#F472B6", "#60A5FA", "#A78BFA", "#FBBF24", "#34D399", "#
 
 interface Props {
 	movie: IMovie;
+	access: IMovieAccess | null;
 }
 
-const MovieDetailHero = ({ movie }: Props) => {
+const MovieDetailHero = ({ movie, access }: Props) => {
 	const isFree = movie.pricingType === "FREE";
-	console.log(movie.movieCasts);
+	const canStream = isFree || (access?.hasAccess ?? false);
 	return (
 		<section className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[360px_1fr] gap-8 md:gap-10 pb-12">
 			{/* Poster */}
@@ -99,12 +101,23 @@ const MovieDetailHero = ({ movie }: Props) => {
 				</div>
 
 				{/* Actions */}
-				<div className="flex gap-3 mb-8">
+				<div className="flex flex-wrap gap-3 mb-8">
 					<button className="flex items-center gap-2 px-5 py-3 rounded-[10px] border border-line text-[14px] font-semibold text-ink hover:border-ink transition-colors">
 						<Bookmark size={16} />
 						Add to Watchlist
 					</button>
-					{movie.streamingUrl && (
+					{movie.trailerUrl && (
+						<a
+							href={movie.trailerUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="flex items-center gap-2 px-5 py-3 rounded-[10px] border border-line text-[14px] font-semibold text-ink hover:border-ink transition-colors"
+						>
+							<Play size={16} />
+							Watch Trailer
+						</a>
+					)}
+					{canStream && movie.streamingUrl && (
 						<a
 							href={movie.streamingUrl}
 							target="_blank"

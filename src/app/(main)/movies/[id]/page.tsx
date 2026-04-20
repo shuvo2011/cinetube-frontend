@@ -59,7 +59,7 @@ const MovieDetailsPage = async ({ params, searchParams }: MovieDetailsPageProps)
 				</div>
 
 				{/* Hero */}
-				<MovieDetailHero movie={movie} />
+				<MovieDetailHero movie={movie} access={access} />
 
 				{/* Body */}
 				<div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_300px] gap-8 pb-20">
