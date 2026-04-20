@@ -12,16 +12,21 @@ import Link from "next/link";
 import { getTags } from "@/services/tag.services";
 import EditReviewForm from "@/components/modules/MovieDetails/EditReviewForm";
 
+export const dynamic = "force-dynamic";
+
 interface MovieDetailsPageProps {
 	params: Promise<{ id: string }>;
+	searchParams: Promise<Record<string, string>>;
 }
 
-const MovieDetailsPage = async ({ params }: MovieDetailsPageProps) => {
+const MovieDetailsPage = async ({ params, searchParams }: MovieDetailsPageProps) => {
 	const { id } = await params;
+	const sp = await searchParams;
+	const reviewPage = parseInt(sp.reviewPage ?? "1");
 
 	const [movieRes, reviewsRes, user, tags] = await Promise.all([
 		getMovieById(id),
-		getReviewsByMovie(id),
+		getReviewsByMovie(id, reviewPage),
 		getUserInfo(),
 		getTags(),
 	]);
@@ -29,7 +34,8 @@ const MovieDetailsPage = async ({ params }: MovieDetailsPageProps) => {
 	if (!movieRes?.data) return notFound();
 
 	const movie = movieRes.data;
-	const reviews = reviewsRes ?? [];
+	const reviews = reviewsRes.data ?? [];
+	const reviewMeta = reviewsRes.meta;
 
 	const existingReview = reviews.find((r: any) => r.userId === user?.id);
 	const hasReviewed = !!existingReview;
@@ -58,7 +64,7 @@ const MovieDetailsPage = async ({ params }: MovieDetailsPageProps) => {
 						) : (
 							<WriteReviewForm movieId={movie.id} user={user} tags={tags ?? []} />
 						)}
-						<ReviewList reviews={reviews} currentUser={user} />
+						<ReviewList reviews={reviews} currentUser={user} meta={reviewMeta} />
 					</div>
 
 					{/* Sidebar */}

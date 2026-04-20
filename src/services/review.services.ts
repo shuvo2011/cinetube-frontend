@@ -28,13 +28,16 @@ export interface IReview {
 	}[];
 }
 
-export const getReviewsByMovie = async (movieId: string) => {
+export const getReviewsByMovie = async (movieId: string, page = 1) => {
 	try {
-		const result = await httpClient.get<any>(`/reviews/movie/${movieId}?limit=20`);
-		return result.data?.data ?? [];
+		const result = await httpClient.get<any>(`/reviews/movie/${movieId}?limit=10&page=${page}`);
+		return {
+			data: result.data?.data ?? [],
+			meta: result.data?.meta ?? {},
+		};
 	} catch (error) {
 		console.log("Error fetching reviews:", error);
-		return [];
+		return { data: [], meta: {} };
 	}
 };
 

@@ -17,7 +17,7 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 	const router = useRouter();
 	const [deleted, setDeleted] = useState(false);
 	const [showReplies, setShowReplies] = useState(false);
-
+	const [expanded, setExpanded] = useState(false);
 	const isPending = review.status === "PENDING";
 	const isAdmin = currentUser?.role === "ADMIN" || currentUser?.role === "SUPER_ADMIN";
 
@@ -77,7 +77,19 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 			</div>
 
 			{/* Body */}
-			<p className="text-[14px] text-text-base leading-relaxed mb-3">{review.content}</p>
+			<div className="mb-3">
+				<p className={cn("text-[14px] text-text-base leading-relaxed", !expanded && "line-clamp-3")}>
+					{review.content}
+				</p>
+				{review.content?.length > 200 && (
+					<button
+						onClick={() => setExpanded(!expanded)}
+						className="text-[13px] text-brand font-medium mt-1 hover:opacity-80 transition-opacity"
+					>
+						{expanded ? "Read less" : "Read more"}
+					</button>
+				)}
+			</div>
 
 			{/* Tags */}
 			{review.tags?.length > 0 && (
