@@ -20,8 +20,8 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 	const router = useRouter();
 	const [deleted, setDeleted] = useState(false);
 	const [expanded, setExpanded] = useState(false);
-	const [likeCount, setLikeCount] = useState<number>(review.totalLikes ?? 0);
-	const [liked, setLiked] = useState(false);
+	const [likeCount, setLikeCount] = useState<number>(review.likes?.length ?? review.totalLikes ?? 0);
+	const [liked, setLiked] = useState<boolean>(review.isLikedByCurrentUser ?? false);
 	const [likeLoading, setLikeLoading] = useState(false);
 	const isPending = review.status === "PENDING";
 	const isAdmin = currentUser?.role === "ADMIN" || currentUser?.role === "SUPER_ADMIN";
@@ -177,7 +177,7 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 				<CommentSection
 					reviewId={review.id}
 					currentUser={currentUser}
-					initialCount={review._count?.comments ?? review.comments?.length ?? 0}
+					initialCount={review._count?.comments ?? 0}
 				/>
 			</div>
 		</div>

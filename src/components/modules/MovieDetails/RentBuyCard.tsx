@@ -29,6 +29,7 @@ interface Props {
 const RentBuyCard = ({ movie, access, isLoggedIn }: Props) => {
 	const rentDuration = movie.rentDuration as RentalDuration | null;
 	const [loadingType, setLoadingType] = useState<"RENT" | "BUY" | null>(null);
+	const [error, setError] = useState<string>("");
 
 	useEffect(() => {
 		const handlePageShow = (e: PageTransitionEvent) => {
@@ -40,6 +41,7 @@ const RentBuyCard = ({ movie, access, isLoggedIn }: Props) => {
 
 	const handleCheckout = async (purchaseType: "RENT" | "BUY") => {
 		setLoadingType(purchaseType);
+		setError("");
 		try {
 			const res = await fetch(`${API_BASE}/payments/checkout`, {
 				method: "POST",
@@ -54,7 +56,11 @@ const RentBuyCard = ({ movie, access, isLoggedIn }: Props) => {
 			const data = await res.json();
 			if (res.ok && data.data?.checkoutUrl) {
 				window.location.href = data.data.checkoutUrl;
+			} else {
+				setError(data.message ?? "Checkout failed. Please try again.");
 			}
+		} catch {
+			setError("Something went wrong. Please try again.");
 		} finally {
 			setLoadingType(null);
 		}
@@ -203,6 +209,7 @@ const RentBuyCard = ({ movie, access, isLoggedIn }: Props) => {
 					</div>
 				)}
 			</div>
+			{error && <p className="text-[12px] text-red-500 mt-3">{error}</p>}
 		</div>
 	);
 };

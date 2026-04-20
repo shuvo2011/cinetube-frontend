@@ -31,8 +31,10 @@ const CommentSection = ({ reviewId, currentUser, initialCount }: Props) => {
 				credentials: "include",
 			});
 			const data = await res.json();
-			setComments(data.data ?? []);
-			setCount(data.meta?.total ?? data.data?.length ?? 0);
+			const fetched: IComment[] = data.data ?? [];
+			setComments(fetched);
+			const total = fetched.reduce((acc, c) => acc + 1 + (c.replies?.length ?? 0), 0);
+			setCount(total);
 		} catch {
 			// silent
 		} finally {

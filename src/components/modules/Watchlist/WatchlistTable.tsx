@@ -2,7 +2,6 @@
 
 import DataTable from "@/components/shared/table/DataTable";
 import { useServerManagedDataTable } from "@/hooks/useServerManagedDataTable";
-import { useServerManagedDataTableSearch } from "@/hooks/useServerManagedDataTableSearch";
 import { getMyWatchlistItems, IWatchlistItem } from "@/services/watchlist.services";
 import { PaginationMeta } from "@/types/api.types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -24,18 +23,12 @@ const WatchlistTable = ({ initialQueryString }: { initialQueryString: string }) 
 		optimisticSortingState,
 		optimisticPaginationState,
 		isRouteRefreshPending,
-		updateParams,
 		handleSortingChange,
 		handlePaginationChange,
 	} = useServerManagedDataTable({
 		searchParams,
 		defaultPage: DEFAULT_PAGE,
 		defaultLimit: DEFAULT_LIMIT,
-	});
-
-	const { searchTermFromUrl, handleDebouncedSearchChange } = useServerManagedDataTableSearch({
-		searchParams,
-		updateParams,
 	});
 
 	const queryString = queryStringFromUrl || initialQueryString;
@@ -75,12 +68,6 @@ const WatchlistTable = ({ initialQueryString }: { initialQueryString: string }) 
 			pagination={{
 				state: optimisticPaginationState,
 				onPaginationChange: handlePaginationChange,
-			}}
-			search={{
-				initialValue: searchTermFromUrl,
-				placeholder: "Search by title...",
-				debounceMs: 400,
-				onDebouncedChange: handleDebouncedSearchChange,
 			}}
 			meta={meta}
 			actions={{ onDelete: handleRemove }}
