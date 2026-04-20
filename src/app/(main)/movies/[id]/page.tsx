@@ -40,6 +40,8 @@ const MovieDetailsPage = async ({ params, searchParams }: MovieDetailsPageProps)
 	const existingReview = reviews.find((r: any) => r.userId === user?.id);
 	const hasReviewed = !!existingReview;
 
+	// console.log("movie", movie);
+
 	return (
 		<div className="bg-bg-2 min-h-screen">
 			<div className="max-w-350 mx-auto px-6 md:px-10">

@@ -1,3 +1,5 @@
+"use client";
+
 import { IMovie } from "@/types/movie.types";
 import { Bookmark, Play } from "lucide-react";
 import Image from "next/image";
@@ -11,13 +13,19 @@ interface Props {
 
 const MovieDetailHero = ({ movie }: Props) => {
 	const isFree = movie.pricingType === "FREE";
-
+	console.log(movie.movieCasts);
 	return (
 		<section className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[360px_1fr] gap-8 md:gap-10 pb-12">
 			{/* Poster */}
 			<div className="relative rounded-[18px] overflow-hidden bg-gradient-to-br from-brand-softer to-brand-soft aspect-[2/3] flex items-center justify-center">
 				{movie.posterImage ? (
-					<Image src={movie.posterImage} alt={movie.title} fill className="object-cover" />
+					<Image
+						src={movie.posterImage}
+						alt={movie.title}
+						fill
+						sizes="(max-width: 768px) 100vw, 360px"
+						className="object-cover"
+					/>
 				) : (
 					<div className="w-40 h-40 rounded-full bg-brand/40" />
 				)}
@@ -109,23 +117,24 @@ const MovieDetailHero = ({ movie }: Props) => {
 					)}
 				</div>
 
-				{/* Cast */}
-				{movie.movieCasts && movie.movieCasts.length > 0 && (
-					<div>
-						<p className="text-[11px] font-bold tracking-[0.14em] text-text-muted uppercase mb-3">Director & Cast</p>
-						<div className="flex flex-wrap gap-2">
-							{/* Director */}
-							<div className="flex items-center gap-2 px-3 py-2 bg-ink text-white rounded-full text-[13px] font-medium">
+				{/* Director & Cast */}
+				<div>
+					<p className="text-[11px] font-bold tracking-[0.14em] text-text-muted uppercase mb-3">Director & Cast</p>
+					<div className="flex flex-wrap gap-2">
+						{[
+							<div
+								key="director"
+								className="flex items-center gap-2 px-3 py-2 bg-ink text-white rounded-full text-[13px] font-medium"
+							>
 								<div className="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center text-[10px] font-bold">
 									{movie.director?.slice(0, 2).toUpperCase()}
 								</div>
 								{movie.director} · Director
-							</div>
-							{/* Cast */}
-							{movie.movieCasts.map((c, i) => (
+							</div>,
+							...(movie.movieCasts?.map((c, i) => (
 								<div
-									key={c.id}
-									className="flex items-center gap-2 px-3 py-2 bg-white border border-line-2 rounded-full text-[13px] text-ink"
+									key={c.castMemberId}
+									className="flex items-center gap-2 px-3 py-2 bg-white border border-line-2 rounded-full text-[13px] text-ink }"
 								>
 									<div
 										className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-white"
@@ -135,10 +144,10 @@ const MovieDetailHero = ({ movie }: Props) => {
 									</div>
 									{c.castMember?.name}
 								</div>
-							))}
-						</div>
+							)) ?? []),
+						]}
 					</div>
-				)}
+				</div>
 			</div>
 		</section>
 	);

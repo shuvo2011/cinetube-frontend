@@ -28,17 +28,20 @@ export interface IMovie {
 		};
 	}[];
 	movieCasts?: {
-		id: string;
+		castMemberId: string;
+		movieId: string;
 		castMember: {
 			id: string;
 			name: string;
 		};
 	}[];
 }
+
 interface IPlatform {
 	id: string;
 	name: string;
 }
+
 interface IGenre {
 	id: string;
 	name: string;
