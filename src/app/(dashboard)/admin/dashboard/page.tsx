@@ -1,7 +1,9 @@
-import React from "react";
+import AdminDashboardClient from "@/components/modules/AdminDashboardClient/AdminDashboardClient";
+
+export const dynamic = "force-dynamic";
 
 const AdminDashboardPage = () => {
-	return <div>AdminDashboardPage</div>;
+	return <AdminDashboardClient />;
 };
 
 export default AdminDashboardPage;
