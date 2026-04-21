@@ -2,14 +2,15 @@ import Link from "next/link";
 import {
 	HelpCircle,
 	Mail,
-	MessageCircle,
 	FileText,
 	Clock,
 	ShieldCheck,
 	ArrowRight,
+	Globe,
 	Phone,
-	Star,
 	PlayCircle,
+	Star,
+	MapPin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -114,15 +115,6 @@ const contactMethods = [
 		iconColor: "text-[#EF4C5C]",
 	},
 	{
-		icon: MessageCircle,
-		title: "Live Chat",
-		info: "24/7 Availability",
-		action: "#",
-		buttonText: "Start Chat",
-		color: "bg-[#DDF4E5]",
-		iconColor: "text-[#16A34A]",
-	},
-	{
 		icon: Phone,
 		title: "Phone Support",
 		info: "+1 (800) 123-4567",
@@ -130,6 +122,25 @@ const contactMethods = [
 		buttonText: "Call Us",
 		color: "bg-[#FDF1D5]",
 		iconColor: "text-[#D97706]",
+	},
+	{
+		icon: MapPin,
+		title: "Visit Office",
+		info: "123 Cinema St, NY 10001",
+		action: "https://maps.google.com/?q=123+Cinema+St+NY",
+		buttonText: "Get Directions",
+		color: "bg-[#FCE7F3]",
+		iconColor: "text-[#BE185D]",
+		iconBg: "bg-[#FCE7F3]",
+	},
+	{
+		icon: Globe,
+		title: "Social Media",
+		info: "Follow @cinetube",
+		action: "https://twitter.com/cinetube",
+		buttonText: "Follow Us",
+		color: "bg-[#E0F2FE]",
+		iconColor: "text-[#0284C7]",
 	},
 ];
 
@@ -162,17 +173,9 @@ const SupportPage = () => {
 							size="lg"
 							className="bg-[#EF4C5C] hover:bg-[#DC3545] text-white rounded-[10px] px-6 font-semibold"
 						>
-							<Link href="#contact">
+							<Link href="/contact">
 								Contact Support <ArrowRight className="w-4 h-4 ml-1" />
 							</Link>
-						</Button>
-						<Button
-							asChild
-							size="lg"
-							variant="outline"
-							className="rounded-[10px] px-6 font-semibold border-[#EAEAEE] text-[#0F0F10]"
-						>
-							<Link href="#faq">Browse FAQs</Link>
 						</Button>
 					</div>
 				</div>
@@ -215,7 +218,7 @@ const SupportPage = () => {
 										variant="link"
 										className="text-[#EF4C5C] p-0 h-auto font-semibold text-[14px] justify-start"
 									>
-										<Link href="#">{category.buttonText} →</Link>
+										<Link href="/contact">{category.buttonText} →</Link>
 									</Button>
 								</div>
 							);
@@ -236,7 +239,7 @@ const SupportPage = () => {
 						</div>
 						<p className="text-[15px] text-[#6B6B73] max-w-xs text-right">
 							Still have questions?{" "}
-							<Link href="#contact" className="text-[#EF4C5C] font-semibold hover:underline">
+							<Link href="/contact" className="text-[#EF4C5C] font-semibold hover:underline">
 								Contact us →
 							</Link>
 						</p>
@@ -305,7 +308,7 @@ const SupportPage = () => {
 							size="lg"
 							className="bg-white text-[#EF4C5C] hover:bg-[#FAFAFA] rounded-[10px] px-6 font-semibold"
 						>
-							<Link href="/register">Create Support Ticket</Link>
+							<Link href="/contact">Contact Us</Link>
 						</Button>
 						<Button
 							asChild
@@ -313,7 +316,7 @@ const SupportPage = () => {
 							variant="outline"
 							className="border-white/40 text-white bg-transparent hover:bg-white/10 rounded-[10px] px-6 font-semibold"
 						>
-							<Link href="/faq">Read Full FAQ</Link>
+							<Link href="/terms">Terms</Link>
 						</Button>
 					</div>
 				</div>

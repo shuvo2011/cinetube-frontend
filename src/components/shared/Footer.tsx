@@ -4,7 +4,7 @@ import Link from "next/link";
 const footerLinks = {
 	browse: [
 		{ label: "Movies", href: "/movies" },
-		{ label: "Series", href: "/series" },
+		{ label: "New Added", href: "/movies?sortBy=createdAt&sortOrder=desc" },
 		{ label: "Top Rated", href: "/movies?sort=rating&sortBy=averageRating&sortOrder=desc" },
 		{ label: "New Releases", href: "/movies?sort=rating&sortBy=releaseYear&sortOrder=desc" },
 	],
@@ -82,7 +82,9 @@ const Footer = () => {
 				{/* Bottom */}
 				<div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-line-2 mt-10 pt-6">
 					<span className="text-xs text-text-subtle">© {new Date().getFullYear()} CineTube. All rights reserved.</span>
-					<span className="text-xs text-text-subtle">Terms &amp; Conditions · Privacy &amp; Policy</span>
+					<span className="text-xs text-text-subtle">
+						<Link href="/terms">Terms &amp; Conditions</Link> · <Link href="/privacy">Privacy &amp; Policy</Link>
+					</span>
 				</div>
 			</div>
 		</footer>

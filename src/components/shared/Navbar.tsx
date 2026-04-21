@@ -14,6 +14,8 @@ import { logout } from "@/services/auth.services";
 const navLinks = [
 	{ label: "Home", href: "/" },
 	{ label: "Movies", href: "/movies" },
+	{ label: "About", href: "/about" },
+	{ label: "Contact", href: "/contact" },
 ];
 
 interface NavbarProps {
