@@ -20,9 +20,7 @@ export const registerAction = async (payload: IRegisterPayload): Promise<IRegist
 
 	try {
 		const response = await httpClient.post<IRegisterResponse>("/auth/register", parsedPayload.data);
-
 		const { user } = response.data;
-
 		redirect(`/verify-email?email=${user.email}`);
 	} catch (error: any) {
 		if (

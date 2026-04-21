@@ -39,6 +39,51 @@ export const changeEmail = async (payload: { newEmail: string }): Promise<ApiRes
 	}
 };
 
+// ── Admin user management ──────────────────────────────────────────────────
+
+export interface IAdminUser {
+	id: string;
+	name: string;
+	email: string;
+	image: string | null;
+	role: "USER" | "ADMIN" | "SUPER_ADMIN";
+	status: "ACTIVE" | "BLOCKED" | "DELETED";
+	emailVerified: boolean;
+	subscriptionStatus: string;
+	createdAt: string;
+	isDeleted: boolean;
+}
+
+export const getAllUsers = async (queryString?: string): Promise<ApiResponse<IAdminUser[]>> => {
+	try {
+		return await httpClient.get<IAdminUser[]>(queryString ? `/users?${queryString}` : "/users");
+	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const e: any = error;
+		throw new Error(e?.response?.data?.message ?? e?.message ?? "Error fetching users");
+	}
+};
+
+export const changeUserStatus = async (userId: string, status: string): Promise<ApiResponse<any>> => {
+	try {
+		return await httpClient.patch<any>("/users/change-user-status", { userId, status });
+	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const e: any = error;
+		throw new Error(e?.response?.data?.message ?? e?.message ?? "Error changing status");
+	}
+};
+
+export const changeUserRole = async (userId: string, role: string): Promise<ApiResponse<any>> => {
+	try {
+		return await httpClient.patch<any>("/users/change-user-role", { userId, role });
+	} catch (error) {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const e: any = error;
+		throw new Error(e?.response?.data?.message ?? e?.message ?? "Error changing role");
+	}
+};
+
 export const changeEmailAndLogout = async (newEmail: string): Promise<void> => {
 	try {
 		await httpClient.patch<any>("/users/change-email", { newEmail });

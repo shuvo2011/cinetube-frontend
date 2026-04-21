@@ -16,6 +16,10 @@ import {
 	Bookmark,
 	Receipt,
 	LucideIcon,
+	MessageCircle,
+	UserStar,
+	Tags,
+	ClipboardList,
 } from "lucide-react";
 
 export type NavItem = {
@@ -43,22 +47,26 @@ export const adminNavSections: NavSection[] = [
 		title: "Content",
 		items: [
 			{ title: "Movies & Series", href: "/admin/dashboard/movies", icon: Film },
+			{ title: "Movie Casts", href: "/admin/dashboard/cast-members", icon: UserStar },
 			{
 				title: "Reviews",
 				href: "/admin/dashboard/reviews",
 				icon: MessageSquare,
-				badge: 18,
-				badgeVariant: "red",
 			},
-			{ title: "Genres", href: "/admin/dashboard/genres", icon: Tag },
+			{
+				title: "Comments",
+				href: "/admin/dashboard/comments",
+				icon: MessageCircle,
+			},
+			{ title: "Genres", href: "/admin/dashboard/genres", icon: ClipboardList },
 			{ title: "Platforms", href: "/admin/dashboard/platforms", icon: Globe },
+			{ title: "Tags", href: "/admin/dashboard/tags", icon: Tags },
 		],
 	},
 	{
 		title: "Users",
 		items: [
 			{ title: "All Users", href: "/admin/dashboard/users", icon: Users },
-			{ title: "Admins", href: "/admin/dashboard/admins", icon: ShieldCheck },
 			{ title: "Watchlists", href: "/admin/dashboard/watchlists", icon: Heart },
 		],
 	},
@@ -77,15 +85,11 @@ export const adminNavSections: NavSection[] = [
 				href: "/admin/dashboard/subscriptions",
 				icon: BadgeDollarSign,
 			},
-			{ title: "Analytics", href: "/admin/dashboard/analytics", icon: BarChart2 },
 		],
 	},
 	{
 		title: "Settings",
-		items: [
-			{ title: "Site Settings", href: "/admin/dashboard/settings", icon: Settings },
-			{ title: "My Profile", href: "/admin/dashboard/profile", icon: User },
-		],
+		items: [{ title: "My Profile", href: "/admin/dashboard/profile", icon: User }],
 	},
 ];
 

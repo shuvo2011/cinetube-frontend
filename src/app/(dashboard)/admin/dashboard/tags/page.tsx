@@ -1,8 +1,9 @@
 import { Suspense } from "react";
 import TagsTable from "@/components/modules/Tags/TagsTable";
 
-export default function TagsPage({ searchParams }: { searchParams: Record<string, string> }) {
-	const initialQueryString = new URLSearchParams(searchParams).toString();
+export default async function TagsPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
+	const resolvedParams = await searchParams;
+	const initialQueryString = new URLSearchParams(resolvedParams).toString();
 
 	return (
 		<div>

@@ -85,12 +85,20 @@ export async function proxy(request: NextRequest) {
 			return NextResponse.redirect(loginUrl);
 		}
 
-		// Rule-5: enforce email verification
+		// Rule-5: enforce email verification + blocked user logout
 		if (accessToken) {
 			const userInfo = await getUserInfo();
-			console.log("userInfo:", userInfo);
 			if (userInfo) {
-				console.log("emailVerified:", userInfo.emailVerified);
+				if (userInfo.status === "BLOCKED" || userInfo.isDeleted || userInfo.status === "DELETED") {
+					const loginUrl = new URL("/login", request.url);
+					const response = NextResponse.redirect(loginUrl);
+					response.cookies.delete("accessToken");
+					response.cookies.delete("refreshToken");
+					response.cookies.delete("better-auth.session_token");
+					response.cookies.delete("better-auth.session_data");
+					return response;
+				}
+
 				if (userInfo.emailVerified === false) {
 					if (pathname !== "/verify-email") {
 						const verifyEmailUrl = new URL("/verify-email", request.url);

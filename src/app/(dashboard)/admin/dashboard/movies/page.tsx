@@ -1,8 +1,9 @@
 import { Suspense } from "react";
 import MoviesTable from "@/components/modules/AdminMovies/MoviesTable";
 
-export default async function MoviesPage({ searchParams }: { searchParams: Record<string, string> }) {
-	const initialQueryString = new URLSearchParams(searchParams).toString();
+export default async function MoviesPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
+	const resolvedParams = await searchParams;
+	const initialQueryString = new URLSearchParams(resolvedParams).toString();
 
 	return (
 		<div>

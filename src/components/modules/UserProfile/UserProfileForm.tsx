@@ -162,7 +162,11 @@ const UserProfileForm = () => {
 						) : (
 							<div className="w-28 h-28 rounded-full bg-linear-to-br from-gray-100 to-gray-200 flex items-center justify-center text-lg font-bold text-gray-500">
 								{profile?.name
-									? profile.name.split(" ").map((n: string) => n[0]).slice(0, 2).join("")
+									? profile.name
+											.split(" ")
+											.map((n: string) => n[0])
+											.slice(0, 2)
+											.join("")
 									: "U"}
 							</div>
 						)}
@@ -185,30 +189,14 @@ const UserProfileForm = () => {
 						{!isImageUploading && !imageJustSaved && (
 							<label className="absolute inset-0 rounded-full flex items-center justify-center bg-black/0 hover:bg-black/40 transition-colors cursor-pointer group">
 								<Camera className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-								<input
-									ref={fileInputRef}
-									type="file"
-									accept="image/*"
-									className="hidden"
-									onChange={handleFileChange}
-								/>
+								<input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
 							</label>
 						)}
 					</div>
 
 					<p className="text-[11px] text-text-muted text-center">
-						{isImageUploading
-							? "Uploading..."
-							: imageJustSaved
-							? "Image saved!"
-							: "Click photo to change"}
+						{isImageUploading ? "Uploading..." : imageJustSaved ? "Image saved!" : "Click photo to change"}
 					</p>
-
-					{preview && !isImageUploading && (
-						<Button type="button" variant="ghost" size="sm" onClick={handleRemoveImage}>
-							Remove photo
-						</Button>
-					)}
 				</div>
 			</div>
 

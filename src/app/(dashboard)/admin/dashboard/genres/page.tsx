@@ -1,8 +1,9 @@
 import { Suspense } from "react";
 import GenresTable from "@/components/modules/Genres/GenresTable";
 
-export default function GenresPage({ searchParams }: { searchParams: Record<string, string> }) {
-	const initialQueryString = new URLSearchParams(searchParams).toString();
+export default async function GenresPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
+	const resolvedParams = await searchParams;
+	const initialQueryString = new URLSearchParams(resolvedParams).toString();
 
 	return (
 		<div>

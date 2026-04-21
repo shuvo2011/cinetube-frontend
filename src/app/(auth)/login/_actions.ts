@@ -26,7 +26,14 @@ export const loginAction = async (
 		const response = await httpClient.post<ILoginResponse>("/auth/login", parsedPayload.data);
 
 		const { accessToken, refreshToken, token, user } = response.data;
-		const { role, emailVerified, email } = user;
+		const { role, emailVerified, email, status } = user;
+
+		if (status === "BLOCKED") {
+			return {
+				success: false,
+				message: "Your account has been blocked. Please contact support for assistance.",
+			};
+		}
 
 		await setTokenInCookies("accessToken", accessToken);
 		await setTokenInCookies("refreshToken", refreshToken);
@@ -53,13 +60,19 @@ export const loginAction = async (
 			throw error;
 		}
 
-		if (error?.response?.data?.message === "Email not verified") {
+		const errMsg: string = error?.response?.data?.message || error?.message || "Login failed";
+
+		if (/blocked/i.test(errMsg)) {
+			return {
+				success: false,
+				message: "Your account has been blocked. Please contact support for assistance.",
+			};
+		}
+
+		if (errMsg === "Email not verified") {
 			redirect(`/verify-email?email=${payload.email}`);
 		}
 
-		return {
-			success: false,
-			message: error?.response?.data?.message || error.message || "Login failed",
-		};
+		return { success: false, message: errMsg };
 	}
 };
