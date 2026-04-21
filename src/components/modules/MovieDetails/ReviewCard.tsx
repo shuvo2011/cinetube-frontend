@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Heart } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { approveReview, deleteReview, updateReviewStatus } from "@/services/review.services";
+import { approveReview, deleteReview } from "@/services/review.services";
 import CommentSection from "@/components/modules/Comments/CommentSection";
 import Image from "next/image";
 

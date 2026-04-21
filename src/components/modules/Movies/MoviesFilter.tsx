@@ -34,7 +34,6 @@ const MoviesFilter = ({ genres, platforms, availableYears }: MoviesFilterProps) 
 	const currentGenre = searchParams.get("genreId") ?? "";
 	const currentPlatform = searchParams.get("platformId") ?? "";
 	const currentRating = searchParams.get("minRating") ?? "";
-	const currentYear = searchParams.get("releaseYear") ?? "";
 
 	const push = (params: URLSearchParams) => {
 		params.delete("page");

@@ -389,13 +389,13 @@ const AdminDashboardClient = () => {
 											/>
 											<span className="text-[11px] text-text-muted truncate">{item.genre}</span>
 										</div>
-										<span className="text-[11px] font-semibold text-ink flex-shrink-0">{pct}%</span>
+										<span className="text-[11px] font-semibold text-ink shrink-0">{pct}%</span>
 									</div>
 								);
 							})}
 							{(stats?.genreDistribution?.length ?? 0) > 5 && (
 								<div className="flex items-center gap-1.5">
-									<span className="w-2 h-2 rounded-full bg-text-subtle flex-shrink-0" />
+									<span className="w-2 h-2 rounded-full bg-text-subtle shrink-0" />
 									<span className="text-[11px] text-text-muted">Others</span>
 									<span className="text-[11px] font-semibold text-ink ml-auto">
 										{100 -
@@ -468,7 +468,7 @@ const AdminDashboardClient = () => {
 					</Link>
 				</div>
 				<div className="overflow-x-auto">
-					<table className="w-full min-w-[600px]">
+					<table className="w-full min-w-150">
 						<thead>
 							<tr className="border-b border-line">
 								{["User", "Movie", "Rating", "Submitted", "Status", "Actions"].map((h) => (
@@ -509,14 +509,12 @@ const AdminDashboardClient = () => {
 					<div className="space-y-3">
 						{(stats?.ratingReports.topRatedTitles ?? []).map((movie, i) => (
 							<div key={movie.id} className="flex items-center gap-3">
-								<span className="text-[13px] font-bold text-text-subtle w-5 flex-shrink-0">{i + 1}</span>
+								<span className="text-[13px] font-bold text-text-subtle w-5 shrink-0">{i + 1}</span>
 								<div className="flex-1 min-w-0">
 									<p className="text-[13px] font-medium text-ink truncate">{movie.title}</p>
 									<p className="text-[11px] text-text-muted">{fmt(movie.totalReviews)} reviews</p>
 								</div>
-								<span className="text-[13px] font-semibold text-ink flex-shrink-0">
-									★ {movie.averageRating?.toFixed(1)}
-								</span>
+								<span className="text-[13px] font-semibold text-ink shrink-0">★ {movie.averageRating?.toFixed(1)}</span>
 							</div>
 						))}
 						{(stats?.ratingReports.topRatedTitles?.length ?? 0) === 0 && (
@@ -536,7 +534,7 @@ const AdminDashboardClient = () => {
 					<div className="space-y-3">
 						{(stats?.paymentStats.monthlyRevenue ?? []).map((item) => (
 							<div key={item.month} className="flex items-center gap-3">
-								<span className="text-[12px] text-text-muted w-8 flex-shrink-0">{item.month.split(" ")[0]}</span>
+								<span className="text-[12px] text-text-muted w-8 shrink-0">{item.month.split(" ")[0]}</span>
 								<div className="flex-1 bg-line-2 rounded-full h-3 overflow-hidden">
 									<div
 										className="h-3 rounded-full bg-brand/70 transition-all"

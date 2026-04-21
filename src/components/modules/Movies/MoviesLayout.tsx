@@ -4,8 +4,8 @@ import { useState } from "react";
 import { Filter, X } from "lucide-react";
 import MoviesFilter from "./MoviesFilter";
 import ActiveFiltersBar from "./ActiveFiltersBar";
-import { IGenre } from "@/services/genre.services";
-import { IPlatform } from "@/services/platform.services";
+import { IGenre } from "@/types/genre.types";
+import { IPlatform } from "@/types/platform.types";
 
 interface MoviesLayoutProps {
 	genres: IGenre[];
@@ -19,9 +19,9 @@ const MoviesLayout = ({ genres, platforms, availableYears, children }: MoviesLay
 	const [filterOpen, setFilterOpen] = useState(false);
 
 	return (
-		<div className="w-full max-w-[1400px] mx-auto px-6 md:px-10 py-10">
+		<div className="w-full max-w-350 mx-auto px-6 md:px-10 py-10">
 			<div className="grid grid-cols-1 lg:grid-cols-[240px_minmax(0,1fr)] gap-10 items-start">
-				<div className="sticky top-[80px] self-start hidden lg:block">
+				<div className="sticky top-20 self-start hidden lg:block">
 					<MoviesFilter genres={genres} platforms={platforms} availableYears={availableYears} />
 				</div>
 
@@ -46,7 +46,7 @@ const MoviesLayout = ({ genres, platforms, availableYears, children }: MoviesLay
 				<div className="fixed inset-0 z-50 lg:hidden">
 					<div className="absolute inset-0 bg-black/40" onClick={() => setFilterOpen(false)} />
 
-					<div className="absolute left-0 top-0 h-full w-[300px] bg-white overflow-y-auto p-6">
+					<div className="absolute left-0 top-0 h-full w-75 bg-white overflow-y-auto p-6">
 						<div className="flex items-center justify-between mb-6">
 							<p className="font-bold text-ink text-[16px]">Filters</p>
 							<button onClick={() => setFilterOpen(false)}>

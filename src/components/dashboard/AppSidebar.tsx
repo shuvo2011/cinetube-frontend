@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { adminNavSections, userNavSections } from "@/lib/dashboardNavItems";
-import { LogOut, Play, X } from "lucide-react";
+import { LogOut, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Logo from "../shared/Logo/Logo";
 import { logout } from "@/services/auth.services";
@@ -55,7 +55,7 @@ export default function AppSidebar({ role, userName, userEmail, open, onClose }:
 
 			<aside
 				className={cn(
-					"fixed left-0 top-0 z-50 flex h-screen w-[260px] flex-col border-r border-gray-100 bg-white transition-transform duration-300",
+					"fixed left-0 top-0 z-50 flex h-screen w-65 flex-col border-r border-gray-100 bg-white transition-transform duration-300",
 
 					open ? "translate-x-0" : "-translate-x-full",
 

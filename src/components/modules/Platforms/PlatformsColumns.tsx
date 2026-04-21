@@ -11,7 +11,6 @@ export const platformsColumns: ColumnDef<IPlatform>[] = [
 		header: "Platform",
 		cell: ({ row }) => {
 			const { name, logo } = row.original;
-			const initial = name.charAt(0).toUpperCase();
 
 			return (
 				<div className="flex items-center gap-3">

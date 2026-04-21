@@ -7,7 +7,6 @@ import {
 	Heart,
 	CreditCard,
 	User,
-	Star,
 	Bookmark,
 	Receipt,
 	LucideIcon,
@@ -85,10 +84,7 @@ export const userNavSections: NavSection[] = [
 	},
 	{
 		title: "My Activity",
-		items: [
-			{ title: "My Reviews", href: "/dashboard/my-reviews", icon: Star },
-			{ title: "Watchlist", href: "/dashboard/watchlist", icon: Bookmark },
-		],
+		items: [{ title: "Watchlist", href: "/dashboard/watchlist", icon: Bookmark }],
 	},
 	{
 		title: "Billing",

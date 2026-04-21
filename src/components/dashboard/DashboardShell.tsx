@@ -30,7 +30,7 @@ export default function DashboardShell({ role, userName, userEmail, children }: 
 				onClose={() => setSidebarOpen(false)}
 			/>
 
-			<div className="flex min-h-screen w-full flex-col lg:ml-[260px]">
+			<div className="flex min-h-screen w-full flex-col lg:ml-65">
 				<AppHeader
 					role={role}
 					userName={liveUserName}

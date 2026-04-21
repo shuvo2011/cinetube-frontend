@@ -39,7 +39,7 @@ const HeroSection = ({ movies }: HeroSectionProps) => {
 							Favorite <em className="not-italic text-brand">Films</em>
 						</h1>
 
-						<p className="text-[17px] text-text-muted max-w-[520px] mb-8 leading-relaxed">
+						<p className="text-[17px] text-text-muted max-w-130 mb-8 leading-relaxed">
 							Discover thousands of movies and series. Read community reviews, write your own, and stream premium
 							content — all in one place.
 						</p>

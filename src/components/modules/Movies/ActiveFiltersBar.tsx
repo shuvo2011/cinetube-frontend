@@ -1,7 +1,6 @@
 "use client";
-
-import { IGenre } from "@/services/genre.services";
-import { IPlatform } from "@/services/platform.services";
+import { IGenre } from "@/types/genre.types";
+import { IPlatform } from "@/types/platform.types";
 import { X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 

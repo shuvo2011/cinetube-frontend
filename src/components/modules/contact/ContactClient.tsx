@@ -212,7 +212,7 @@ const ContactClient = () => {
 								return (
 									<div key={item.label} className={`${item.bg} rounded-[14px] p-6 flex items-start gap-4`}>
 										<div
-											className={`w-11 h-11 rounded-[10px] ${item.iconBg} ${item.iconColor} flex items-center justify-center flex-shrink-0`}
+											className={`w-11 h-11 rounded-[10px] ${item.iconBg} ${item.iconColor} flex items-center justify-center shrink-0`}
 										>
 											<Icon className="w-5 h-5" />
 										</div>
