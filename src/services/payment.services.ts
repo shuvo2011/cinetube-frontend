@@ -1,5 +1,6 @@
 "use server";
 
+import { ApiResponse } from "@/types/api.types";
 import { httpClient } from "@/lib/axios/httpClient";
 
 export interface IMovieAccess {
@@ -29,6 +30,25 @@ export interface IPayment {
 	createdAt: string;
 	movie: IPaymentMovie | null;
 }
+
+export interface IAdminPayment extends IPayment {
+	userId: string;
+	gateway: string;
+	stripeCustomerId: string | null;
+	subscriptionId: string | null;
+	invoiceUrl: string | null;
+	updatedAt: string;
+	user: {
+		id: string;
+		name: string;
+		email: string;
+	};
+}
+
+export const getAllPayments = async (queryString: string): Promise<ApiResponse<IAdminPayment[]>> => {
+	const endpoint = queryString ? `/payments?${queryString}` : "/payments";
+	return httpClient.get<IAdminPayment[]>(endpoint);
+};
 
 export const getMyPayments = async (): Promise<IPayment[]> => {
 	try {

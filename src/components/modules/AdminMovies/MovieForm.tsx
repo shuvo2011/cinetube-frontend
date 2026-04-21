@@ -100,6 +100,25 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 		}
 	}, [mode, movie]);
 
+	const resetForm = () => {
+		setTitle("");
+		setSynopsis("");
+		setReleaseYear("");
+		setDirector("");
+		setTrailerUrl("");
+		setStreamingUrl("");
+		setRentPrice("");
+		setBuyPrice("");
+		setRentDuration("");
+		setIsFeatured(false);
+		setPosterPreview(null);
+		setPosterFile(null);
+		setSelectedGenreIds([]);
+		setSelectedPlatformIds([]);
+		setSelectedCastIds([]);
+		setErrors({});
+	};
+
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const file = e.target.files?.[0];
 		if (!file) return;
@@ -171,6 +190,9 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 			}
 			toast.success(result.message || `Movie ${mode === "create" ? "created" : "updated"} successfully.`);
 			await queryClient.invalidateQueries({ queryKey: ["movies"] });
+			if (mode === "create") {
+				resetForm();
+			}
 			// router.push("/admin/dashboard/movies");
 		} catch {
 			/* onError handles it */
@@ -351,7 +373,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 							<Label>Rent Price</Label>
 							<Input
 								type="number"
-								placeholder="0"
+								placeholder="Add 65+ BDT for rental price"
 								value={rentPrice}
 								onChange={(e) => {
 									setRentPrice(e.target.value);
@@ -366,7 +388,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 							<Label>Buy Price</Label>
 							<Input
 								type="number"
-								placeholder="0"
+								placeholder="Add 65+ BDT for Buy Price"
 								value={buyPrice}
 								onChange={(e) => {
 									setBuyPrice(e.target.value);
