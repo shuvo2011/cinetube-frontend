@@ -5,14 +5,14 @@ const footerLinks = {
 	browse: [
 		{ label: "Movies", href: "/movies" },
 		{ label: "Series", href: "/series" },
-		{ label: "Top Rated", href: "/movies?sort=rating" },
-		{ label: "New Releases", href: "/movies?sort=newest" },
+		{ label: "Top Rated", href: "/movies?sort=rating&sortBy=averageRating&sortOrder=desc" },
+		{ label: "New Releases", href: "/movies?sort=rating&sortBy=releaseYear&sortOrder=desc" },
 	],
 	account: [
 		{ label: "Sign Up", href: "/register" },
 		{ label: "Login", href: "/login" },
-		{ label: "Dashboard", href: "/dashboard" },
-		{ label: "Watchlist", href: "/dashboard/watchlist" },
+		{ label: "Forgot Password", href: "/forgot-password" },
+		{ label: "Support", href: "/support" },
 	],
 	company: [
 		{ label: "About Us", href: "/about" },

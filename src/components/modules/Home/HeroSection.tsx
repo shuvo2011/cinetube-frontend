@@ -58,7 +58,7 @@ const HeroSection = ({ movies }: HeroSectionProps) => {
 								Explore Now →
 							</Link>
 							<Link
-								href="#how-it-works"
+								href="/how-it-works"
 								className="inline-flex items-center gap-2 bg-white hover:bg-line-2 text-ink font-semibold text-sm px-6 py-3 rounded-[10px] border border-line transition-colors"
 							>
 								How it works
