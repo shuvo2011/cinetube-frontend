@@ -14,7 +14,6 @@ import { logout } from "@/services/auth.services";
 const navLinks = [
 	{ label: "Home", href: "/" },
 	{ label: "Movies", href: "/movies" },
-	{ label: "Series", href: "/series" },
 ];
 
 interface NavbarProps {
@@ -34,8 +33,12 @@ const Navbar = ({ userInfo }: NavbarProps) => {
 	const inputRef = useRef<HTMLInputElement>(null);
 	const [dropdownOpen, setDropdownOpen] = useState(false);
 	const dropdownRef = useRef<HTMLDivElement>(null);
+
 	const dashboardRoute =
 		userInfo?.role === "ADMIN" || userInfo?.role === "SUPER_ADMIN" ? "/admin/dashboard" : "/dashboard";
+
+	const profileRoute =
+		userInfo?.role === "ADMIN" || userInfo?.role === "SUPER_ADMIN" ? "/admin/dashboard/profile" : "/dashboard/profile";
 
 	const handleSearch = (e: React.FormEvent) => {
 		e.preventDefault();
@@ -138,7 +141,7 @@ const Navbar = ({ userInfo }: NavbarProps) => {
 												Dashboard
 											</Link>
 											<Link
-												href="/profile"
+												href={profileRoute}
 												onClick={() => setDropdownOpen(false)}
 												className="flex items-center gap-2.5 px-4 py-2 text-[13px] text-text-base hover:bg-line-2 hover:text-ink transition-colors"
 											>

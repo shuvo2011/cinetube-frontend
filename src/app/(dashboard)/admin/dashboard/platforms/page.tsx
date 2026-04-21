@@ -1,6 +1,12 @@
 import { Suspense } from "react";
 import PlatformsTable from "@/components/modules/Platforms/PlatformsTable";
 
+export const metadata = {
+	title: "Platforms - Manage Streaming Services - CineTube Admin",
+	description:
+		"Manage streaming platforms where movies and series are available. Add, edit, or remove platforms like YouTube, Chorki, Netflix, Amazon Prime, and more on CineTube.",
+};
+
 export default async function PlatformsPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
 	const resolvedParams = await searchParams;
 	const initialQueryString = new URLSearchParams(resolvedParams).toString();

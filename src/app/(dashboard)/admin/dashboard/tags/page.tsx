@@ -1,6 +1,12 @@
 import { Suspense } from "react";
 import TagsTable from "@/components/modules/Tags/TagsTable";
 
+export const metadata = {
+	title: "Tags - Manage Content Labels | CineTube Admin",
+	description:
+		"Manage tags for movies and TV series. Add, edit, or delete content tags. Organize content with labels like trending, recommended, new release, popular, and more on CineTube.",
+};
+
 export default async function TagsPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
 	const resolvedParams = await searchParams;
 	const initialQueryString = new URLSearchParams(resolvedParams).toString();

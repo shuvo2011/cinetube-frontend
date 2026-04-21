@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 import { IMovie } from "@/types/movie.types";
-import { Heart } from "lucide-react";
+import { BookmarkCheck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -87,8 +87,8 @@ const MovieCard = ({ movie, index }: MovieCardProps) => {
 						{movie.totalReviews ? <span className="text-[11px] text-text-subtle">({movie.totalReviews})</span> : null}
 					</div>
 					<div className="flex items-center gap-1 text-[12px] text-brand font-medium">
-						<Heart size={11} className="fill-brand" />
-						<span>{movie.totalLikes ?? 0}</span>
+						<BookmarkCheck size={11} className="text-brand" />
+						<span>{movie?._count?.watchlists ?? 0}</span>
 					</div>
 				</div>
 			</div>

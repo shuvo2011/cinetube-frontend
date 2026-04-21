@@ -1,6 +1,10 @@
 import { Suspense } from "react";
 import AdminUsersTable from "@/components/modules/AdminUsers/AdminUsersTable";
-
+export const metadata = {
+	title: "Users - Manage User Accounts | CineTube Admin",
+	description:
+		"Manage all user accounts on CineTube. View, edit, suspend, or delete users. Track user activity, ratings, reviews, and subscription status.",
+};
 export default async function AdminUsersPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
 	const resolvedParams = await searchParams;
 	const initialQueryString = new URLSearchParams(resolvedParams).toString();

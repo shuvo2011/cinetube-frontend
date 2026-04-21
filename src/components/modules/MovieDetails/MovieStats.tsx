@@ -11,7 +11,7 @@ const MovieStats = ({ movie }: Props) => (
 			{[
 				{ n: movie.averageRating ? movie.averageRating.toFixed(1) : "N/A", l: "Avg Rating" },
 				{ n: movie.totalReviews ?? 0, l: "Reviews" },
-				{ n: movie.totalLikes ?? 0, l: "Total Likes" },
+				{ n: movie?._count?.watchlists ?? 0, l: "Watchlists" },
 			].map(({ n, l }) => (
 				<div key={l} className="bg-bg-2 rounded-[10px] p-3 text-center">
 					<div className="text-[20px] font-black text-ink">{n}</div>

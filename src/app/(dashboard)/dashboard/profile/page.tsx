@@ -1,7 +1,10 @@
-"use client";
-
-import React, { useState, useEffect, useRef } from "react";
 import UserProfileForm from "@/components/modules/UserProfile/UserProfileForm";
+
+export const metadata = {
+	title: "My Profile - Account Settings | CineTube",
+	description:
+		"Manage your CineTube profile. Update personal information, change password, upload profile picture, and customize your account preferences.",
+};
 
 const DashboardProfilePage = () => {
 	return (

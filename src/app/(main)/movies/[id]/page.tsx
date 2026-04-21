@@ -6,7 +6,7 @@ import WriteReviewForm from "@/components/modules/MovieDetails/WriteReviewForm";
 import ReviewList from "@/components/modules/MovieDetails/ReviewList";
 import RentBuyCard from "@/components/modules/MovieDetails/RentBuyCard";
 import { getMovieById } from "@/services/movie.services";
-import { getReviewsByMovie } from "@/services/review.services";
+import { getReviewsByMovie, getMyReviewForMovie, getPendingReviewsForMovie } from "@/services/review.services";
 import { getUserInfo } from "@/services/auth.services";
 import { checkMovieAccess } from "@/services/payment.services";
 import { isMovieInWatchlist } from "@/services/watchlist.services";
@@ -16,6 +16,16 @@ import { getTags } from "@/services/tag.services";
 import EditReviewForm from "@/components/modules/MovieDetails/EditReviewForm";
 
 export const dynamic = "force-dynamic";
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+	const { id } = await params;
+	const res = await getMovieById(id);
+	const movie = res?.data;
+
+	return {
+		title: movie ? `${movie.title} (${movie.releaseYear}) — CineTube` : "Movie Details — CineTube",
+		description: movie?.synopsis ?? `Watch reviews, ratings, and details for ${movie?.title} on CineTube.`,
+	};
+}
 
 interface MovieDetailsPageProps {
 	params: Promise<{ id: string }>;
@@ -37,18 +47,35 @@ const MovieDetailsPage = async ({ params, searchParams }: MovieDetailsPageProps)
 	if (!movieRes?.data) return notFound();
 
 	const movie = movieRes.data;
-	const reviews = reviewsRes.data ?? [];
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const publishedReviews: any[] = reviewsRes.data ?? [];
 	const reviewMeta = reviewsRes.meta;
 
-	const existingReview = reviews.find((r: any) => r.userId === user?.id);
+	const isAdmin = user?.role === "ADMIN" || user?.role === "SUPER_ADMIN";
+
+	const [myReview, pendingReviews] = await Promise.all([
+		user && !isAdmin ? getMyReviewForMovie(id) : Promise.resolve(null),
+		isAdmin ? getPendingReviewsForMovie(id) : Promise.resolve([]),
+	]);
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const publishedIds = new Set(publishedReviews.map((r: any) => r.id));
+	const extraReviews = isAdmin
+		? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+			(pendingReviews as any[]).filter((r: any) => !publishedIds.has(r.id))
+		: myReview && !publishedIds.has(myReview.id)
+			? [myReview]
+			: [];
+	const reviews = [...extraReviews, ...publishedReviews];
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const existingReview = myReview ?? reviews.find((r: any) => r.userId === user?.id);
 	const hasReviewed = !!existingReview;
 
 	const [access, inWatchlist] = await Promise.all([
 		movie.pricingType === "PREMIUM" && user ? checkMovieAccess(id) : Promise.resolve(null),
 		user ? isMovieInWatchlist(id) : Promise.resolve(false),
 	]);
-
-	// console.log("movie", movie);
 
 	return (
 		<div className="bg-bg-2 min-h-screen">
@@ -79,9 +106,7 @@ const MovieDetailsPage = async ({ params, searchParams }: MovieDetailsPageProps)
 
 					{/* Sidebar */}
 					<div className="space-y-5">
-						{movie.pricingType === "PREMIUM" && (
-							<RentBuyCard movie={movie} access={access} isLoggedIn={!!user} />
-						)}
+						{movie.pricingType === "PREMIUM" && <RentBuyCard movie={movie} access={access} isLoggedIn={!!user} />}
 						<MovieInfo movie={movie} />
 						<MovieStats movie={movie} />
 						<SimilarMovies genres={movie.genres} currentId={movie.id} />

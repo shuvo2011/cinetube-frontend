@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Bell, Search, Settings, ChevronDown, User, LogOut, Menu } from "lucide-react";
+import { Settings, ChevronDown, User, LogOut, Menu } from "lucide-react";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -11,7 +11,6 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { adminNavSections, userNavSections } from "@/lib/dashboardNavItems";
 import { cn } from "@/lib/utils";
@@ -45,7 +44,6 @@ export default function AppHeader({ role, userName, userEmail, onMenuClick }: Pr
 	const pathname = usePathname();
 	const router = useRouter();
 	const { title, sub } = getPageTitle(pathname, role);
-	const [search, setSearch] = useState("");
 
 	const initials = userName
 		.split(" ")
@@ -80,16 +78,6 @@ export default function AppHeader({ role, userName, userEmail, onMenuClick }: Pr
 				</h1>
 			</div>
 			{/* Settings — hidden on mobile */}
-			<Button
-				variant="ghost"
-				size="icon"
-				className="hidden h-9 w-9 rounded-lg bg-gray-50 hover:bg-gray-100 sm:flex"
-				asChild
-			>
-				<Link href={settingsHref}>
-					<Settings className="h-4 w-4 text-gray-500" />
-				</Link>
-			</Button>
 
 			{/* Profile dropdown */}
 			<DropdownMenu>
@@ -118,12 +106,6 @@ export default function AppHeader({ role, userName, userEmail, onMenuClick }: Pr
 						<Link href={profileHref} className="flex cursor-pointer items-center gap-2 text-[13px]">
 							<User className="h-4 w-4" />
 							My Profile
-						</Link>
-					</DropdownMenuItem>
-					<DropdownMenuItem asChild>
-						<Link href={settingsHref} className="flex cursor-pointer items-center gap-2 text-[13px]">
-							<Settings className="h-4 w-4" />
-							Settings
 						</Link>
 					</DropdownMenuItem>
 					<DropdownMenuSeparator />

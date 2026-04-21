@@ -37,6 +37,7 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
 					return;
 				}
 			} catch (error: any) {
+				if (error?.digest?.startsWith("NEXT_REDIRECT")) return;
 				setServerError(error.message || "Login failed");
 			}
 		},

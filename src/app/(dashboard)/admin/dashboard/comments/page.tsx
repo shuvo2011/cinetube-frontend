@@ -1,5 +1,11 @@
 import AdminCommentsTable from "@/components/modules/AdminComments/AdminCommentsTable";
 
+export const metadata = {
+	title: "Comments - Moderate User Reviews - CineTube Admin",
+	description:
+		"Moderate user comments and reviews on movies and series. Approve, flag, or delete inappropriate content. Manage community discussions on CineTube.",
+};
+
 export const dynamic = "force-dynamic";
 
 interface Props {

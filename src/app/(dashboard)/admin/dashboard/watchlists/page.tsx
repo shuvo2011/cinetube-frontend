@@ -1,5 +1,11 @@
 import WatchlistTable from "@/components/modules/Watchlist/WatchlistTable";
 
+export const metadata = {
+	title: "Watchlists - Manage User Watchlists | CineTube Admin",
+	description:
+		"View and manage user watchlists. Track what movies and series users are saving for later. Monitor popular content and user engagement on CineTube.",
+};
+
 export const dynamic = "force-dynamic";
 
 interface Props {

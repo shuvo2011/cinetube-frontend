@@ -8,6 +8,12 @@ import TopRatedSection from "@/components/modules/Home/TopRatedSection";
 import PricingSection from "@/components/modules/Home/PricingSection";
 import CTASection from "@/components/modules/Home/CTASection";
 
+export const metadata = {
+	title: "CineTube - Discover, Rate & Review Movies and TV Series",
+	description:
+		"Join CineTube to explore thousands of movies and TV series. Rate titles on a 1-10 scale, write reviews, and engage with a passionate community of fellow cinephiles.",
+};
+
 const HomePage = async () => {
 	const [featuredRes, latestRes, topRatedRes, user] = await Promise.all([
 		getMovies(`isFeatured=true&limit=${HOME_HERO_LIMIT}`),

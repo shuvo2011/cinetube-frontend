@@ -1,6 +1,12 @@
 import AdminPaymentsTable from "@/components/modules/AdminPayments/AdminPaymentsTable";
 import { Suspense } from "react";
 
+export const metadata = {
+	title: "Payments & Transactions | CineTube Admin",
+	description:
+		"View and manage all user payments. Track monthly and yearly subscriptions, movie rentals, purchases, and transaction history on CineTube.",
+};
+
 export default async function AdminDashboardPaymentsPage({
 	searchParams,
 }: {

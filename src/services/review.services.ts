@@ -63,6 +63,25 @@ export const getReviewsByMovie = async (movieId: string, page = 1) => {
 	}
 };
 
+export const getMyReviewForMovie = async (movieId: string) => {
+	try {
+		const result = await httpClient.get<any>(`/reviews/my/reviews?movieId=${movieId}&limit=1`);
+		const list = Array.isArray(result.data) ? result.data : (result.data?.data ?? []);
+		return list[0] ?? null;
+	} catch {
+		return null;
+	}
+};
+
+export const getPendingReviewsForMovie = async (movieId: string) => {
+	try {
+		const result = await httpClient.get<any>(`/reviews?movieId=${movieId}&status=PENDING&limit=100`);
+		return Array.isArray(result.data) ? result.data : (result.data?.data ?? []);
+	} catch {
+		return [];
+	}
+};
+
 export const approveReview = async (id: string, status: string) => {
 	try {
 		const result = await httpClient.patch(`/reviews/${id}/status`, { status });

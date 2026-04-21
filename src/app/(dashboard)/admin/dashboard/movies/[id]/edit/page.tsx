@@ -10,6 +10,19 @@ interface EditMoviePageProps {
 	params: Promise<{ id: string }>;
 }
 
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
+	const { id } = await params;
+	const res = await getMovieById(id);
+	const movie = res?.data;
+
+	return {
+		title: movie
+			? `Edit Movie ${movie.title} (${movie.releaseYear}) — CineTube Admin`
+			: "Edit Movie - Update Media Entry | CineTube Admin",
+		description: `Edit existing movie details. Update title, release year, genre, cast, ratings, description, poster image, and availability status on CineTube.`,
+	};
+}
+
 const EditMoviePage = async ({ params }: EditMoviePageProps) => {
 	const { id } = await params;
 

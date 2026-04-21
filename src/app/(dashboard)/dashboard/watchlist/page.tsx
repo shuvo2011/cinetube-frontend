@@ -1,5 +1,11 @@
 import WatchlistTable from "@/components/modules/Watchlist/WatchlistTable";
 
+export const metadata = {
+	title: "My Watchlists - Saved Movies & Series | CineTube",
+	description:
+		"View and manage your watchlists on CineTube. Save movies and TV series to watch later, organize your queue, and keep track of what you want to watch.",
+};
+
 export const dynamic = "force-dynamic";
 
 interface Props {

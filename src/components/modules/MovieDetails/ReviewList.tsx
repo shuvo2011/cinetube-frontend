@@ -19,7 +19,7 @@ const ReviewList = ({ reviews, currentUser, meta }: Props) => {
 	const visibleReviews = reviews.filter((r) => {
 		if (r.status === "PUBLISHED") return true;
 		if (isAdmin) return true;
-		if (currentUser && r.userId === currentUser.id && r.status === "PENDING") return true;
+		if (currentUser && r.userId === currentUser.id) return true;
 		return false;
 	});
 

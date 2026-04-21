@@ -10,8 +10,11 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-	title: "CineTube",
-	description: "Movie and Series Rating & Streaming Portal",
+	title: {
+		default: "CineTube",
+		template: "%s",
+	},
+	description: "CineTube - Movie and Series Rating & Streaming Portal.",
 };
 
 export default function RootLayout({

@@ -4,6 +4,12 @@ import { getGenresForAdmin } from "@/services/genre.services";
 import { getPlatforms } from "@/services/platform.services";
 import MovieForm from "@/components/modules/AdminMovies/MovieForm";
 
+export const metadata = {
+	title: "Add New Movie - Create Media Entry - CineTube Admin",
+	description:
+		"Add a new movie to the CineTube library. Fill in details like title, release year, genre, cast, ratings, description, and poster image.",
+};
+
 const NewMoviePage = async () => {
 	const [genresRes, platformsRes, castMembersRes] = await Promise.all([
 		getGenresForAdmin("limit=100"),

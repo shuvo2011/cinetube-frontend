@@ -1,6 +1,12 @@
 import { Suspense } from "react";
 import MoviesTable from "@/components/modules/AdminMovies/MoviesTable";
 
+export const metadata = {
+	title: "Movies - Manage Media Library - CineTube Admin",
+	description:
+		"Manage your movie library. Add new movies, update existing entries, edit details, upload posters, and control availability on CineTube.",
+};
+
 export default async function MoviesPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
 	const resolvedParams = await searchParams;
 	const initialQueryString = new URLSearchParams(resolvedParams).toString();

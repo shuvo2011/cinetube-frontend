@@ -1,5 +1,11 @@
 import AdminReviewsTable from "@/components/modules/AdminReviews/AdminReviewsTable";
 
+export const metadata = {
+	title: "Reviews - Moderate User Ratings & Reviews - CineTube Admin",
+	description:
+		"Moderate user reviews and ratings on movies and series. Approve, flag, or delete inappropriate reviews. Manage 1-10 scale ratings and user feedback on CineTube.",
+};
+
 export const dynamic = "force-dynamic";
 
 interface Props {

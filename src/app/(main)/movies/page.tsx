@@ -9,6 +9,12 @@ interface MoviesPageProps {
 	searchParams: Promise<Record<string, string>>;
 }
 
+export const metadata = {
+	title: "Movies - Explore, Rate & Review | CineTube",
+	description:
+		"Discover thousands of movies from every genre. Rate them on a 1-10 scale, read authentic reviews, and find your next favorite film on CineTube.",
+};
+
 const MoviesPage = async ({ searchParams }: MoviesPageProps) => {
 	const params = await searchParams;
 	const page = params.page ?? "1";
@@ -18,7 +24,6 @@ const MoviesPage = async ({ searchParams }: MoviesPageProps) => {
 
 	const movies = moviesRes?.data ?? [];
 	const total = moviesRes?.meta?.total ?? 0;
-
 	return (
 		<>
 			<Suspense>

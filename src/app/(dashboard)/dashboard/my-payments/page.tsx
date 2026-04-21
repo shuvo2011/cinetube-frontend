@@ -3,6 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { Play, Crown, ShoppingCart, Clock, Receipt } from "lucide-react";
 
+export const metadata = {
+	title: "My Payments - Transaction History | CineTube",
+	description:
+		"View your payment history on CineTube. Track monthly and yearly subscriptions, movie rentals, purchases, and download invoices.",
+};
+
 export const dynamic = "force-dynamic";
 
 const DURATION_LABELS: Record<string, string> = {

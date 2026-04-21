@@ -1,6 +1,12 @@
 import { Suspense } from "react";
 import CastMembersTable from "@/components/modules/CastMembers/CastMembersTable";
 
+export const metadata = {
+	title: "Cast Members - CineTube Admin Dashboard",
+	description:
+		"Add, edit, and manage cast members including actors, directors, and producers for movies and TV series.",
+};
+
 export default async function CastMembersPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
 	const resolvedParams = await searchParams;
 	const initialQueryString = new URLSearchParams(resolvedParams).toString();

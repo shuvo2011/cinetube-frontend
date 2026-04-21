@@ -1,6 +1,12 @@
 import { Suspense } from "react";
 import GenresTable from "@/components/modules/Genres/GenresTable";
 
+export const metadata = {
+	title: "Genres - Manage Genres | CineTube Admin",
+	description:
+		"Manage movie and TV series genres. Add, edit, or delete genre categories. Organize content by action, drama, comedy, horror, and more on CineTube.",
+};
+
 export default async function GenresPage({ searchParams }: { searchParams: Promise<Record<string, string>> }) {
 	const resolvedParams = await searchParams;
 	const initialQueryString = new URLSearchParams(resolvedParams).toString();
