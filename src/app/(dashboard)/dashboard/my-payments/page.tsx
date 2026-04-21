@@ -46,7 +46,9 @@ const PaymentCard = ({ payment }: { payment: IPayment }) => {
 			{payment.movie ? (
 				<div className="w-14 h-20 rounded-[8px] overflow-hidden shrink-0 bg-bg-2 relative">
 					{payment.movie.posterImage ? (
-						<Image src={payment.movie.posterImage} alt={payment.movie.title} fill className="object-cover" />
+						<div className="relative w-20 h-35">
+							<Image src={payment.movie.posterImage} alt={payment.movie.title} fill className="object-cover" />
+						</div>
 					) : (
 						<div className="w-full h-full flex items-center justify-center text-text-subtle">
 							<Play size={16} />

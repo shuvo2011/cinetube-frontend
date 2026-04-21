@@ -95,7 +95,7 @@ const HeroSection = ({ movies }: HeroSectionProps) => {
 									{/* Poster */}
 									<div className="h-35 relative overflow-hidden" style={{ background: color.bg }}>
 										{movie.posterImage ? (
-											<Image src={movie.posterImage} alt={movie.title} fill sizes="200px" className="object-cover" />
+											<Image src={movie.posterImage} alt={movie.title} fill className="object-cover" />
 										) : (
 											<div className="w-full h-full flex items-center justify-center">
 												<div className="w-16 h-16 rounded-full" style={{ background: color.dot }} />

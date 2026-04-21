@@ -49,9 +49,7 @@ export const watchlistColumns: ColumnDef<IWatchlistItem>[] = [
 							{g.genre.name}
 						</span>
 					))}
-					{genres.length > 2 && (
-						<span className="text-[11px] text-text-muted">+{genres.length - 2}</span>
-					)}
+					{genres.length > 2 && <span className="text-[11px] text-text-muted">+{genres.length - 2}</span>}
 				</div>
 			);
 		},
@@ -62,7 +60,9 @@ export const watchlistColumns: ColumnDef<IWatchlistItem>[] = [
 		cell: ({ row }) => {
 			const { pricingType, rentPrice, buyPrice } = row.original.movie;
 			if (pricingType === "FREE") {
-				return <span className="text-[12px] font-semibold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">Free</span>;
+				return (
+					<span className="text-[12px] font-semibold text-green-600 bg-green-50 px-2.5 py-1 rounded-full">Free</span>
+				);
 			}
 			return (
 				<div className="space-y-0.5">

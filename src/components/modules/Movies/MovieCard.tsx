@@ -35,15 +35,11 @@ const MovieCard = ({ movie, index }: MovieCardProps) => {
 				style={{ aspectRatio: "16/11", background: color.bg }}
 			>
 				{movie.posterImage ? (
-					<Image
-						src={movie.posterImage}
-						alt={movie.title}
-						fill
-						sizes="(max-width: 768px) 50vw, 25vw"
-						className="object-cover"
-					/>
+					<div className="relative w-90 h-100">
+						<Image src={movie.posterImage} alt={movie.title} fill className="object-cover" />
+					</div>
 				) : (
-					<div className="w-[110px] h-[110px] rounded-full" style={{ background: color.circle }} />
+					<div className="w-27.5 h-27.5 rounded-full" style={{ background: color.circle }} />
 				)}
 
 				{/* Badges */}

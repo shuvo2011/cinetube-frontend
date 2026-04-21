@@ -12,7 +12,6 @@ type JwtPayload = {
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
 	const cookieStore = await cookies();
 	const accessToken = cookieStore.get("accessToken")?.value;
-
 	if (!accessToken) redirect("/login");
 
 	let payload: JwtPayload;

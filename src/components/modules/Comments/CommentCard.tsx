@@ -20,7 +20,6 @@ const ReplyCard = ({ reply, currentUser, onDelete }: ReplyCardProps) => {
 	const isOwner = currentUser?.id === reply.userId;
 	const isAdmin = currentUser?.role === "ADMIN" || currentUser?.role === "SUPER_ADMIN";
 	const name = reply.user?.name ?? "Anonymous";
-
 	return (
 		<div className="flex gap-2.5 py-3">
 			<div

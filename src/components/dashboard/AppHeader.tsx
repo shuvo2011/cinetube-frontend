@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Settings, ChevronDown, User, LogOut, Menu } from "lucide-react";
+import { ChevronDown, User, LogOut, Menu } from "lucide-react";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -11,7 +10,6 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
 import { adminNavSections, userNavSections } from "@/lib/dashboardNavItems";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -52,10 +50,8 @@ export default function AppHeader({ role, userName, userEmail, onMenuClick }: Pr
 		.toUpperCase()
 		.slice(0, 2);
 	const profileHref = role === "ADMIN" ? "/admin/dashboard/profile" : "/dashboard/profile";
-	const settingsHref = role === "ADMIN" ? "/admin/dashboard/settings" : "/dashboard/settings";
 	const accentBg = role === "ADMIN" ? "bg-rose-50" : "bg-blue-50";
 	const accentText = role === "ADMIN" ? "text-rose-600" : "text-blue-600";
-	const dotColor = role === "ADMIN" ? "bg-rose-600" : "bg-blue-600";
 
 	const handleLogout = async () => {
 		await logout();

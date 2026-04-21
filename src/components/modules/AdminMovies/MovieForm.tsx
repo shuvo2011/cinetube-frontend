@@ -17,6 +17,7 @@ import { IPlatform } from "@/types/platform.types";
 import { ICastMember } from "@/types/castMember.types";
 import { createMovieAction, updateMovieAction } from "@/app/(dashboard)/admin/dashboard/movies/_action";
 import { movieFormSchema } from "@/zod/movie.validation";
+import Image from "next/image";
 
 type MovieFormSchema = z.infer<typeof movieFormSchema>;
 
@@ -218,7 +219,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 						>
 							{posterPreview ? (
 								<>
-									<img src={posterPreview} alt="poster" className="h-full w-full object-cover" />
+									<Image src={posterPreview} alt="poster" fill className="h-full w-full object-cover" />
 									<button
 										type="button"
 										onClick={(e) => {

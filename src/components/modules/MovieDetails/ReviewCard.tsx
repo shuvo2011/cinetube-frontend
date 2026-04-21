@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { approveReview, deleteReview, updateReviewStatus } from "@/services/review.services";
 import CommentSection from "@/components/modules/Comments/CommentSection";
+import Image from "next/image";
 
 const AVATAR_COLORS = ["#F472B6", "#60A5FA", "#A78BFA", "#34D399", "#FBBF24", "#FB923C"];
 
@@ -62,7 +63,6 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 			setLikeLoading(false);
 		}
 	};
-
 	return (
 		<div className="py-5 first:pt-0 last:pb-0">
 			{/* Pending badge — only admin */}
@@ -82,10 +82,14 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 			{/* Head */}
 			<div className="flex items-start gap-3 mb-3">
 				<div
-					className="w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold text-white shrink-0"
+					className="relative w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold text-white shrink-0"
 					style={{ background: AVATAR_COLORS[colorIndex] }}
 				>
-					{initials}
+					{review.user.image ? (
+						<Image src={review.user.image} alt={review.user.name} fill className="object-cover rounded-full" />
+					) : (
+						<div className="">{initials}</div>
+					)}
 				</div>
 				<div className="flex-1 min-w-0">
 					<p className="text-[14px] font-semibold text-ink">{name}</p>
@@ -174,11 +178,7 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 
 			{/* Comments */}
 			<div className="mt-3">
-				<CommentSection
-					reviewId={review.id}
-					currentUser={currentUser}
-					initialCount={review._count?.comments ?? 0}
-				/>
+				<CommentSection reviewId={review.id} currentUser={currentUser} initialCount={review._count?.comments ?? 0} />
 			</div>
 		</div>
 	);

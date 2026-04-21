@@ -53,13 +53,15 @@ const NewReleasesSection = ({ movies }: NewReleasesSectionProps) => {
 								{/* Thumbnail */}
 								<div className="aspect-4/5 relative flex items-center justify-center" style={{ background: color.bg }}>
 									{movie.posterImage ? (
-										<Image
-											src={movie.posterImage}
-											alt={movie.title}
-											fill
-											sizes="(max-width: 768px) 50vw, 25vw"
-											className="object-cover"
-										/>
+										<div className="relative w-90 h-100">
+											<Image
+												src={movie.posterImage}
+												alt={movie.title}
+												fill
+												sizes="(max-width: 768px) 50vw, 25vw"
+												className="object-cover"
+											/>
+										</div>
 									) : (
 										<div className="w-30 h-30 rounded-full" style={{ background: color.dot }} />
 									)}

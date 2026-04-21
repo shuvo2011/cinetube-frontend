@@ -5,6 +5,7 @@ import { IMovie } from "@/types/movie.types";
 import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
+import Image from "next/image";
 
 export const moviesColumns: ColumnDef<IMovie>[] = [
 	{
@@ -16,9 +17,11 @@ export const moviesColumns: ColumnDef<IMovie>[] = [
 				<div className="flex items-center gap-3">
 					{posterImage ? (
 						// eslint-disable-next-line @next/next/no-img-element
-						<img src={posterImage} alt={title} className="h-12 w-8 rounded object-cover flex-shrink-0" />
+						<div className="relative h-12 w-8">
+							<Image src={posterImage} alt={title} fill className="rounded object-cover shrink-0" />
+						</div>
 					) : (
-						<div className="flex h-12 w-8 items-center justify-center rounded bg-muted text-[10px] font-bold text-muted-foreground flex-shrink-0">
+						<div className="flex h-12 w-8 items-center justify-center rounded bg-muted text-[10px] font-bold text-muted-foreground shrink-0">
 							{title.slice(0, 2).toUpperCase()}
 						</div>
 					)}

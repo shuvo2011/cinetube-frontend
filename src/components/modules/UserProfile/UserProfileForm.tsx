@@ -8,6 +8,7 @@ import { getMyProfile, updateMyProfile, changeEmailAndLogout } from "@/services/
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { updateProfileZodSchema as profileSchema } from "@/zod/profile.validation";
+import Image from "next/image";
 
 const UserProfileForm = () => {
 	const qc = useQueryClient();
@@ -158,7 +159,7 @@ const UserProfileForm = () => {
 					<div className="relative w-28 h-28">
 						{preview ? (
 							// eslint-disable-next-line @next/next/no-img-element
-							<img src={preview} alt="avatar" className="w-28 h-28 rounded-full object-cover" />
+							<Image src={preview} alt="avatar" fill className="w-28 h-28 rounded-full object-cover" />
 						) : (
 							<div className="w-28 h-28 rounded-full bg-linear-to-br from-gray-100 to-gray-200 flex items-center justify-center text-lg font-bold text-gray-500">
 								{profile?.name

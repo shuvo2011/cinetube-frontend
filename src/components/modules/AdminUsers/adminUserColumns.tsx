@@ -12,6 +12,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
+import Image from "next/image";
 
 const ROLE_STYLES: Record<string, string> = {
 	SUPER_ADMIN: "bg-purple-50 text-purple-700",
@@ -52,10 +53,12 @@ export const adminUserColumns = ({
 				.join("")
 				.toUpperCase();
 			return (
-				<div className="flex items-center gap-2.5">
+				<div className=" flex items-center gap-2.5">
 					{image ? (
 						// eslint-disable-next-line @next/next/no-img-element
-						<img src={image} alt={name} className="w-8 h-8 rounded-full object-cover shrink-0" />
+						<div className="relative  w-8 h-8">
+							<Image src={image} alt={name} fill className="rounded-full object-cover shrink-0" />
+						</div>
 					) : (
 						<div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-[11px] font-bold shrink-0">
 							{initials}
@@ -75,7 +78,9 @@ export const adminUserColumns = ({
 		cell: ({ row }) => {
 			const role = row.original.role;
 			return (
-				<span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${ROLE_STYLES[role] ?? "bg-gray-100 text-gray-500"}`}>
+				<span
+					className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${ROLE_STYLES[role] ?? "bg-gray-100 text-gray-500"}`}
+				>
 					{role}
 				</span>
 			);
@@ -87,7 +92,9 @@ export const adminUserColumns = ({
 		cell: ({ row }) => {
 			const s = row.original.status;
 			return (
-				<span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${STATUS_STYLES[s] ?? "bg-gray-100 text-gray-500"}`}>
+				<span
+					className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${STATUS_STYLES[s] ?? "bg-gray-100 text-gray-500"}`}
+				>
 					{s}
 				</span>
 			);
@@ -97,7 +104,9 @@ export const adminUserColumns = ({
 		accessorKey: "emailVerified",
 		header: "Verified",
 		cell: ({ row }) => (
-			<span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${row.original.emailVerified ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-500"}`}>
+			<span
+				className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${row.original.emailVerified ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-500"}`}
+			>
 				{row.original.emailVerified ? "Yes" : "No"}
 			</span>
 		),
@@ -108,7 +117,9 @@ export const adminUserColumns = ({
 		cell: ({ row }) => {
 			const sub = row.original.subscriptionStatus;
 			return (
-				<span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${sub === "ACTIVE" ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-500"}`}>
+				<span
+					className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${sub === "ACTIVE" ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-500"}`}
+				>
 					{sub}
 				</span>
 			);

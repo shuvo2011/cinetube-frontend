@@ -26,7 +26,10 @@ const MovieDetailHero = ({ movie, access, isLoggedIn, initialInWatchlist }: Prop
 	const [watchlistLoading, setWatchlistLoading] = useState(false);
 
 	const handleWatchlist = async () => {
-		if (!isLoggedIn) { router.push("/login"); return; }
+		if (!isLoggedIn) {
+			router.push("/login");
+			return;
+		}
 		setWatchlistLoading(true);
 		try {
 			const method = inWatchlist ? "DELETE" : "POST";
@@ -42,7 +45,7 @@ const MovieDetailHero = ({ movie, access, isLoggedIn, initialInWatchlist }: Prop
 	return (
 		<section className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[360px_1fr] gap-8 md:gap-10 pb-12">
 			{/* Poster */}
-			<div className="relative rounded-[18px] overflow-hidden bg-gradient-to-br from-brand-softer to-brand-soft aspect-[2/3] flex items-center justify-center">
+			<div className="relative rounded-[18px] overflow-hidden bg-linear-to-br from-brand-softer to-brand-soft aspect-2/3 flex items-center justify-center">
 				{movie.posterImage ? (
 					<Image
 						src={movie.posterImage}
@@ -130,9 +133,7 @@ const MovieDetailHero = ({ movie, access, isLoggedIn, initialInWatchlist }: Prop
 						disabled={watchlistLoading}
 						className={cn(
 							"flex items-center gap-2 px-5 py-3 rounded-[10px] border text-[14px] font-semibold transition-colors disabled:opacity-60",
-							inWatchlist
-								? "bg-brand/10 border-brand text-brand"
-								: "border-line text-ink hover:border-ink",
+							inWatchlist ? "bg-brand/10 border-brand text-brand" : "border-line text-ink hover:border-ink",
 						)}
 					>
 						{inWatchlist ? <BookmarkCheck size={16} /> : <Bookmark size={16} />}
