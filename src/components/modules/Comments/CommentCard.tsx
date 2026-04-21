@@ -122,7 +122,6 @@ const CommentCard = ({ comment, currentUser, onDelete, onReply }: Props) => {
 
 	return (
 		<div className="py-4 first:pt-0 last:pb-0">
-			{/* Top-level comment */}
 			<div className="flex gap-3">
 				<div
 					className="w-8 h-8 rounded-full flex items-center justify-center text-[11px] font-bold text-white shrink-0 mt-0.5"
@@ -182,7 +181,6 @@ const CommentCard = ({ comment, currentUser, onDelete, onReply }: Props) => {
 				)}
 			</div>
 
-			{/* Replies */}
 			{comment.replies?.length > 0 && (
 				<div className="ml-11 mt-1 border-l-2 border-line-2 pl-4 divide-y divide-line-2">
 					{comment.replies.map((reply) => (

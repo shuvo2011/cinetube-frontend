@@ -58,9 +58,7 @@ const EditTagModal = ({ open, onOpenChange, tag }: EditTagModalProps) => {
 			void queryClient.invalidateQueries({ queryKey: ["tags"] });
 			void queryClient.refetchQueries({ queryKey: ["tags"], type: "active" });
 			router.refresh();
-		} catch {
-			/* onError handles it */
-		}
+		} catch {}
 	};
 
 	return (

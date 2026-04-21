@@ -50,7 +50,6 @@ const ReviewList = ({ reviews, currentUser, meta }: Props) => {
 				</div>
 			)}
 
-			{/* Pagination */}
 			{totalPages > 1 && (
 				<div className="flex items-center justify-center gap-2 mt-6 pt-6 border-t border-line-2">
 					<button

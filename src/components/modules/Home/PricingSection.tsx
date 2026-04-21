@@ -53,7 +53,6 @@ const PricingSection = ({ isLoggedIn, hasActiveSub }: Props) => {
 	return (
 		<section className="py-16 md:py-20 bg-bg-2">
 			<div className="max-w-350 mx-auto px-6 md:px-10">
-				{/* Header */}
 				<div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-12">
 					<div>
 						<p className="text-[11px] font-bold tracking-[0.18em] text-brand uppercase mb-3">Simple Pricing</p>
@@ -66,7 +65,6 @@ const PricingSection = ({ isLoggedIn, hasActiveSub }: Props) => {
 					</p>
 				</div>
 
-				{/* Cards */}
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
 					{plans.map((plan) => (
 						<div
@@ -75,7 +73,6 @@ const PricingSection = ({ isLoggedIn, hasActiveSub }: Props) => {
 								plan.highlighted ? "bg-ink text-white" : "bg-bg border border-line-2"
 							}`}
 						>
-							{/* Badge */}
 							{plan.badge && (
 								<div className="absolute -top-4 left-1/2 -translate-x-1/2">
 									<span className="bg-brand text-white text-[11px] font-bold tracking-widest px-4 py-1.5 rounded-full">
@@ -84,7 +81,6 @@ const PricingSection = ({ isLoggedIn, hasActiveSub }: Props) => {
 								</div>
 							)}
 
-							{/* Plan name */}
 							<p
 								className={`text-[11px] font-bold tracking-[0.15em] mb-4 ${
 									plan.highlighted ? "text-white/50" : "text-text-subtle"
@@ -93,7 +89,6 @@ const PricingSection = ({ isLoggedIn, hasActiveSub }: Props) => {
 								{plan.name}
 							</p>
 
-							{/* Price */}
 							<div className="mb-1">
 								<span
 									className={`text-[52px] font-black tracking-tight leading-none ${
@@ -105,7 +100,6 @@ const PricingSection = ({ isLoggedIn, hasActiveSub }: Props) => {
 							</div>
 							<p className={`text-sm mb-8 ${plan.highlighted ? "text-white/50" : "text-text-muted"}`}>{plan.period}</p>
 
-							{/* Features */}
 							<ul className="flex-1 space-y-4 mb-8">
 								{plan.features.map((feature) => (
 									<li
@@ -132,7 +126,6 @@ const PricingSection = ({ isLoggedIn, hasActiveSub }: Props) => {
 								))}
 							</ul>
 
-							{/* CTA */}
 							<SubscribePlanButton
 								planType={plan.planType}
 								isLoggedIn={isLoggedIn}

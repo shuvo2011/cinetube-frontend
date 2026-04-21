@@ -83,7 +83,6 @@ export const useServerManagedDataTable = ({
 
 			const nextUrl = nextQuery ? `${pathname}?${nextQuery}` : pathname;
 
-			// Update URL immediately for optimistic UX, then refresh server components.
 			window.history.pushState(null, "", nextUrl);
 
 			startRouteRefreshTransition(() => {

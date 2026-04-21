@@ -127,7 +127,6 @@ const sections = [
 const TermsOfUsePage = () => {
 	return (
 		<div className="bg-white min-h-screen">
-			{/* ── Hero Section ── */}
 			<section className="bg-[#FEF2F2] py-20 relative overflow-hidden">
 				<div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-[#EF4C5C]/5 pointer-events-none" />
 				<div className="absolute -bottom-16 -left-16 w-56 h-56 rounded-full bg-[#EF4C5C]/5 pointer-events-none" />
@@ -153,7 +152,6 @@ const TermsOfUsePage = () => {
 				</div>
 			</section>
 
-			{/* ── Quick Navigation ── */}
 			<section className="bg-white border-b border-[#F2F2F5] sticky top-0 z-10">
 				<div className="max-w-[1280px] mx-auto px-10 py-4">
 					<div className="flex flex-wrap gap-2 justify-center">
@@ -170,11 +168,9 @@ const TermsOfUsePage = () => {
 				</div>
 			</section>
 
-			{/* ── Main Content ── */}
 			<section className="py-16">
 				<div className="max-w-[1280px] mx-auto px-10">
 					<div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-						{/* Sidebar */}
 						<div className="lg:col-span-3">
 							<div className="bg-[#FAFAFA] border border-[#F2F2F5] rounded-[18px] p-6 sticky top-24">
 								<h3 className="text-[16px] font-bold text-[#0F0F10] mb-4">Quick Links</h3>
@@ -200,7 +196,6 @@ const TermsOfUsePage = () => {
 							</div>
 						</div>
 
-						{/* Main Content */}
 						<div className="lg:col-span-9">
 							<div className="space-y-8">
 								{sections.map((section) => {
@@ -234,7 +229,6 @@ const TermsOfUsePage = () => {
 									);
 								})}
 
-								{/* Governing Law Section */}
 								<section id="governing-law" className="scroll-mt-24">
 									<div className="flex items-center gap-3 mb-4">
 										<div className="w-10 h-10 rounded-full bg-[#FEF2F2] text-[#EF4C5C] flex items-center justify-center">
@@ -252,7 +246,6 @@ const TermsOfUsePage = () => {
 									</div>
 								</section>
 
-								{/* Contact Information */}
 								<div className="bg-[#FAFAFA] border border-[#F2F2F5] rounded-[18px] p-6 text-center">
 									<RefreshCw className="w-8 h-8 text-[#EF4C5C] mx-auto mb-3" />
 									<p className="text-[13px] text-[#6B6B73]">
@@ -268,7 +261,6 @@ const TermsOfUsePage = () => {
 				</div>
 			</section>
 
-			{/* ── CTA Section ── */}
 			<section className="bg-[#EF4C5C] py-16">
 				<div className="max-w-[1280px] mx-auto px-10 text-center">
 					<h2 className="text-[28px] font-extrabold text-white mb-3">By Using CineTube, You Agree to These Terms</h2>

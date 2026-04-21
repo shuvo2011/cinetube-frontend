@@ -93,21 +93,14 @@ const faqs = [
 	},
 ];
 
-/* ------------------------------------------------------------------ */
-/*  Page                                                                */
-/* ------------------------------------------------------------------ */
-
 const HowItWorksPage = () => {
 	return (
 		<div className="bg-white min-h-screen">
-			{/* ── Hero ── */}
 			<section className="bg-[#FEF2F2] py-20 relative overflow-hidden">
-				{/* decorative circles */}
 				<div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-[#EF4C5C]/5 pointer-events-none" />
 				<div className="absolute -bottom-16 -left-16 w-56 h-56 rounded-full bg-[#EF4C5C]/5 pointer-events-none" />
 
 				<div className="max-w-[1280px] mx-auto px-10 relative z-10 text-center">
-					{/* eyebrow */}
 					<div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white rounded-full text-[12px] font-semibold text-[#2B2B30] shadow-sm mb-5">
 						<span className="w-1.5 h-1.5 rounded-full bg-[#EF4C5C]" />
 						Simple, Powerful, Free
@@ -144,10 +137,8 @@ const HowItWorksPage = () => {
 				</div>
 			</section>
 
-			{/* ── Steps ── */}
 			<section className="py-20">
 				<div className="max-w-[1280px] mx-auto px-10">
-					{/* Section header */}
 					<div className="flex justify-between items-end mb-12">
 						<div>
 							<p className="text-[11px] font-bold text-[#EF4C5C] tracking-[0.18em] uppercase mb-3">STEP BY STEP</p>
@@ -160,7 +151,6 @@ const HowItWorksPage = () => {
 						</p>
 					</div>
 
-					{/* Grid */}
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 						{steps.map((step) => {
 							const Icon = step.icon;
@@ -186,11 +176,9 @@ const HowItWorksPage = () => {
 				</div>
 			</section>
 
-			{/* ── Why CineTube ── */}
 			<section className="py-20 bg-[#FAFAFA]">
-				<div className="max-w-[1280px] mx-auto px-10">
+				<div className="max-w-7xl mx-auto px-10">
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-						{/* Left: text */}
 						<div>
 							<p className="text-[11px] font-bold text-[#EF4C5C] tracking-[0.18em] uppercase mb-3">WHY CINETUBE</p>
 							<h2 className="text-[38px] font-extrabold tracking-[-0.025em] text-[#0F0F10] leading-[1.05] mb-5">
@@ -216,7 +204,6 @@ const HowItWorksPage = () => {
 							</ul>
 						</div>
 
-						{/* Right: stats */}
 						<div className="grid grid-cols-2 gap-4">
 							{[
 								{ n: "12K+", l: "Movies & Series", bg: "bg-[#FEF2F2]", nc: "text-[#EF4C5C]" },
@@ -234,7 +221,6 @@ const HowItWorksPage = () => {
 				</div>
 			</section>
 
-			{/* ── FAQ ── */}
 			<section className="py-20">
 				<div className="max-w-[1280px] mx-auto px-10">
 					<div className="flex justify-between items-end mb-12">
@@ -263,7 +249,6 @@ const HowItWorksPage = () => {
 				</div>
 			</section>
 
-			{/* ── CTA ── */}
 			<section className="bg-[#EF4C5C] py-20">
 				<div className="max-w-[1280px] mx-auto px-10 text-center">
 					<h2 className="text-[38px] font-extrabold tracking-tight text-white mb-4">Start Watching Today</h2>

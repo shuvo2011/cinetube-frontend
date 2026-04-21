@@ -30,9 +30,6 @@ export type NavSection = {
 	items: NavItem[];
 };
 
-// ------------------------------------------------------------------
-// ADMIN nav sections
-// ------------------------------------------------------------------
 export const adminNavSections: NavSection[] = [
 	{
 		title: "Overview",
@@ -81,9 +78,6 @@ export const adminNavSections: NavSection[] = [
 	},
 ];
 
-// ------------------------------------------------------------------
-// USER nav sections
-// ------------------------------------------------------------------
 export const userNavSections: NavSection[] = [
 	{
 		title: "Overview",

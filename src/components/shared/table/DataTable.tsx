@@ -91,9 +91,8 @@ const DataTable = <TData,>({
 		? [
 				...columns,
 
-				// Action column
 				{
-					id: "actions", // Unique id for the column
+					id: "actions",
 					header: "Actions",
 					enableSorting: false,
 					cell: ({ row }) => {
@@ -198,7 +197,6 @@ const DataTable = <TData,>({
 				</div>
 			)}
 
-			{/* // Table */}
 			<div className="rounded-lg border">
 				<Table>
 					<TableHeader>

@@ -59,9 +59,7 @@ const CreateGenreModal = () => {
 			void queryClient.invalidateQueries({ queryKey: ["genres"] });
 			void queryClient.refetchQueries({ queryKey: ["genres"], type: "active" });
 			router.refresh();
-		} catch {
-			// onError handles it
-		}
+		} catch {}
 	};
 
 	return (

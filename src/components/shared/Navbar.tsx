@@ -1,4 +1,3 @@
-// Navbar.tsx
 "use client";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -71,10 +70,8 @@ const Navbar = ({ userInfo }: NavbarProps) => {
 		<>
 			<header className="sticky top-0 z-9999 bg-bg">
 				<div className="max-w-350 mx-auto px-6 md:px-10 flex items-center justify-between h-18">
-					{/* Logo */}
 					<Logo />
 
-					{/* Desktop Nav */}
 					<nav className="hidden lg:flex items-center gap-9 flex-1 justify-center">
 						{allLinks.map((link) => {
 							const isActive = link.href === "/" ? pathname === "/" : pathname.startsWith(link.href);
@@ -94,9 +91,7 @@ const Navbar = ({ userInfo }: NavbarProps) => {
 						})}
 					</nav>
 
-					{/* Right */}
 					<div className="flex items-center gap-2 md:gap-3 shrink-0">
-						{/* Search Trigger — desktop only */}
 						<div
 							onClick={() => setSearchOpen(true)}
 							className="hidden md:flex items-center gap-2 bg-line-2 rounded-full px-4 py-2 w-55 text-text-subtle text-sm cursor-pointer hover:bg-line transition-colors"
@@ -105,7 +100,6 @@ const Navbar = ({ userInfo }: NavbarProps) => {
 							<span>Search movies...</span>
 						</div>
 
-						{/* Search icon — mobile */}
 						<button
 							className="md:hidden p-2 text-text-muted hover:text-ink transition-colors"
 							onClick={() => setSearchOpen(true)}
@@ -128,12 +122,11 @@ const Navbar = ({ userInfo }: NavbarProps) => {
 
 								{dropdownOpen && (
 									<div className="absolute right-0 top-[calc(100%+8px)] w-52 bg-white rounded-[12px] border border-line-2 shadow-[0_8px_30px_rgba(15,15,16,0.10)] py-1.5 z-50">
-										{/* User info */}
 										<div className="px-4 py-3 border-b border-line-2">
 											<p className="text-[13px] font-semibold text-ink truncate">{userInfo.name}</p>
 											<p className="text-[11px] text-text-muted capitalize">{userInfo.role.toLowerCase()}</p>
 										</div>
-										{/* Links */}
+
 										<div className="py-1">
 											<Link
 												href={dashboardRoute}
@@ -150,7 +143,7 @@ const Navbar = ({ userInfo }: NavbarProps) => {
 												Profile
 											</Link>
 										</div>
-										{/* Logout */}
+
 										<div className="border-t border-line-2 py-1">
 											<button
 												onClick={() => handleLogout()}
@@ -179,7 +172,6 @@ const Navbar = ({ userInfo }: NavbarProps) => {
 							</>
 						)}
 
-						{/* Mobile Menu Button */}
 						<button
 							className="md:hidden p-2 text-text-muted hover:text-ink transition-colors"
 							onClick={() => setMobileOpen((v) => !v)}
@@ -189,7 +181,6 @@ const Navbar = ({ userInfo }: NavbarProps) => {
 					</div>
 				</div>
 
-				{/* Mobile Menu */}
 				{mobileOpen && (
 					<div className="lg:hidden border-t border-line-2 bg-bg px-6 py-3 space-y-1">
 						{allLinks.map((link) => {
@@ -221,7 +212,6 @@ const Navbar = ({ userInfo }: NavbarProps) => {
 				)}
 			</header>
 
-			{/* Search Dialog */}
 			<Dialog open={searchOpen} onOpenChange={setSearchOpen}>
 				<DialogContent className="fixed top-20 left-1/2 -translate-x-1/2 translate-y-0 max-w-xl w-[calc(100%-2rem)] p-0 gap-0 rounded-[14px] border-line shadow-[0_12px_40px_rgba(15,15,16,0.12)]">
 					<DialogTitle className="sr-only">Search</DialogTitle>

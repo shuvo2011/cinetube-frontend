@@ -36,7 +36,7 @@ export async function getNewTokens(refreshToken: string): Promise<boolean> {
 		}
 
 		if (token) {
-			await setTokenInCookies("better-auth.session_token", token, 24 * 60 * 60); // 1 day in seconds
+			await setTokenInCookies("better-auth.session_token", token, 24 * 60 * 60);
 		}
 
 		return true;
@@ -93,7 +93,6 @@ export async function logout() {
 	} catch (error) {
 		console.error("Logout error:", error);
 	} finally {
-		// সব cookie clear করো
 		const cookieStore = await cookies();
 		cookieStore.delete("accessToken");
 		cookieStore.delete("refreshToken");

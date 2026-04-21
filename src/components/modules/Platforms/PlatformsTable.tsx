@@ -9,8 +9,6 @@ import { IPlatform } from "@/types/platform.types";
 import { PaginationMeta } from "@/types/api.types";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-// import { platformsColumns } from "./platformsColumns";
-// import CreatePlatformModal from "./CreatePlatformModal";
 import EditPlatformModal from "./EditPlatformModal";
 import DeletePlatformDialog from "./DeletePlatformDialog";
 import { platformsColumns } from "./PlatformsColumns";

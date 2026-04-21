@@ -26,9 +26,7 @@ const Footer = () => {
 	return (
 		<footer className="border-t border-line-2 bg-bg">
 			<div className="max-w-350 mx-auto px-6 md:px-10 py-12">
-				{/* Top Grid */}
 				<div className="grid grid-cols-1 md:grid-cols-4 gap-10">
-					{/* Brand */}
 					<div className="space-y-4">
 						<Logo />
 						<p className="text-sm text-text-muted leading-relaxed max-w-55">
@@ -36,7 +34,6 @@ const Footer = () => {
 						</p>
 					</div>
 
-					{/* Browse */}
 					<div>
 						<h4 className="text-xs font-semibold tracking-widest text-ink-2 uppercase mb-4">Browse</h4>
 						<ul className="space-y-3">
@@ -50,7 +47,6 @@ const Footer = () => {
 						</ul>
 					</div>
 
-					{/* Account */}
 					<div>
 						<h4 className="text-xs font-semibold tracking-widest text-ink-2 uppercase mb-4">Account</h4>
 						<ul className="space-y-3">
@@ -64,7 +60,6 @@ const Footer = () => {
 						</ul>
 					</div>
 
-					{/* Company */}
 					<div>
 						<h4 className="text-xs font-semibold tracking-widest text-ink-2 uppercase mb-4">Company</h4>
 						<ul className="space-y-3">
@@ -79,7 +74,6 @@ const Footer = () => {
 					</div>
 				</div>
 
-				{/* Bottom */}
 				<div className="flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-line-2 mt-10 pt-6">
 					<span className="text-xs text-text-subtle">© {new Date().getFullYear()} CineTube. All rights reserved.</span>
 					<span className="text-xs text-text-subtle">

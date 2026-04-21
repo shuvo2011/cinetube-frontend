@@ -65,21 +65,18 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 	};
 	return (
 		<div className="py-5 first:pt-0 last:pb-0">
-			{/* Pending badge — only admin */}
 			{isPending && isAdmin && (
 				<div className="flex items-center gap-2 text-[12px] text-yellow font-semibold mb-3">
 					● Pending admin approval
 				</div>
 			)}
 
-			{/* Spoiler warning */}
 			{review.hasSpoiler && (
 				<div className="text-[12px] text-amber-600 bg-amber-50 border border-amber-200 rounded-[8px] px-3 py-2 mb-3">
 					⚠ This review contains spoilers — read with caution
 				</div>
 			)}
 
-			{/* Head */}
 			<div className="flex items-start gap-3 mb-3">
 				<div
 					className="relative w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold text-white shrink-0"
@@ -104,7 +101,6 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 				<span className="text-[15px] font-black text-ink shrink-0">{review.rating}/10</span>
 			</div>
 
-			{/* Body */}
 			<div className="mb-3">
 				<p className={cn("text-[14px] text-text-base leading-relaxed", !expanded && "line-clamp-3")}>
 					{review.content}
@@ -119,7 +115,6 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 				)}
 			</div>
 
-			{/* Tags */}
 			{review.tags?.length > 0 && (
 				<div className="flex flex-wrap gap-1.5 mb-3">
 					{review.tags.map((t: any) => (
@@ -130,7 +125,6 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 				</div>
 			)}
 
-			{/* Actions */}
 			<div className="flex items-center gap-4 text-[13px] text-text-muted">
 				<button
 					onClick={handleLike}
@@ -145,7 +139,6 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 					{likeCount} Likes
 				</button>
 
-				{/* Admin only */}
 				{isAdmin && (
 					<div className="ml-auto flex items-center gap-3">
 						{review.status === "PENDING" && (
@@ -176,7 +169,6 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 				)}
 			</div>
 
-			{/* Comments */}
 			<div className="mt-3">
 				<CommentSection reviewId={review.id} currentUser={currentUser} initialCount={review._count?.comments ?? 0} />
 			</div>

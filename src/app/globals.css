@@ -48,7 +48,7 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 
 
-  /* CineTube Brand Colors */
+
   --color-brand: var(--brand);
   --color-brand-hover: var(--brand-hover);
   --color-brand-soft: var(--brand-soft);
@@ -64,7 +64,7 @@
   --color-bg-2: var(--ct-bg-2);
   --color-cream: var(--cream);
   --color-yellow: var(--yellow);
-  /* Semantic */
+
   --color-accent-orange: #F97316;
   --color-green: #16A34A;
   --color-green-soft: #DCFCE7;

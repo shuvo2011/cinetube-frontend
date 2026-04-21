@@ -1,4 +1,3 @@
-// src/components/modules/Home/HeroSection.tsx
 import { IMovie } from "@/types/movie.types";
 import { Star } from "lucide-react";
 import Image from "next/image";
@@ -26,15 +25,12 @@ const HeroSection = ({ movies }: HeroSectionProps) => {
 		<section className="bg-cream py-16 md:py-20 overflow-hidden">
 			<div className="max-w-350 mx-auto px-6 md:px-10">
 				<div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-					{/* Left */}
 					<div>
-						{/* Eyebrow */}
 						<div className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-1.5 text-xs font-medium text-text-base shadow-sm mb-5">
 							<span className="w-1.5 h-1.5 rounded-full bg-brand" />
 							New releases every week
 						</div>
 
-						{/* Heading */}
 						<h1 className="text-[52px] md:text-[64px] font-black tracking-[-0.035em] text-ink leading-[1.02] mb-6">
 							Rate, Review &amp;
 							<br />
@@ -43,13 +39,11 @@ const HeroSection = ({ movies }: HeroSectionProps) => {
 							Favorite <em className="not-italic text-brand">Films</em>
 						</h1>
 
-						{/* Description */}
 						<p className="text-[17px] text-text-muted max-w-[520px] mb-8 leading-relaxed">
 							Discover thousands of movies and series. Read community reviews, write your own, and stream premium
 							content — all in one place.
 						</p>
 
-						{/* Actions */}
 						<div className="flex items-center gap-3 mb-12">
 							<Link
 								href="/movies"
@@ -65,7 +59,6 @@ const HeroSection = ({ movies }: HeroSectionProps) => {
 							</Link>
 						</div>
 
-						{/* Stats */}
 						<div className="flex items-center gap-8 flex-wrap">
 							{stats.map((stat) => (
 								<div key={stat.label}>
@@ -76,7 +69,6 @@ const HeroSection = ({ movies }: HeroSectionProps) => {
 						</div>
 					</div>
 
-					{/* Right — Movie Cards */}
 					<div className="relative h-95 hidden lg:block">
 						{movies.slice(0, 3).map((movie, index) => {
 							const color = CARD_COLORS[index];
@@ -92,7 +84,6 @@ const HeroSection = ({ movies }: HeroSectionProps) => {
 									key={movie.id}
 									className={`absolute w-50 bg-white rounded-[14px] overflow-hidden shadow-md hover:shadow-lg transition-shadow ${positions[index]}`}
 								>
-									{/* Poster */}
 									<div className="h-35 relative overflow-hidden" style={{ background: color.bg }}>
 										{movie.posterImage ? (
 											<Image src={movie.posterImage} alt={movie.title} fill className="object-cover" />
@@ -102,7 +93,7 @@ const HeroSection = ({ movies }: HeroSectionProps) => {
 											</div>
 										)}
 									</div>
-									{/* Info */}
+
 									<div className="p-3">
 										<div className="text-sm font-semibold text-ink truncate">{movie.title}</div>
 										<div className="flex items-center gap-1 mt-1">

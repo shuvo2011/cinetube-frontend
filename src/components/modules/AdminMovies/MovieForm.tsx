@@ -194,10 +194,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 			if (mode === "create") {
 				resetForm();
 			}
-			// router.push("/admin/dashboard/movies");
-		} catch {
-			/* onError handles it */
-		}
+		} catch {}
 	};
 
 	return (
@@ -378,7 +375,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 								value={rentPrice}
 								onChange={(e) => {
 									setRentPrice(e.target.value);
-									if (errors.rentPrice) setErrors({ ...errors, rentPrice: undefined });
+									if (errors?.rentPrice) setErrors({ ...errors, rentPrice: undefined });
 								}}
 								disabled={isPending}
 								className={errors.rentPrice ? "border-destructive" : ""}
@@ -484,11 +481,11 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 							variant="outline"
 							onClick={() => router.push("/admin/dashboard/movies")}
 							disabled={isPending}
-							className="sm:min-w-[120px]"
+							className="sm:min-w-30"
 						>
 							Cancel
 						</Button>
-						<Button type="submit" disabled={isPending} className="sm:min-w-[140px]">
+						<Button type="submit" disabled={isPending} className="sm:min-w-35">
 							{isPending ? "Saving..." : mode === "create" ? "Create Movie" : "Save Changes"}
 						</Button>
 					</div>

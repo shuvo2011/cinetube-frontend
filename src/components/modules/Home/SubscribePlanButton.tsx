@@ -17,7 +17,6 @@ interface Props {
 const SubscribePlanButton = ({ planType, isLoggedIn, hasActiveSub, highlighted }: Props) => {
 	const [loading, setLoading] = useState(false);
 
-	// Free plan
 	if (!planType) {
 		return (
 			<Link
@@ -32,7 +31,6 @@ const SubscribePlanButton = ({ planType, isLoggedIn, hasActiveSub, highlighted }
 		);
 	}
 
-	// Already subscribed
 	if (hasActiveSub) {
 		return (
 			<div
@@ -47,16 +45,13 @@ const SubscribePlanButton = ({ planType, isLoggedIn, hasActiveSub, highlighted }
 		);
 	}
 
-	// Not logged in
 	if (!isLoggedIn) {
 		return (
 			<Link
 				href="/login"
 				className={cn(
 					"block text-center font-semibold text-sm py-3.5 rounded-[10px] transition-colors",
-					highlighted
-						? "bg-brand hover:bg-brand/90 text-white"
-						: "bg-bg border border-line hover:bg-line-2 text-ink",
+					highlighted ? "bg-brand hover:bg-brand/90 text-white" : "bg-bg border border-line hover:bg-line-2 text-ink",
 				)}
 			>
 				{planType === "MONTHLY" ? "Subscribe Now" : "Subscribe Yearly"}
@@ -88,9 +83,7 @@ const SubscribePlanButton = ({ planType, isLoggedIn, hasActiveSub, highlighted }
 			disabled={loading}
 			className={cn(
 				"w-full flex items-center justify-center gap-2 font-semibold text-sm py-3.5 rounded-[10px] transition-colors disabled:opacity-70",
-				highlighted
-					? "bg-brand hover:bg-brand/90 text-white"
-					: "bg-bg border border-line hover:bg-line-2 text-ink",
+				highlighted ? "bg-brand hover:bg-brand/90 text-white" : "bg-bg border border-line hover:bg-line-2 text-ink",
 			)}
 		>
 			{loading && <Loader2 size={14} className="animate-spin" />}

@@ -11,7 +11,7 @@ import { Mail } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState, KeyboardEvent } from "react";
 
-const RESEND_COOLDOWN = 120; // 2 minutes
+const RESEND_COOLDOWN = 120;
 
 const VerifyEmailForm = () => {
 	const searchParams = useSearchParams();
@@ -120,13 +120,11 @@ const VerifyEmailForm = () => {
 	return (
 		<div className="min-h-screen flex items-center justify-center px-6 py-12">
 			<div className="w-full max-w-sm bg-card border border-border rounded-2xl p-10">
-				{/* Logo */}
 				<div className="text-center mb-6">
 					<div className="flex justify-center mb-8">
 						<Logo />
 					</div>
 
-					{/* Icon */}
 					<div className="w-14 h-14 rounded-full bg-destructive/10 border border-destructive/20 flex items-center justify-center mx-auto mb-4">
 						<Mail className="size-6 text-destructive" />
 					</div>
@@ -137,7 +135,6 @@ const VerifyEmailForm = () => {
 				</div>
 
 				<form onSubmit={handleSubmit} className="space-y-5">
-					{/* OTP Inputs */}
 					<div>
 						<p className="text-xs text-muted-foreground text-center mb-3">Enter verification code</p>
 						<div className="flex gap-2 justify-center" onPaste={handlePaste}>

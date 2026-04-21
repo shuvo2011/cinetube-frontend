@@ -36,8 +36,6 @@ const fmtUSD = (n: number) => `$${n.toLocaleString("en-US", { minimumFractionDig
 
 const today = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
 
-// --- Small helpers ---
-
 const Avatar = ({ name }: { name: string }) => {
 	const initials = name
 		.split(" ")
@@ -49,7 +47,7 @@ const Avatar = ({ name }: { name: string }) => {
 	const color = colors[name.charCodeAt(0) % colors.length];
 	return (
 		<span
-			className={`inline-flex items-center justify-center w-7 h-7 rounded-full text-white text-[10px] font-bold flex-shrink-0 ${color}`}
+			className={`inline-flex items-center justify-center w-7 h-7 rounded-full text-white text-[10px] font-bold shrink-0 ${color}`}
 		>
 			{initials}
 		</span>
@@ -158,8 +156,6 @@ const PendingReviewRow = ({ review, onAction }: { review: IAdminReview; onAction
 	);
 };
 
-// --- Main Component ---
-
 const AdminDashboardClient = () => {
 	const queryClient = useQueryClient();
 
@@ -202,13 +198,11 @@ const AdminDashboardClient = () => {
 
 	return (
 		<div className="space-y-5">
-			{/* Header */}
 			<div>
 				<h1 className="text-[22px] font-bold text-ink">Admin Dashboard</h1>
 				<p className="text-[13px] text-text-muted mt-0.5">Platform overview — {today}</p>
 			</div>
 
-			{/* Summary Cards */}
 			<div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
 				<SummaryCard
 					label="Total Movies"
@@ -240,7 +234,6 @@ const AdminDashboardClient = () => {
 				/>
 			</div>
 
-			{/* Action Cards */}
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 				<ActionCard
 					label="Pending Reviews"
@@ -271,9 +264,7 @@ const AdminDashboardClient = () => {
 				/>
 			</div>
 
-			{/* Revenue Trend + User Stats */}
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-				{/* Revenue Trend */}
 				<div className="bg-bg border border-line rounded-xl p-5">
 					<div className="flex items-start justify-between mb-4">
 						<div>
@@ -321,7 +312,6 @@ const AdminDashboardClient = () => {
 					</ResponsiveContainer>
 				</div>
 
-				{/* User Stats */}
 				<div className="bg-bg border border-line rounded-xl p-5">
 					<div className="flex items-start justify-between mb-4">
 						<div>
@@ -361,9 +351,7 @@ const AdminDashboardClient = () => {
 				</div>
 			</div>
 
-			{/* Charts Row */}
 			<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-				{/* Genre Distribution */}
 				<div className="bg-bg border border-line rounded-xl p-5">
 					<p className="text-[14px] font-semibold text-ink mb-3">Genre Distribution</p>
 					<div className="flex items-center gap-3">
@@ -396,7 +384,7 @@ const AdminDashboardClient = () => {
 									<div key={i} className="flex items-center justify-between gap-1.5">
 										<div className="flex items-center gap-1.5 min-w-0">
 											<span
-												className="w-2 h-2 rounded-full flex-shrink-0"
+												className="w-2 h-2 rounded-full shrink-0"
 												style={{ backgroundColor: GENRE_COLORS[i % GENRE_COLORS.length] }}
 											/>
 											<span className="text-[11px] text-text-muted truncate">{item.genre}</span>
@@ -422,17 +410,13 @@ const AdminDashboardClient = () => {
 					</div>
 				</div>
 
-				{/* Reviews by Day */}
 				<div className="bg-bg border border-line rounded-xl p-5">
 					<div className="flex items-center justify-between mb-3">
 						<p className="text-[14px] font-semibold text-ink">Reviews by Day</p>
 						<span className="text-[11px] text-text-muted">This week</span>
 					</div>
 					<ResponsiveContainer width="100%" height={140}>
-						<BarChart
-							data={stats?.trendStats.reviewsByDay ?? []}
-							margin={{ top: 0, right: 0, left: -28, bottom: 0 }}
-						>
+						<BarChart data={stats?.trendStats.reviewsByDay ?? []} margin={{ top: 0, right: 0, left: -28, bottom: 0 }}>
 							<CartesianGrid strokeDasharray="3 3" stroke="#EAEAEE" vertical={false} />
 							<XAxis
 								dataKey="label"
@@ -441,12 +425,7 @@ const AdminDashboardClient = () => {
 								tickLine={false}
 								tickFormatter={(v: string) => v.split(",")[0]}
 							/>
-							<YAxis
-								tick={{ fontSize: 10, fill: "#9CA0A8" }}
-								axisLine={false}
-								tickLine={false}
-								allowDecimals={false}
-							/>
+							<YAxis tick={{ fontSize: 10, fill: "#9CA0A8" }} axisLine={false} tickLine={false} allowDecimals={false} />
 							<Tooltip
 								formatter={(v: number) => [v, "Reviews"]}
 								contentStyle={{ borderRadius: 8, border: "1px solid #EAEAEE", fontSize: 11 }}
@@ -456,7 +435,6 @@ const AdminDashboardClient = () => {
 					</ResponsiveContainer>
 				</div>
 
-				{/* Streaming Platforms */}
 				<div className="bg-bg border border-line rounded-xl p-5">
 					<p className="text-[14px] font-semibold text-ink mb-4">Streaming Platforms</p>
 					<div className="space-y-3">
@@ -464,7 +442,7 @@ const AdminDashboardClient = () => {
 							const pct = (item.count / maxPlatform) * 100;
 							return (
 								<div key={i} className="flex items-center gap-2.5">
-									<span className="text-[11px] text-text-muted w-14 flex-shrink-0 truncate">{item.platform}</span>
+									<span className="text-[11px] text-text-muted w-14 shrink-0 truncate">{item.platform}</span>
 									<div className="flex-1 bg-line-2 rounded-full h-2.5 overflow-hidden">
 										<div
 											className="h-2.5 rounded-full transition-all"
@@ -479,7 +457,6 @@ const AdminDashboardClient = () => {
 				</div>
 			</div>
 
-			{/* Pending Reviews Table */}
 			<div className="bg-bg border border-line rounded-xl p-5">
 				<div className="flex items-center justify-between mb-4">
 					<div>
@@ -521,9 +498,7 @@ const AdminDashboardClient = () => {
 				</div>
 			</div>
 
-			{/* Bottom Row */}
 			<div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pb-6">
-				{/* Top Rated Movies */}
 				<div className="bg-bg border border-line rounded-xl p-5">
 					<div className="flex items-center justify-between mb-4">
 						<p className="text-[14px] font-semibold text-ink">Top Rated Movies</p>
@@ -550,7 +525,6 @@ const AdminDashboardClient = () => {
 					</div>
 				</div>
 
-				{/* Monthly Revenue Bars */}
 				<div className="bg-bg border border-line rounded-xl p-5">
 					<div className="flex items-center justify-between mb-4">
 						<p className="text-[14px] font-semibold text-ink">Monthly Revenue</p>
@@ -562,9 +536,7 @@ const AdminDashboardClient = () => {
 					<div className="space-y-3">
 						{(stats?.paymentStats.monthlyRevenue ?? []).map((item) => (
 							<div key={item.month} className="flex items-center gap-3">
-								<span className="text-[12px] text-text-muted w-8 flex-shrink-0">
-									{item.month.split(" ")[0]}
-								</span>
+								<span className="text-[12px] text-text-muted w-8 flex-shrink-0">{item.month.split(" ")[0]}</span>
 								<div className="flex-1 bg-line-2 rounded-full h-3 overflow-hidden">
 									<div
 										className="h-3 rounded-full bg-brand/70 transition-all"

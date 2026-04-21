@@ -30,7 +30,6 @@ const MoviesPagination = ({ meta }: Props) => {
 		}
 	}
 
-	// ellipsis যোগ করো
 	const pagesWithEllipsis: (number | "...")[] = [];
 	let prev = 0;
 	for (const page of pages) {

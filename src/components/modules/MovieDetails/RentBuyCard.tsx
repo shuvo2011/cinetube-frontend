@@ -66,7 +66,6 @@ const RentBuyCard = ({ movie, access, isLoggedIn }: Props) => {
 		}
 	};
 
-	// Already has access
 	if (access?.hasAccess) {
 		return (
 			<div className="bg-white rounded-[14px] border border-line-2 p-5">
@@ -110,7 +109,6 @@ const RentBuyCard = ({ movie, access, isLoggedIn }: Props) => {
 		);
 	}
 
-	// Not logged in
 	if (!isLoggedIn) {
 		return (
 			<div className="bg-white rounded-[14px] border border-line-2 p-5">
@@ -118,13 +116,17 @@ const RentBuyCard = ({ movie, access, isLoggedIn }: Props) => {
 				<div className="space-y-2.5 mb-4">
 					{movie.rentPrice > 0 && (
 						<div className="flex items-center justify-between text-[13px]">
-							<span className="text-text-muted flex items-center gap-1.5"><Clock size={13} /> Rent</span>
+							<span className="text-text-muted flex items-center gap-1.5">
+								<Clock size={13} /> Rent
+							</span>
 							<span className="font-semibold text-ink">৳ {movie.rentPrice}</span>
 						</div>
 					)}
 					{movie.buyPrice > 0 && (
 						<div className="flex items-center justify-between text-[13px]">
-							<span className="text-text-muted flex items-center gap-1.5"><ShoppingCart size={13} /> Buy</span>
+							<span className="text-text-muted flex items-center gap-1.5">
+								<ShoppingCart size={13} /> Buy
+							</span>
 							<span className="font-semibold text-ink">৳ {movie.buyPrice}</span>
 						</div>
 					)}
@@ -139,13 +141,11 @@ const RentBuyCard = ({ movie, access, isLoggedIn }: Props) => {
 		);
 	}
 
-	// Logged in, no access — show rent/buy options
 	return (
 		<div className="bg-white rounded-[14px] border border-line-2 p-5">
 			<p className="text-[11px] font-bold tracking-[0.12em] text-text-muted uppercase mb-4">Get Access</p>
 
 			<div className="space-y-4">
-				{/* Rent */}
 				{movie.rentPrice > 0 && (
 					<div className="border border-line rounded-[10px] p-3.5">
 						<div className="flex items-center justify-between mb-3">
@@ -158,8 +158,7 @@ const RentBuyCard = ({ movie, access, isLoggedIn }: Props) => {
 						{rentDuration && (
 							<div className="flex items-center gap-1.5 text-[12px] text-text-muted mb-3">
 								<Clock size={11} />
-								Access for{" "}
-								<span className="font-semibold text-ink">{DURATION_LABELS[rentDuration]}</span>
+								Access for <span className="font-semibold text-ink">{DURATION_LABELS[rentDuration]}</span>
 							</div>
 						)}
 						<button
@@ -170,17 +169,12 @@ const RentBuyCard = ({ movie, access, isLoggedIn }: Props) => {
 								"bg-brand/10 text-brand hover:bg-brand hover:text-white disabled:opacity-50",
 							)}
 						>
-							{loadingType === "RENT" ? (
-								<Loader2 size={14} className="animate-spin" />
-							) : (
-								<ShoppingCart size={14} />
-							)}
+							{loadingType === "RENT" ? <Loader2 size={14} className="animate-spin" /> : <ShoppingCart size={14} />}
 							Rent Now
 						</button>
 					</div>
 				)}
 
-				{/* Buy */}
 				{movie.buyPrice > 0 && (
 					<div className="border border-line rounded-[10px] p-3.5">
 						<div className="flex items-center justify-between mb-3">
@@ -199,11 +193,7 @@ const RentBuyCard = ({ movie, access, isLoggedIn }: Props) => {
 								"bg-brand text-white hover:bg-brand/90 disabled:opacity-50",
 							)}
 						>
-							{loadingType === "BUY" ? (
-								<Loader2 size={14} className="animate-spin" />
-							) : (
-								<ShoppingCart size={14} />
-							)}
+							{loadingType === "BUY" ? <Loader2 size={14} className="animate-spin" /> : <ShoppingCart size={14} />}
 							Buy Now
 						</button>
 					</div>

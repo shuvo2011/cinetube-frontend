@@ -13,7 +13,6 @@ type Props = {
 	children: React.ReactNode;
 };
 
-// Client component — manages sidebar state + live user data for header/sidebar
 export default function DashboardShell({ role, userName, userEmail, children }: Props) {
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -31,9 +30,13 @@ export default function DashboardShell({ role, userName, userEmail, children }: 
 				onClose={() => setSidebarOpen(false)}
 			/>
 
-			{/* Content — desktop offset by sidebar width */}
 			<div className="flex min-h-screen w-full flex-col lg:ml-[260px]">
-				<AppHeader role={role} userName={liveUserName} userEmail={liveUserEmail} onMenuClick={() => setSidebarOpen(true)} />
+				<AppHeader
+					role={role}
+					userName={liveUserName}
+					userEmail={liveUserEmail}
+					onMenuClick={() => setSidebarOpen(true)}
+				/>
 				<main className="flex-1 p-4 lg:p-7">{children}</main>
 			</div>
 		</div>

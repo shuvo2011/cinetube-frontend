@@ -21,14 +21,11 @@ const MoviesLayout = ({ genres, platforms, availableYears, children }: MoviesLay
 	return (
 		<div className="w-full max-w-[1400px] mx-auto px-6 md:px-10 py-10">
 			<div className="grid grid-cols-1 lg:grid-cols-[240px_minmax(0,1fr)] gap-10 items-start">
-				{/* Desktop Sidebar */}
 				<div className="sticky top-[80px] self-start hidden lg:block">
 					<MoviesFilter genres={genres} platforms={platforms} availableYears={availableYears} />
 				</div>
 
-				{/* Main */}
 				<div className="min-w-0">
-					{/* Mobile Filter Button */}
 					<div className="flex items-center justify-between mb-4 lg:hidden">
 						<button
 							onClick={() => setFilterOpen(true)}
@@ -45,12 +42,10 @@ const MoviesLayout = ({ genres, platforms, availableYears, children }: MoviesLay
 				</div>
 			</div>
 
-			{/* Mobile Filter Drawer */}
 			{filterOpen && (
 				<div className="fixed inset-0 z-50 lg:hidden">
-					{/* Backdrop */}
 					<div className="absolute inset-0 bg-black/40" onClick={() => setFilterOpen(false)} />
-					{/* Drawer */}
+
 					<div className="absolute left-0 top-0 h-full w-[300px] bg-white overflow-y-auto p-6">
 						<div className="flex items-center justify-between mb-6">
 							<p className="font-bold text-ink text-[16px]">Filters</p>

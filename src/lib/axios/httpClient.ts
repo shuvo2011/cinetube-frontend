@@ -40,7 +40,6 @@ const axiosInstance = async (contentType = "application/json") => {
 		baseURL: `${API_BASE_URL}`,
 		timeout: 30000,
 		headers: {
-			// FormData হলে Content-Type বাদ দাও — axios নিজেই multipart boundary সেট করে
 			...(contentType !== "multipart/form-data" && { "Content-Type": contentType }),
 			Cookie: cookieHeader,
 		},

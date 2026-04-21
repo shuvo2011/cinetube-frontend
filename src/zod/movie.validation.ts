@@ -16,6 +16,6 @@ export const movieFormSchema = z.object({
 	trailerUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
 	streamingUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
 	rentDuration: rentalDurationEnum.optional().or(z.literal("")),
-	// rentPrice: z.coerce.number().min(65, "Rent price must be at least 65").optional().or(z.literal("")),
-	// buyPrice: z.coerce.number().min(65, "Buy price must be at least 65").optional().or(z.literal("")),
+	rentPrice: z.coerce.number().optional(),
+	buyPrice: z.coerce.number().optional(),
 });

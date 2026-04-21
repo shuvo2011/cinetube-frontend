@@ -80,7 +80,6 @@ const MovieDetailsPage = async ({ params, searchParams }: MovieDetailsPageProps)
 	return (
 		<div className="bg-bg-2 min-h-screen">
 			<div className="max-w-350 mx-auto px-6 md:px-10">
-				{/* Breadcrumb */}
 				<div className="py-5 text-[13px] text-text-muted">
 					<Link href="/movies" className="hover:text-brand transition-colors">
 						Movies
@@ -89,12 +88,9 @@ const MovieDetailsPage = async ({ params, searchParams }: MovieDetailsPageProps)
 					<span className="text-ink font-medium">{movie.title}</span>
 				</div>
 
-				{/* Hero */}
 				<MovieDetailHero movie={movie} access={access} isLoggedIn={!!user} initialInWatchlist={inWatchlist} />
 
-				{/* Body */}
 				<div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_300px] gap-8 pb-20">
-					{/* Main */}
 					<div className="space-y-6">
 						{hasReviewed ? (
 							<EditReviewForm review={existingReview} tags={tags ?? []} />
@@ -104,7 +100,6 @@ const MovieDetailsPage = async ({ params, searchParams }: MovieDetailsPageProps)
 						<ReviewList reviews={reviews} currentUser={user} meta={reviewMeta} />
 					</div>
 
-					{/* Sidebar */}
 					<div className="space-y-5">
 						{movie.pricingType === "PREMIUM" && <RentBuyCard movie={movie} access={access} isLoggedIn={!!user} />}
 						<MovieInfo movie={movie} />

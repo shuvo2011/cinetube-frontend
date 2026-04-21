@@ -1,4 +1,3 @@
-// app/(public)/contact/page.tsx
 "use client";
 
 import { useForm } from "@tanstack/react-form";
@@ -8,11 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-
-/* ------------------------------------------------------------------ */
-/*  Schema                                                              */
-/* ------------------------------------------------------------------ */
-
 const contactSchema = z.object({
 	name: z.string().min(2, "Name must be at least 2 characters").max(60, "Name is too long"),
 	email: z.string().email("Enter a valid email address"),
@@ -24,10 +18,6 @@ const contactSchema = z.object({
 });
 
 type ContactFormValues = z.infer<typeof contactSchema>;
-
-/* ------------------------------------------------------------------ */
-/*  Page                                                                */
-/* ------------------------------------------------------------------ */
 
 const ContactClient = () => {
 	const form = useForm<ContactFormValues>({
@@ -48,9 +38,8 @@ const ContactClient = () => {
 
 	return (
 		<div className="bg-white min-h-screen">
-			{/* ── Hero ── */}
 			<section className="bg-[#FEF2F2] py-16">
-				<div className="max-w-[1280px] mx-auto px-10 text-center">
+				<div className="max-w-7xl mx-auto px-10 text-center">
 					<div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white rounded-full text-[12px] font-semibold text-[#2B2B30] shadow-sm mb-5">
 						<span className="w-1.5 h-1.5 rounded-full bg-[#EF4C5C]" />
 						We&apos;d love to hear from you
@@ -65,11 +54,9 @@ const ContactClient = () => {
 				</div>
 			</section>
 
-			{/* ── Body ── */}
 			<section className="py-20">
-				<div className="max-w-[1280px] mx-auto px-10">
+				<div className="max-w-7xl mx-auto px-10">
 					<div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-12 items-start">
-						{/* Form */}
 						<div className="bg-[#FAFAFA] border border-[#F2F2F5] rounded-[18px] p-8">
 							<h2 className="text-[22px] font-bold text-[#0F0F10] tracking-tight mb-1">Send us a message</h2>
 							<p className="text-[14px] text-[#6B6B73] mb-8">
@@ -83,7 +70,6 @@ const ContactClient = () => {
 								}}
 								className="flex flex-col gap-5"
 							>
-								{/* Name + Email */}
 								<div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
 									<form.Field name="name" validators={{ onChange: contactSchema.shape.name }}>
 										{(field) => (
@@ -129,7 +115,6 @@ const ContactClient = () => {
 									</form.Field>
 								</div>
 
-								{/* Subject */}
 								<form.Field name="subject" validators={{ onChange: contactSchema.shape.subject }}>
 									{(field) => (
 										<div className="flex flex-col gap-1.5">
@@ -151,7 +136,6 @@ const ContactClient = () => {
 									)}
 								</form.Field>
 
-								{/* Message */}
 								<form.Field name="message" validators={{ onChange: contactSchema.shape.message }}>
 									{(field) => (
 										<div className="flex flex-col gap-1.5">
@@ -179,7 +163,6 @@ const ContactClient = () => {
 									)}
 								</form.Field>
 
-								{/* Submit */}
 								<form.Subscribe selector={(state) => state.isSubmitting}>
 									{(isSubmitting) => (
 										<Button
@@ -195,7 +178,6 @@ const ContactClient = () => {
 							</form>
 						</div>
 
-						{/* Info sidebar */}
 						<div className="flex flex-col gap-4">
 							{[
 								{

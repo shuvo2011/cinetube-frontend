@@ -64,8 +64,6 @@ const MoviesFilter = ({ genres, platforms, availableYears }: MoviesFilterProps) 
 		currentRating === value ? params.delete("minRating") : params.set("minRating", value);
 		push(params);
 	};
-
-	// availableYears থেকে min/max বের করো — hooks এর পরে
 	const minYear = availableYears.length > 0 ? Math.min(...availableYears) : 2000;
 	const maxYear = availableYears.length > 0 ? Math.max(...availableYears) : new Date().getFullYear();
 
@@ -92,7 +90,6 @@ const MoviesFilter = ({ genres, platforms, availableYears }: MoviesFilterProps) 
 
 	return (
 		<aside className="flex-3 shrink-0 pr-2">
-			{/* Sort By */}
 			<div className="mb-9">
 				<p className="text-[11px] font-bold text-ink tracking-[0.12em] uppercase mb-3.5">Sort By</p>
 				<div className="space-y-0.5">
@@ -122,7 +119,6 @@ const MoviesFilter = ({ genres, platforms, availableYears }: MoviesFilterProps) 
 				</div>
 			</div>
 
-			{/* Genre */}
 			{genres.length > 0 && (
 				<div className="mb-9">
 					<p className="text-[11px] font-bold text-ink tracking-[0.12em] uppercase mb-3.5">Genre</p>
@@ -144,8 +140,6 @@ const MoviesFilter = ({ genres, platforms, availableYears }: MoviesFilterProps) 
 					</div>
 				</div>
 			)}
-
-			{/* Release Year */}
 
 			{availableYears.length > 0 && (
 				<div className="mb-9">
@@ -170,7 +164,6 @@ const MoviesFilter = ({ genres, platforms, availableYears }: MoviesFilterProps) 
 				</div>
 			)}
 
-			{/* Rating Range */}
 			<div className="mb-9">
 				<p className="text-[11px] font-bold text-ink tracking-[0.12em] uppercase mb-3.5">Rating Range</p>
 				<div className="space-y-0.5">
@@ -206,7 +199,6 @@ const MoviesFilter = ({ genres, platforms, availableYears }: MoviesFilterProps) 
 				</div>
 			</div>
 
-			{/* Platform */}
 			{platforms.length > 0 && (
 				<div className="mb-9">
 					<p className="text-[11px] font-bold text-ink tracking-[0.12em] uppercase mb-3.5">Platform</p>

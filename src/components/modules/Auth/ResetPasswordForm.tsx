@@ -102,7 +102,6 @@ const ResetPasswordForm = () => {
 					}}
 					className="space-y-4"
 				>
-					{/* OTP */}
 					<div>
 						<Label className="text-center block mb-3 text-xs text-muted-foreground">Enter OTP</Label>
 						<div className="flex gap-2 justify-center" onPaste={handlePaste}>

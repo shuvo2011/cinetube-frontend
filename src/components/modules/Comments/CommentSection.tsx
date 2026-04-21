@@ -36,7 +36,6 @@ const CommentSection = ({ reviewId, currentUser, initialCount }: Props) => {
 			const total = fetched.reduce((acc, c) => acc + 1 + (c.replies?.length ?? 0), 0);
 			setCount(total);
 		} catch {
-			// silent
 		} finally {
 			setLoading(false);
 			setLoaded(true);
@@ -96,9 +95,7 @@ const CommentSection = ({ reviewId, currentUser, initialCount }: Props) => {
 		if (!res.ok) return;
 
 		setComments((prev) =>
-			prev.map((c) =>
-				c.id === parentId ? { ...c, replies: [...(c.replies ?? []), data.data] } : c,
-			),
+			prev.map((c) => (c.id === parentId ? { ...c, replies: [...(c.replies ?? []), data.data] } : c)),
 		);
 	};
 
@@ -125,7 +122,6 @@ const CommentSection = ({ reviewId, currentUser, initialCount }: Props) => {
 
 	return (
 		<div>
-			{/* Toggle row */}
 			<div className="flex items-center gap-3">
 				<button
 					onClick={handleToggle}
@@ -148,7 +144,6 @@ const CommentSection = ({ reviewId, currentUser, initialCount }: Props) => {
 
 			{open && (
 				<div className="mt-4 ml-10 border-t border-line-2 pt-4 space-y-4">
-					{/* Add comment form */}
 					{showForm && currentUser && (
 						<form onSubmit={handleSubmit} className="space-y-2">
 							<textarea
@@ -171,7 +166,11 @@ const CommentSection = ({ reviewId, currentUser, initialCount }: Props) => {
 								</button>
 								<button
 									type="button"
-									onClick={() => { setShowForm(false); setError(""); setNewComment(""); }}
+									onClick={() => {
+										setShowForm(false);
+										setError("");
+										setNewComment("");
+									}}
 									className="flex items-center gap-1 text-[12px] text-text-muted hover:text-ink transition-colors"
 								>
 									<X size={13} />

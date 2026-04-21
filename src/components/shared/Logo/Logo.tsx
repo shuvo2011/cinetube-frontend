@@ -1,4 +1,3 @@
-// Logo.tsx
 import { cn } from "@/lib/utils";
 import { Play } from "lucide-react";
 import Link from "next/link";

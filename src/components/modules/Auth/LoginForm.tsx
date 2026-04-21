@@ -45,7 +45,6 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
 
 	return (
 		<div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
-			{/* Left — Branding */}
 			<div className="hidden lg:flex flex-col justify-between bg-[#0f0f0f] p-12">
 				<div>
 					<div className="mb-12">
@@ -83,10 +82,8 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
 				</div>
 			</div>
 
-			{/* Right — Form */}
 			<div className="flex items-center justify-center px-6 py-12">
 				<div className="w-full max-w-sm">
-					{/* Mobile Logo */}
 					<div className="text-2xl font-medium tracking-wide mb-8 lg:hidden text-center">
 						<span className="text-foreground">Cine</span>
 						<span className="text-destructive">Tube</span>

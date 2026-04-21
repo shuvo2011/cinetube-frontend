@@ -1,4 +1,3 @@
-// src/components/modules/Home/CTASection.tsx
 import Link from "next/link";
 
 const CTASection = () => {

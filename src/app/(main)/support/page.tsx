@@ -147,7 +147,6 @@ const contactMethods = [
 const SupportPage = () => {
 	return (
 		<div className="bg-white min-h-screen">
-			{/* ── Hero ── */}
 			<section className="bg-[#FEF2F2] py-20 relative overflow-hidden">
 				<div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-[#EF4C5C]/5 pointer-events-none" />
 				<div className="absolute -bottom-16 -left-16 w-56 h-56 rounded-full bg-[#EF4C5C]/5 pointer-events-none" />
@@ -181,7 +180,6 @@ const SupportPage = () => {
 				</div>
 			</section>
 
-			{/* ── Support Categories ── */}
 			<section className="py-20">
 				<div className="max-w-[1280px] mx-auto px-10">
 					<div className="flex justify-between items-end mb-12">
@@ -227,7 +225,6 @@ const SupportPage = () => {
 				</div>
 			</section>
 
-			{/* ── FAQ Section ── */}
 			<section id="faq" className="py-20 bg-[#FAFAFA]">
 				<div className="max-w-[1280px] mx-auto px-10">
 					<div className="flex justify-between items-end mb-12">
@@ -256,7 +253,6 @@ const SupportPage = () => {
 				</div>
 			</section>
 
-			{/* ── Contact Methods ── */}
 			<section id="contact" className="py-20">
 				<div className="max-w-[1280px] mx-auto px-10">
 					<div className="text-center mb-12">
@@ -294,7 +290,6 @@ const SupportPage = () => {
 				</div>
 			</section>
 
-			{/* ── Response Time Promise ── */}
 			<section className="bg-[#EF4C5C] py-20">
 				<div className="max-w-[1280px] mx-auto px-10 text-center">
 					<Clock className="w-12 h-12 text-white mx-auto mb-6" />

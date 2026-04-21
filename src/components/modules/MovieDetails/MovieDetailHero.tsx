@@ -44,7 +44,6 @@ const MovieDetailHero = ({ movie, access, isLoggedIn, initialInWatchlist }: Prop
 	};
 	return (
 		<section className="grid grid-cols-1 md:grid-cols-[280px_1fr] lg:grid-cols-[360px_1fr] gap-8 md:gap-10 pb-12">
-			{/* Poster */}
 			<div className="relative rounded-[18px] overflow-hidden bg-linear-to-br from-brand-softer to-brand-soft aspect-2/3 flex items-center justify-center">
 				{movie.posterImage ? (
 					<Image
@@ -57,7 +56,7 @@ const MovieDetailHero = ({ movie, access, isLoggedIn, initialInWatchlist }: Prop
 				) : (
 					<div className="w-40 h-40 rounded-full bg-brand/40" />
 				)}
-				{/* Badges */}
+
 				<div className="absolute top-4 left-4 flex gap-2">
 					<span
 						className={cn(
@@ -73,7 +72,7 @@ const MovieDetailHero = ({ movie, access, isLoggedIn, initialInWatchlist }: Prop
 						</span>
 					)}
 				</div>
-				{/* Stream ribbon */}
+
 				{movie.streamingUrl && (
 					<div className="absolute bottom-4 left-4 right-4 bg-ink/85 text-white px-4 py-3 rounded-[10px] flex justify-between items-center text-[12px]">
 						<span className="opacity-70">Available on</span>
@@ -82,7 +81,6 @@ const MovieDetailHero = ({ movie, access, isLoggedIn, initialInWatchlist }: Prop
 				)}
 			</div>
 
-			{/* Info */}
 			<div className="pt-1">
 				<p className="text-[12px] font-semibold text-text-muted tracking-[0.06em] mb-3">
 					{movie.genres?.map((g) => g.genre.name).join(" · ")}
@@ -91,7 +89,6 @@ const MovieDetailHero = ({ movie, access, isLoggedIn, initialInWatchlist }: Prop
 					{movie.title}
 				</h1>
 
-				{/* Meta pills */}
 				<div className="flex flex-wrap gap-2 mb-6">
 					{movie.releaseYear && <span className="meta-pill">{movie.releaseYear}</span>}
 					{movie.platforms?.map((p) => (
@@ -109,7 +106,6 @@ const MovieDetailHero = ({ movie, access, isLoggedIn, initialInWatchlist }: Prop
 					</span>
 				</div>
 
-				{/* Rating block */}
 				<div className="flex items-center gap-5 py-5 border-y border-line-2 mb-7">
 					<div className="text-[52px] font-black tracking-[-0.03em] text-ink leading-none">
 						{movie.averageRating ? movie.averageRating.toFixed(1) : "N/A"}
@@ -126,7 +122,6 @@ const MovieDetailHero = ({ movie, access, isLoggedIn, initialInWatchlist }: Prop
 					</div>
 				</div>
 
-				{/* Actions */}
 				<div className="flex flex-wrap gap-3 mb-8">
 					<button
 						onClick={handleWatchlist}
@@ -163,7 +158,6 @@ const MovieDetailHero = ({ movie, access, isLoggedIn, initialInWatchlist }: Prop
 					)}
 				</div>
 
-				{/* Director & Cast */}
 				<div>
 					<p className="text-[11px] font-bold tracking-[0.14em] text-text-muted uppercase mb-3">Director & Cast</p>
 					<div className="flex flex-wrap gap-2">

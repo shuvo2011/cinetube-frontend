@@ -22,7 +22,6 @@ const WhatWeOfferSection = () => {
 	return (
 		<section className="py-16 md:py-20 bg-bg">
 			<div className="max-w-350 mx-auto px-6 md:px-10">
-				{/* Top */}
 				<div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-12">
 					<div>
 						<p className="text-xs font-semibold tracking-widest text-brand uppercase mb-3">What We Offer</p>
@@ -35,7 +34,6 @@ const WhatWeOfferSection = () => {
 					</p>
 				</div>
 
-				{/* Cards */}
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-5">
 					{offers.map((offer) => (
 						<div key={offer.title} className="bg-bg-2 border border-line rounded-[14px] p-7">

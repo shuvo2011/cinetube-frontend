@@ -15,7 +15,6 @@ export const getMyProfile = async () => {
 	}
 };
 
-
 export const updateMyProfile = async (formData: FormData): Promise<ApiResponse<any>> => {
 	try {
 		return await httpClient.patch<any>("/users/update-profile", formData, { isFormData: true });
@@ -38,8 +37,6 @@ export const changeEmail = async (payload: { newEmail: string }): Promise<ApiRes
 		throw new Error(msg);
 	}
 };
-
-// ── Admin user management ──────────────────────────────────────────────────
 
 export interface IAdminUser {
 	id: string;

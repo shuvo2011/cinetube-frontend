@@ -1,4 +1,3 @@
-// src/components/modules/Home/NewReleasesSection.tsx
 import { IMovie } from "@/types/movie.types";
 import { Star } from "lucide-react";
 import Image from "next/image";
@@ -22,7 +21,6 @@ const NewReleasesSection = ({ movies }: NewReleasesSectionProps) => {
 	return (
 		<section className="py-16 md:py-20 bg-bg-2">
 			<div className="max-w-350 mx-auto px-6 md:px-10">
-				{/* Header */}
 				<div className="flex items-end justify-between mb-10">
 					<div>
 						<p className="text-[11px] font-bold tracking-[0.18em] text-brand uppercase mb-3">Just Added</p>
@@ -38,7 +36,6 @@ const NewReleasesSection = ({ movies }: NewReleasesSectionProps) => {
 					</Link>
 				</div>
 
-				{/* Grid */}
 				<div className="grid grid-cols-2 md:grid-cols-4 gap-5">
 					{movies.map((movie, index) => {
 						const color = CARD_COLORS[index % CARD_COLORS.length];
@@ -50,7 +47,6 @@ const NewReleasesSection = ({ movies }: NewReleasesSectionProps) => {
 								href={`/movies/${movie.id}`}
 								className="bg-bg rounded-[14px] overflow-hidden border border-line-2 hover:-translate-y-1 transition-transform"
 							>
-								{/* Thumbnail */}
 								<div className="aspect-4/5 relative flex items-center justify-center" style={{ background: color.bg }}>
 									{movie.posterImage ? (
 										<div className="relative w-90 h-100">
@@ -66,7 +62,6 @@ const NewReleasesSection = ({ movies }: NewReleasesSectionProps) => {
 										<div className="w-30 h-30 rounded-full" style={{ background: color.dot }} />
 									)}
 
-									{/* Badge */}
 									<span
 										className={`absolute top-3 right-3 text-[10px] font-semibold px-2.5 py-1 rounded-full ${
 											isFree ? "bg-green-soft text-green" : "bg-brand-softer text-brand"
@@ -76,7 +71,6 @@ const NewReleasesSection = ({ movies }: NewReleasesSectionProps) => {
 									</span>
 								</div>
 
-								{/* Body */}
 								<div className="p-4">
 									<div className="text-[16px] font-bold text-ink mb-1 truncate">{movie.title}</div>
 									<div className="text-xs text-text-muted mb-2.5">

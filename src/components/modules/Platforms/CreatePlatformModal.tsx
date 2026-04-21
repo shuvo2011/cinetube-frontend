@@ -59,9 +59,7 @@ const CreatePlatformModal = () => {
 			void queryClient.invalidateQueries({ queryKey: ["platforms"] });
 			void queryClient.refetchQueries({ queryKey: ["platforms"], type: "active" });
 			router.refresh();
-		} catch {
-			// onError handles it
-		}
+		} catch {}
 	};
 
 	return (

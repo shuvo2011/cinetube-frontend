@@ -23,8 +23,6 @@ export default function AppSidebar({ role, userName, userEmail, open, onClose }:
 
 	const navSections = role === "ADMIN" ? adminNavSections : userNavSections;
 
-	// Compute the most specific active href (longest matching) so parent items
-	// don't remain active when a more specific child route is selected.
 	const allHrefs = navSections.flatMap((s) => s.items.map((i) => i.href));
 	const activeHref = (() => {
 		const matches = allHrefs.filter((h) => pathname === h || (h.length > 1 && pathname.startsWith(h + "/")));
@@ -53,20 +51,17 @@ export default function AppSidebar({ role, userName, userEmail, open, onClose }:
 
 	return (
 		<>
-			{/* Mobile overlay backdrop */}
 			{open && <div className="fixed inset-0 z-40 bg-black/40 lg:hidden" onClick={onClose} />}
 
-			{/* Sidebar */}
 			<aside
 				className={cn(
 					"fixed left-0 top-0 z-50 flex h-screen w-[260px] flex-col border-r border-gray-100 bg-white transition-transform duration-300",
-					// Mobile: slide in/out
+
 					open ? "translate-x-0" : "-translate-x-full",
-					// Desktop: always visible
+
 					"lg:translate-x-0",
 				)}
 			>
-				{/* Logo */}
 				<div className="flex items-center gap-3 border-b border-gray-100 px-5 py-5">
 					<Logo />
 					<span
@@ -74,13 +69,12 @@ export default function AppSidebar({ role, userName, userEmail, open, onClose }:
 					>
 						{role === "ADMIN" ? "Admin" : "User"}
 					</span>
-					{/* Close button — mobile only */}
+
 					<button onClick={onClose} className="ml-1 rounded-lg p-1 hover:bg-gray-100 lg:hidden">
 						<X className="h-4 w-4 text-gray-500" />
 					</button>
 				</div>
 
-				{/* Profile */}
 				<div className="border-b border-gray-100 px-5 py-4">
 					<div className="flex items-center gap-3">
 						<div
@@ -99,7 +93,6 @@ export default function AppSidebar({ role, userName, userEmail, open, onClose }:
 					</div>
 				</div>
 
-				{/* Nav */}
 				<nav className="flex-1 overflow-y-auto px-3 py-3">
 					{navSections.map((section) => (
 						<div key={section.title} className="mb-2">
@@ -138,7 +131,6 @@ export default function AppSidebar({ role, userName, userEmail, open, onClose }:
 					))}
 				</nav>
 
-				{/* Logout */}
 				<div className="border-t border-gray-100 p-3">
 					<Button
 						variant="ghost"

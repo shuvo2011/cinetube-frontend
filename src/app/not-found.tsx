@@ -1,8 +1,6 @@
-// app/not-found.tsx
-
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Film, Home, Search, Star, Calendar, User, LayoutDashboard } from "lucide-react";
+import { Film, Home, Search } from "lucide-react";
 export const metadata = {
 	title: "404 - Lost in Streaming",
 	description:
@@ -11,7 +9,6 @@ export const metadata = {
 export default function NotFound() {
 	return (
 		<div className="min-h-screen bg-muted/40 flex flex-col items-center justify-center px-4 py-20">
-			{/* Film reel icon */}
 			<div className="relative mb-8">
 				<div className="w-28 h-28 rounded-full border-2 border-dashed border-muted-foreground/20 flex items-center justify-center bg-background shadow-sm">
 					<div className="w-14 h-14 rounded-full bg-destructive/10 border-2 border-destructive flex items-center justify-center">
@@ -22,20 +19,14 @@ export default function NotFound() {
 					404
 				</span>
 			</div>
-
-			{/* Error code */}
 			<h1 className="text-[96px] font-black leading-none tracking-tighter text-muted-foreground/20 mb-2 select-none">
 				4<span className="text-destructive">0</span>4
 			</h1>
-
-			{/* Title & description */}
 			<h2 className="text-2xl font-bold text-foreground tracking-tight mb-3">Page Not Found</h2>
 			<p className="text-muted-foreground text-center max-w-sm mb-10 leading-relaxed">
 				Looks like this scene got cut from the final edit. The page you&apos;re looking for doesn&apos;t exist or has
 				been moved.
 			</p>
-
-			{/* CTA buttons */}
 			<div className="flex gap-3 flex-wrap justify-center mb-12">
 				<Button asChild>
 					<Link href="/">

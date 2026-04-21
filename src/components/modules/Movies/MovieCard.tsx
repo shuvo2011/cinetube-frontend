@@ -29,7 +29,6 @@ const MovieCard = ({ movie, index }: MovieCardProps) => {
 			href={`/movies/${movie.id}`}
 			className="group bg-white rounded-[14px] overflow-hidden border border-line-2 hover:-translate-y-0.5 hover:shadow-[0_12px_40px_rgba(15,15,16,0.08)] hover:border-transparent transition-all duration-200 flex flex-col"
 		>
-			{/* Poster */}
 			<div
 				className="relative overflow-hidden flex items-center justify-center"
 				style={{ aspectRatio: "16/11", background: color.bg }}
@@ -42,7 +41,6 @@ const MovieCard = ({ movie, index }: MovieCardProps) => {
 					<div className="w-27.5 h-27.5 rounded-full" style={{ background: color.circle }} />
 				)}
 
-				{/* Badges */}
 				<div className="absolute top-3.5 left-3.5 flex items-center gap-1.5">
 					<span
 						className={cn(
@@ -60,7 +58,6 @@ const MovieCard = ({ movie, index }: MovieCardProps) => {
 				</div>
 			</div>
 
-			{/* Body */}
 			<div className="p-[18px] pb-4 flex flex-col flex-1">
 				<h3 className="text-[17px] font-bold text-ink tracking-[-0.01em] mb-1 truncate">{movie.title}</h3>
 				<p className="text-[12px] text-text-muted mb-2.5">
@@ -89,7 +86,6 @@ const MovieCard = ({ movie, index }: MovieCardProps) => {
 				</div>
 			</div>
 
-			{/* Footer */}
 			<div className="px-[18px] py-3 border-t border-line-2 flex items-center justify-between">
 				<span className="text-[12px] text-text-muted truncate">{movie.director}</span>
 			</div>

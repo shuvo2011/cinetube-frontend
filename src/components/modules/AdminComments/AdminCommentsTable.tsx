@@ -35,7 +35,11 @@ const AdminCommentsTable = ({ initialQueryString }: { initialQueryString: string
 
 	const queryString = queryStringFromUrl || initialQueryString;
 
-	const { data: commentsResponse, isLoading, isFetching } = useQuery({
+	const {
+		data: commentsResponse,
+		isLoading,
+		isFetching,
+	} = useQuery({
 		queryKey: ["admin-comments", queryString],
 		queryFn: () => getCommentsForAdmin(queryString),
 	});

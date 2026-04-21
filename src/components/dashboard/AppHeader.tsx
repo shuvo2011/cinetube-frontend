@@ -25,7 +25,6 @@ type Props = {
 function getPageTitle(pathname: string, role: "ADMIN" | "USER"): { title: string; sub: string } {
 	const sections = role === "ADMIN" ? adminNavSections : userNavSections;
 	const allItems = sections.flatMap((s) => s.items);
-	// Find the most specific (longest) matching item so parent titles aren't chosen when a child route is active.
 	const matches = allItems.filter(
 		(item) => pathname === item.href || (item.href.length > 1 && pathname.startsWith(item.href + "/")),
 	);
@@ -61,21 +60,17 @@ export default function AppHeader({ role, userName, userEmail, onMenuClick }: Pr
 
 	return (
 		<header className="sticky top-0 z-40 flex h-16 items-center gap-3 border-b border-gray-100 bg-white px-4 lg:px-7">
-			{/* Hamburger — mobile only */}
 			<button onClick={onMenuClick} className="rounded-lg p-2 hover:bg-gray-100 lg:hidden">
 				<Menu className="h-5 w-5 text-gray-600" />
 			</button>
 
-			{/* Page title */}
 			<div className="mr-auto">
 				<h1 className="text-[15px] font-extrabold tracking-tight text-gray-900">
 					{title}
 					<span className="ml-2 hidden text-[13px] font-normal text-gray-400 sm:inline">{sub}</span>
 				</h1>
 			</div>
-			{/* Settings — hidden on mobile */}
 
-			{/* Profile dropdown */}
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<button className="flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-gray-50">

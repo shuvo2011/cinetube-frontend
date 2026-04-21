@@ -42,7 +42,6 @@ const UserProfileForm = () => {
 		};
 	}, []);
 
-	// Separate mutation just for image auto-upload
 	const imageMutation = useMutation({
 		mutationFn: (fd: FormData) => updateMyProfile(fd),
 		onSuccess: (res) => {
@@ -79,14 +78,12 @@ const UserProfileForm = () => {
 		const f = e.target.files?.[0] ?? null;
 		if (!f) return;
 
-		// Show local preview immediately
 		const url = URL.createObjectURL(f);
 		if (prevObjectUrl.current) URL.revokeObjectURL(prevObjectUrl.current);
 		prevObjectUrl.current = url;
 		setPreview(url);
 		setImageJustSaved(false);
 
-		// Auto-upload
 		const fd = new FormData();
 		fd.append("file", f);
 		imageMutation.mutate(fd);
@@ -155,7 +152,6 @@ const UserProfileForm = () => {
 		<form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-4">
 			<div className="md:col-span-1">
 				<div className="bg-bg border border-line rounded-xl p-4 flex flex-col items-center gap-3">
-					{/* Avatar with upload overlay */}
 					<div className="relative w-28 h-28">
 						{preview ? (
 							// eslint-disable-next-line @next/next/no-img-element
@@ -172,21 +168,18 @@ const UserProfileForm = () => {
 							</div>
 						)}
 
-						{/* Uploading spinner overlay */}
 						{isImageUploading && (
 							<div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center">
 								<Loader2 className="w-7 h-7 text-white animate-spin" />
 							</div>
 						)}
 
-						{/* Saved checkmark overlay */}
 						{imageJustSaved && !isImageUploading && (
 							<div className="absolute inset-0 rounded-full bg-black/40 flex items-center justify-center">
 								<CheckCircle2 className="w-7 h-7 text-green-400" />
 							</div>
 						)}
 
-						{/* Click-to-change overlay (idle state) */}
 						{!isImageUploading && !imageJustSaved && (
 							<label className="absolute inset-0 rounded-full flex items-center justify-center bg-black/0 hover:bg-black/40 transition-colors cursor-pointer group">
 								<Camera className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" />

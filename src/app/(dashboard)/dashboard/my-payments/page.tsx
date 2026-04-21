@@ -42,7 +42,6 @@ const PaymentCard = ({ payment }: { payment: IPayment }) => {
 
 	return (
 		<div className="bg-white rounded-[14px] border border-line-2 p-5 flex gap-4">
-			{/* Poster */}
 			{payment.movie ? (
 				<div className="w-14 h-20 rounded-[8px] overflow-hidden shrink-0 bg-bg-2 relative">
 					{payment.movie.posterImage ? (
@@ -61,7 +60,6 @@ const PaymentCard = ({ payment }: { payment: IPayment }) => {
 				</div>
 			)}
 
-			{/* Info */}
 			<div className="flex-1 min-w-0">
 				<div className="flex items-start justify-between gap-3 mb-1.5">
 					<div>
@@ -99,7 +97,6 @@ const PaymentCard = ({ payment }: { payment: IPayment }) => {
 					<span className="text-[15px] font-black text-ink shrink-0">৳{payment.amount}</span>
 				</div>
 
-				{/* Expiry info */}
 				{isRent && payment.rentExpiresAt && (
 					<p className={`text-[12px] mb-2 flex items-center gap-1 ${rentExpired ? "text-red-500" : "text-text-muted"}`}>
 						<Clock size={11} />

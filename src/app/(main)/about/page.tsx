@@ -1,5 +1,3 @@
-// app/(public)/about/page.tsx
-
 import Link from "next/link";
 import { ArrowRight, Users, Film, Star, ShieldCheck, Zap, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,11 +6,6 @@ export const metadata = {
 	title: "About Us",
 	description: "Learn about CineTube — who we are, what drives us, and the team behind the platform.",
 };
-
-/* ------------------------------------------------------------------ */
-/*  Data                                                                */
-/* ------------------------------------------------------------------ */
-
 const values = [
 	{
 		icon: ShieldCheck,
@@ -67,24 +60,15 @@ const team = [
 	},
 ];
 
-/* ------------------------------------------------------------------ */
-/*  Page                                                                */
-/* ------------------------------------------------------------------ */
-
 const AboutPage = () => {
 	return (
 		<div className="bg-white min-h-screen">
-			{/* ────────────────────────────────────────────────
-          Section 1 — Hero / Who We Are
-      ──────────────────────────────────────────────── */}
 			<section className="bg-[#FEF2F2] py-24 relative overflow-hidden">
-				{/* decorative blobs */}
 				<div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[#EF4C5C]/5 pointer-events-none" />
 				<div className="absolute -bottom-20 -left-20 w-64 h-64 rounded-full bg-[#EF4C5C]/5 pointer-events-none" />
 
 				<div className="max-w-[1280px] mx-auto px-10 relative z-10">
 					<div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-						{/* Left */}
 						<div>
 							<div className="inline-flex items-center gap-2 px-4 py-1.5 bg-white rounded-full text-[12px] font-semibold text-[#2B2B30] shadow-sm mb-6">
 								<span className="w-1.5 h-1.5 rounded-full bg-[#EF4C5C]" />
@@ -113,7 +97,6 @@ const AboutPage = () => {
 							</Button>
 						</div>
 
-						{/* Right — stat grid */}
 						<div className="grid grid-cols-2 gap-4">
 							{[
 								{ icon: Film, n: "12K+", l: "Movies & Series", bg: "bg-white", nc: "text-[#EF4C5C]" },
@@ -138,12 +121,8 @@ const AboutPage = () => {
 				</div>
 			</section>
 
-			{/* ────────────────────────────────────────────────
-          Section 2 — Our Values
-      ──────────────────────────────────────────────── */}
 			<section className="py-24 bg-[#FAFAFA]">
-				<div className="max-w-[1280px] mx-auto px-10">
-					{/* Header */}
+				<div className="max-w-7xl mx-auto px-10">
 					<div className="flex justify-between items-end mb-14">
 						<div>
 							<p className="text-[11px] font-bold text-[#EF4C5C] tracking-[0.18em] uppercase mb-3">WHAT WE STAND FOR</p>
@@ -156,7 +135,6 @@ const AboutPage = () => {
 						</p>
 					</div>
 
-					{/* Cards */}
 					<div className="grid grid-cols-1 md:grid-cols-3 gap-5">
 						{values.map((v) => {
 							const Icon = v.icon;
@@ -179,12 +157,8 @@ const AboutPage = () => {
 				</div>
 			</section>
 
-			{/* ────────────────────────────────────────────────
-          Section 3 — Team + CTA
-      ──────────────────────────────────────────────── */}
 			<section className="py-24">
-				<div className="max-w-[1280px] mx-auto px-10">
-					{/* Header */}
+				<div className="max-w-7xl mx-auto px-10">
 					<div className="text-center mb-14">
 						<p className="text-[11px] font-bold text-[#EF4C5C] tracking-[0.18em] uppercase mb-3">THE PEOPLE</p>
 						<h2 className="text-[40px] font-extrabold tracking-[-0.025em] text-[#0F0F10] leading-[1.05] mb-4">
@@ -195,7 +169,6 @@ const AboutPage = () => {
 						</p>
 					</div>
 
-					{/* Team grid */}
 					<div className="grid grid-cols-2 md:grid-cols-4 gap-5 mb-20">
 						{team.map((member) => (
 							<div
@@ -215,7 +188,6 @@ const AboutPage = () => {
 						))}
 					</div>
 
-					{/* CTA banner */}
 					<div className="bg-[#EF4C5C] rounded-[24px] px-12 py-14 flex flex-col md:flex-row items-center justify-between gap-8">
 						<div>
 							<h3 className="text-[30px] font-extrabold text-white tracking-tight mb-2">Join 200,000+ Cinephiles</h3>
