@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import ContactClient from "@/components/modules/contact/ContactClient";
 
 export const metadata = {

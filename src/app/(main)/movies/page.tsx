@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import MoviesLayout from "@/components/modules/Movies/MoviesLayout";
 import MovieCard from "@/components/modules/Movies/MovieCard";
 import MoviesHero from "@/components/modules/Movies/MoviesHero";

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { HOME_HERO_LIMIT, HOME_NEW_RELEASES_LIMIT, HOME_TOP_RATED_LIMIT } from "@/constants/home.constants";
 import { getMovies, getTopRatedMovies } from "@/services/movie.services";
 import { getUserInfo } from "@/services/auth.services";

@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ITag } from "@/services/tag.services";
+import { ITag } from "@/types/tag.types";
 
 interface Props {
 	review: any;

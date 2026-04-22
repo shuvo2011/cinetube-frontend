@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import Link from "next/link";
 import { ArrowRight, Users, Film, Star, ShieldCheck, Zap, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,6 +8,7 @@ export const metadata = {
 	title: "About Us",
 	description: "Learn about CineTube — who we are, what drives us, and the team behind the platform.",
 };
+
 const values = [
 	{
 		icon: ShieldCheck,

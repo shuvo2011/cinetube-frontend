@@ -18,6 +18,7 @@ import {
 	XAxis,
 	YAxis,
 } from "recharts";
+import type { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 
 const BRAND = "#EF4C5C";
 const GREEN = "#16A34A";
@@ -34,7 +35,16 @@ const fmt = (n: number) => n.toLocaleString("en-US");
 const fmtK = (n: number) => (n >= 1000 ? `${(n / 1000).toFixed(0)}K` : String(n));
 const fmtUSD = (n: number) => `$${n.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 
-const today = new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+const today = new Date().toLocaleDateString("en-US", {
+	month: "long",
+	day: "numeric",
+	year: "numeric",
+});
+
+const formatTooltipValue = (value: ValueType | undefined) => {
+	if (Array.isArray(value)) return value.join(", ");
+	return String(value ?? "");
+};
 
 const Avatar = ({ name }: { name: string }) => {
 	const initials = name
@@ -116,10 +126,12 @@ const PendingReviewRow = ({ review, onAction }: { review: IAdminReview; onAction
 		await approveReview(review.id, "PUBLISHED");
 		onAction();
 	};
+
 	const handleReject = async () => {
 		await approveReview(review.id, "UNPUBLISHED");
 		onAction();
 	};
+
 	return (
 		<tr className="border-b border-line-2 last:border-0">
 			<td className="py-3 pr-4">
@@ -131,7 +143,11 @@ const PendingReviewRow = ({ review, onAction }: { review: IAdminReview; onAction
 			<td className="py-3 pr-4 text-[13px] text-text-base">{review.movie.title}</td>
 			<td className="py-3 pr-4 text-[13px] text-ink">★ {review.rating}/10</td>
 			<td className="py-3 pr-4 text-[12px] text-text-muted">
-				{new Date(review.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+				{new Date(review.createdAt).toLocaleDateString("en-US", {
+					month: "short",
+					day: "numeric",
+					year: "numeric",
+				})}
 			</td>
 			<td className="py-3 pr-4">
 				<span className="text-[11px] font-medium px-2 py-0.5 rounded-full bg-yellow/10 text-yellow">Pending</span>
@@ -304,7 +320,10 @@ const AdminDashboardClient = () => {
 								tickFormatter={(v: number) => `$${v}`}
 							/>
 							<Tooltip
-								formatter={(v: number) => [fmtUSD(v), "Revenue"]}
+								formatter={(value: ValueType | undefined, name: NameType | undefined) => {
+									const numericValue = Array.isArray(value) ? Number(value[0] ?? 0) : Number(value ?? 0);
+									return [fmtUSD(numericValue), String(name ?? "Revenue")];
+								}}
 								contentStyle={{ borderRadius: 8, border: "1px solid #EAEAEE", fontSize: 12 }}
 							/>
 							<Area type="monotone" dataKey="revenue" stroke={BRAND} strokeWidth={2} fill="url(#revenueGrad)" />
@@ -372,7 +391,10 @@ const AdminDashboardClient = () => {
 									))}
 								</Pie>
 								<Tooltip
-									formatter={(v: number, n: string) => [v, n]}
+									formatter={(value: ValueType | undefined, name: NameType | undefined) => [
+										formatTooltipValue(value),
+										String(name ?? ""),
+									]}
 									contentStyle={{ borderRadius: 8, fontSize: 11 }}
 								/>
 							</PieChart>
@@ -427,7 +449,10 @@ const AdminDashboardClient = () => {
 							/>
 							<YAxis tick={{ fontSize: 10, fill: "#9CA0A8" }} axisLine={false} tickLine={false} allowDecimals={false} />
 							<Tooltip
-								formatter={(v: number) => [v, "Reviews"]}
+								formatter={(value: ValueType | undefined, name: NameType | undefined) => [
+									formatTooltipValue(value),
+									String(name ?? "Reviews"),
+								]}
 								contentStyle={{ borderRadius: 8, border: "1px solid #EAEAEE", fontSize: 11 }}
 							/>
 							<Bar dataKey="count" fill={BRAND} radius={[3, 3, 0, 0]} maxBarSize={32} />

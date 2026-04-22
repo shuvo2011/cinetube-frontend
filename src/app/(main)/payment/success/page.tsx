@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import React from "react";
 import { CheckCircle } from "lucide-react";
 import Link from "next/link";

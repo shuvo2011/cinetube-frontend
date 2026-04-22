@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+
 const contactSchema = z.object({
 	name: z.string().min(2, "Name must be at least 2 characters").max(60, "Name is too long"),
 	email: z.string().email("Enter a valid email address"),
@@ -17,10 +18,8 @@ const contactSchema = z.object({
 		.max(1000, "Message must be under 1000 characters"),
 });
 
-type ContactFormValues = z.infer<typeof contactSchema>;
-
 const ContactClient = () => {
-	const form = useForm<ContactFormValues>({
+	const form = useForm({
 		defaultValues: {
 			name: "",
 			email: "",
@@ -30,7 +29,7 @@ const ContactClient = () => {
 		validators: {
 			onSubmit: contactSchema,
 		},
-		onSubmit: ({ value }) => {
+		onSubmit: async ({ value }) => {
 			console.log("Contact form submitted:", value);
 			form.reset();
 		},
@@ -66,7 +65,8 @@ const ContactClient = () => {
 							<form
 								onSubmit={(e) => {
 									e.preventDefault();
-									form.handleSubmit();
+									e.stopPropagation();
+									void form.handleSubmit();
 								}}
 								className="flex flex-col gap-5"
 							>
@@ -79,14 +79,18 @@ const ContactClient = () => {
 												</Label>
 												<Input
 													id="name"
+													name={field.name}
 													placeholder="John Doe"
 													value={field.state.value}
 													onChange={(e) => field.handleChange(e.target.value)}
 													onBlur={field.handleBlur}
+													aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
 													className="bg-white border-[#EAEAEE] rounded-[10px] text-[14px] h-11 focus-visible:ring-[#EF4C5C]/30 focus-visible:border-[#EF4C5C]"
 												/>
 												{field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
-													<p className="text-[12px] text-[#EF4C5C]">{field.state.meta.errors[0]?.message}</p>
+													<p className="text-[12px] text-[#EF4C5C]">
+														{String(field.state.meta.errors[0]?.message ?? "")}
+													</p>
 												)}
 											</div>
 										)}
@@ -100,15 +104,19 @@ const ContactClient = () => {
 												</Label>
 												<Input
 													id="email"
+													name={field.name}
 													type="email"
 													placeholder="john@example.com"
 													value={field.state.value}
 													onChange={(e) => field.handleChange(e.target.value)}
 													onBlur={field.handleBlur}
+													aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
 													className="bg-white border-[#EAEAEE] rounded-[10px] text-[14px] h-11 focus-visible:ring-[#EF4C5C]/30 focus-visible:border-[#EF4C5C]"
 												/>
 												{field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
-													<p className="text-[12px] text-[#EF4C5C]">{field.state.meta.errors[0]?.message}</p>
+													<p className="text-[12px] text-[#EF4C5C]">
+														{String(field.state.meta.errors[0]?.message ?? "")}
+													</p>
 												)}
 											</div>
 										)}
@@ -123,14 +131,18 @@ const ContactClient = () => {
 											</Label>
 											<Input
 												id="subject"
+												name={field.name}
 												placeholder="What is this about?"
 												value={field.state.value}
 												onChange={(e) => field.handleChange(e.target.value)}
 												onBlur={field.handleBlur}
+												aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
 												className="bg-white border-[#EAEAEE] rounded-[10px] text-[14px] h-11 focus-visible:ring-[#EF4C5C]/30 focus-visible:border-[#EF4C5C]"
 											/>
 											{field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
-												<p className="text-[12px] text-[#EF4C5C]">{field.state.meta.errors[0]?.message}</p>
+												<p className="text-[12px] text-[#EF4C5C]">
+													{String(field.state.meta.errors[0]?.message ?? "")}
+												</p>
 											)}
 										</div>
 									)}
@@ -144,16 +156,20 @@ const ContactClient = () => {
 											</Label>
 											<Textarea
 												id="message"
+												name={field.name}
 												placeholder="Write your message here..."
 												rows={5}
 												value={field.state.value}
 												onChange={(e) => field.handleChange(e.target.value)}
 												onBlur={field.handleBlur}
+												aria-invalid={field.state.meta.isTouched && !field.state.meta.isValid}
 												className="bg-white border-[#EAEAEE] rounded-[10px] text-[14px] resize-none focus-visible:ring-[#EF4C5C]/30 focus-visible:border-[#EF4C5C]"
 											/>
 											<div className="flex justify-between items-center">
 												{field.state.meta.isTouched && field.state.meta.errors.length > 0 ? (
-													<p className="text-[12px] text-[#EF4C5C]">{field.state.meta.errors[0]?.message}</p>
+													<p className="text-[12px] text-[#EF4C5C]">
+														{String(field.state.meta.errors[0]?.message ?? "")}
+													</p>
 												) : (
 													<span />
 												)}

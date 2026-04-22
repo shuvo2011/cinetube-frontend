@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import Link from "next/link";
 import { getCastMembers } from "@/services/castMember.services";
 import { getGenresForAdmin } from "@/services/genre.services";

@@ -1,5 +1,6 @@
+export const dynamic = "force-dynamic";
 import Link from "next/link";
-import { Shield, Eye, Database, Cookie, Lock, Bell, Mail, Download, Trash2, Globe } from "lucide-react";
+import { Shield, Eye, Database, Cookie, Lock, Bell, Globe } from "lucide-react";
 
 export const metadata = {
 	title: "Privacy Policy - Your Data Protection | CineTube",

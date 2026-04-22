@@ -63,26 +63,40 @@ const MoviesFilter = ({ genres, platforms, availableYears }: MoviesFilterProps) 
 		currentRating === value ? params.delete("minRating") : params.set("minRating", value);
 		push(params);
 	};
+
 	const minYear = availableYears.length > 0 ? Math.min(...availableYears) : 2000;
 	const maxYear = availableYears.length > 0 ? Math.max(...availableYears) : new Date().getFullYear();
 
-	const currentYearFrom = parseInt(searchParams.get("releaseYearFrom") ?? String(minYear));
-	const currentYearTo = parseInt(searchParams.get("releaseYearTo") ?? String(maxYear));
+	const parsedYearFrom = Number(searchParams.get("releaseYearFrom"));
+	const parsedYearTo = Number(searchParams.get("releaseYearTo"));
+
+	const currentYearFrom = Number.isFinite(parsedYearFrom) ? parsedYearFrom : minYear;
+	const currentYearTo = Number.isFinite(parsedYearTo) ? parsedYearTo : maxYear;
 
 	const [yearRange, setYearRange] = useState<[number, number]>([currentYearFrom, currentYearTo]);
 
+	const toYearTuple = (values: number[]): [number, number] => {
+		const from = values[0] ?? minYear;
+		const to = values[1] ?? maxYear;
+		return [from, to];
+	};
+
 	const handleYearChange = (values: number[]) => {
-		setYearRange(values);
+		setYearRange(toYearTuple(values));
 	};
 
 	const handleYearCommit = (values: number[]) => {
+		const [from, to] = toYearTuple(values);
+
+		setYearRange([from, to]);
+
 		const params = new URLSearchParams(searchParams.toString());
-		if (values[0] === minYear && values[1] === maxYear) {
+		if (from === minYear && to === maxYear) {
 			params.delete("releaseYearFrom");
 			params.delete("releaseYearTo");
 		} else {
-			params.set("releaseYearFrom", String(values[0]));
-			params.set("releaseYearTo", String(values[1]));
+			params.set("releaseYearFrom", String(from));
+			params.set("releaseYearTo", String(to));
 		}
 		push(params);
 	};

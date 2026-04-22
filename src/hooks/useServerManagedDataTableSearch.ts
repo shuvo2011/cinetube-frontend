@@ -4,7 +4,7 @@ import { useCallback, useMemo } from "react";
 import { UpdateParamsFn } from "./useServerManagedDataTable";
 
 interface UseServerManagedDataTableSearchParams {
-	searchParams: ReadonlyURLSearchParams;
+	searchParams: URLSearchParams; // 🔥 FIXED
 	updateParams: UpdateParamsFn;
 	queryKey?: string;
 }
