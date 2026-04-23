@@ -60,6 +60,9 @@ const MoviesTable = ({ initialQueryString }: MoviesTableProps) => {
 	const meta: PaginationMeta | undefined = moviesResponse?.meta;
 
 	const tableActions = {
+		onView: (item: IMovie) => {
+			router.push(`/movies/${item.id}`);
+		},
 		onEdit: (item: IMovie) => {
 			router.push(`/admin/dashboard/movies/${item.id}/edit`);
 		},

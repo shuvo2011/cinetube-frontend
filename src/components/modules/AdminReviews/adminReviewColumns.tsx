@@ -3,8 +3,15 @@
 import DateCell from "@/components/shared/cell/DateCell";
 import { IAdminReview } from "@/services/review.services";
 import { ColumnDef } from "@tanstack/react-table";
-import { Star } from "lucide-react";
+import { MoreHorizontal, Star } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const STATUS_STYLES: Record<string, string> = {
 	PUBLISHED: "bg-green-50 text-green-700",
@@ -14,11 +21,12 @@ const STATUS_STYLES: Record<string, string> = {
 };
 
 interface Options {
+	onView: (review: IAdminReview) => void;
 	onApprove: (review: IAdminReview) => void;
 	onUnpublish: (review: IAdminReview) => void;
 }
 
-export const adminReviewColumns = ({ onApprove, onUnpublish }: Options): ColumnDef<IAdminReview>[] => [
+export const adminReviewColumns = ({ onView, onApprove, onUnpublish }: Options): ColumnDef<IAdminReview>[] => [
 	{
 		accessorKey: "movie.title",
 		header: "Movie",
@@ -57,7 +65,11 @@ export const adminReviewColumns = ({ onApprove, onUnpublish }: Options): ColumnD
 		cell: ({ row }) => {
 			const s = row.original.status;
 			return (
-				<span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${STATUS_STYLES[s] ?? "bg-gray-100 text-gray-500"}`}>
+				<span
+					className={`text-[11px] font-semibold px-2 py-0.5 rounded-full ${
+						STATUS_STYLES[s] ?? "bg-gray-100 text-gray-500"
+					}`}
+				>
 					{s}
 				</span>
 			);
@@ -79,25 +91,28 @@ export const adminReviewColumns = ({ onApprove, onUnpublish }: Options): ColumnD
 		enableSorting: false,
 		cell: ({ row }) => {
 			const review = row.original;
+
 			return (
-				<div className="flex items-center gap-2">
-					{(review.status === "PENDING" || review.status === "UNPUBLISHED") && (
-						<button
-							onClick={() => onApprove(review)}
-							className="text-[12px] font-semibold text-green-600 bg-green-50 hover:bg-green-100 px-2.5 py-1 rounded-[6px] transition-colors"
-						>
-							Approve
-						</button>
-					)}
-					{review.status === "PUBLISHED" && (
-						<button
-							onClick={() => onUnpublish(review)}
-							className="text-[12px] font-semibold text-red-500 bg-red-50 hover:bg-red-100 px-2.5 py-1 rounded-[6px] transition-colors"
-						>
-							Unpublish
-						</button>
-					)}
-				</div>
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button variant="ghost" className="h-8 w-8 p-0">
+							<span className="sr-only">Open menu</span>
+							<MoreHorizontal className="h-4 w-4" />
+						</Button>
+					</DropdownMenuTrigger>
+
+					<DropdownMenuContent align="end" className="w-40">
+						<DropdownMenuItem onClick={() => onView(review)}>View</DropdownMenuItem>
+
+						{(review.status === "PENDING" || review.status === "UNPUBLISHED") && (
+							<DropdownMenuItem onClick={() => onApprove(review)}>Publish</DropdownMenuItem>
+						)}
+
+						{review.status === "PUBLISHED" && (
+							<DropdownMenuItem onClick={() => onUnpublish(review)}>Unpublish</DropdownMenuItem>
+						)}
+					</DropdownMenuContent>
+				</DropdownMenu>
 			);
 		},
 	},

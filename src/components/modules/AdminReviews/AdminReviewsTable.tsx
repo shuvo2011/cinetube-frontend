@@ -7,8 +7,9 @@ import { getReviewsForAdmin, IAdminReview, updateReviewStatusAction } from "@/se
 import { PaginationMeta } from "@/types/api.types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { adminReviewColumns } from "./adminReviewColumns";
+import AdminReviewViewDialog from "./AdminReviewViewDialog";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 10;
@@ -16,6 +17,9 @@ const DEFAULT_LIMIT = 10;
 const AdminReviewsTable = ({ initialQueryString }: { initialQueryString: string }) => {
 	const searchParams = useSearchParams();
 	const queryClient = useQueryClient();
+
+	const [selectedReview, setSelectedReview] = useState<IAdminReview | null>(null);
+	const [isViewOpen, setIsViewOpen] = useState(false);
 
 	const {
 		queryStringFromUrl,
@@ -56,6 +60,10 @@ const AdminReviewsTable = ({ initialQueryString }: { initialQueryString: string 
 	const columns = useMemo(
 		() =>
 			adminReviewColumns({
+				onView: (r) => {
+					setSelectedReview(r);
+					setIsViewOpen(true);
+				},
 				onApprove: (r) => handleStatusChange(r.id, "PUBLISHED"),
 				onUnpublish: (r) => handleStatusChange(r.id, "UNPUBLISHED"),
 			}),
@@ -64,21 +72,32 @@ const AdminReviewsTable = ({ initialQueryString }: { initialQueryString: string 
 	);
 
 	return (
-		<DataTable
-			data={reviews}
-			columns={columns}
-			isLoading={isLoading || isFetching || isRouteRefreshPending}
-			emptyMessage="No reviews found."
-			sorting={{ state: optimisticSortingState, onSortingChange: handleSortingChange }}
-			pagination={{ state: optimisticPaginationState, onPaginationChange: handlePaginationChange }}
-			search={{
-				initialValue: searchTermFromUrl,
-				placeholder: "Search by content...",
-				debounceMs: 500,
-				onDebouncedChange: handleDebouncedSearchChange,
-			}}
-			meta={meta}
-		/>
+		<>
+			<DataTable
+				data={reviews}
+				columns={columns}
+				isLoading={isLoading || isFetching || isRouteRefreshPending}
+				emptyMessage="No reviews found."
+				sorting={{ state: optimisticSortingState, onSortingChange: handleSortingChange }}
+				pagination={{ state: optimisticPaginationState, onPaginationChange: handlePaginationChange }}
+				search={{
+					initialValue: searchTermFromUrl,
+					placeholder: "Search by content...",
+					debounceMs: 500,
+					onDebouncedChange: handleDebouncedSearchChange,
+				}}
+				meta={meta}
+			/>
+
+			<AdminReviewViewDialog
+				open={isViewOpen}
+				onOpenChange={(open) => {
+					setIsViewOpen(open);
+					if (!open) setSelectedReview(null);
+				}}
+				review={selectedReview}
+			/>
+		</>
 	);
 };
 

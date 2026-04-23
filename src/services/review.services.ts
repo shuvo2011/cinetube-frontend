@@ -44,6 +44,10 @@ export interface IAdminReview {
 		id: string;
 		title: string;
 	};
+	tags?: {
+		id: string;
+		name: string;
+	}[];
 	_count: { likes: number; comments: number };
 }
 
