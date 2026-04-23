@@ -1,24 +1,33 @@
-"use client";
-
 import DateCell from "@/components/shared/cell/DateCell";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { IAdminComment } from "@/services/comment.services";
 import { ColumnDef } from "@tanstack/react-table";
+import { MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 
 interface Options {
 	onDelete: (comment: IAdminComment) => void;
+	onView: (comment: IAdminComment) => void;
 }
 
-export const adminCommentColumns = ({ onDelete }: Options): ColumnDef<IAdminComment>[] => [
+export const adminCommentColumns = ({ onDelete, onView }: Options): ColumnDef<IAdminComment>[] => [
 	{
 		accessorKey: "content",
 		header: "Comment",
 		cell: ({ row }) => {
 			const { content, parentId } = row.original;
+
+			const shortContent = content.split(" ").slice(0, 8).join(" ") + (content.split(" ").length > 8 ? "..." : "");
+
 			return (
 				<div className="max-w-sm">
 					{parentId && <span className="text-[10px] text-text-muted bg-bg-2 px-1.5 py-0.5 rounded mr-1.5">reply</span>}
-					<span className="text-[13px] text-ink line-clamp-2">{content}</span>
+					<span className="text-[13px] text-ink">{shortContent}</span>
 				</div>
 			);
 		},
@@ -62,13 +71,26 @@ export const adminCommentColumns = ({ onDelete }: Options): ColumnDef<IAdminComm
 		id: "actions",
 		header: "Actions",
 		enableSorting: false,
-		cell: ({ row }) => (
-			<button
-				onClick={() => onDelete(row.original)}
-				className="text-[12px] font-semibold text-red-500 bg-red-50 hover:bg-red-100 px-2.5 py-1 rounded-[6px] transition-colors"
-			>
-				Delete
-			</button>
-		),
+		cell: ({ row }) => {
+			const comment = row.original;
+
+			return (
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<button className="p-2 hover:bg-gray-100 rounded">
+							<MoreHorizontal className="w-4 h-4" />
+						</button>
+					</DropdownMenuTrigger>
+
+					<DropdownMenuContent align="end">
+						<DropdownMenuItem onClick={() => onView(comment)}>View</DropdownMenuItem>
+
+						<DropdownMenuItem onClick={() => onDelete(comment)} className="text-red-500">
+							Delete
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
+			);
+		},
 	},
 ];
