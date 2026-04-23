@@ -1,8 +1,10 @@
 "use client";
 
+import { getCommentsForAdmin } from "@/services/comment.services";
 import { approveReview, getReviewsForAdmin, IAdminReview } from "@/services/review.services";
 import { getDashboardStats } from "@/services/stats.services";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { DollarSign, Film, LucideIcon, Star, Users } from "lucide-react";
 import Link from "next/link";
 import {
 	Area,
@@ -70,17 +72,23 @@ const SummaryCard = ({
 	sub,
 	subPositive,
 	bgColor,
+	Icon, // ✅ add this
 }: {
 	label: string;
 	value: string;
 	sub: string;
 	subPositive?: boolean;
 	bgColor: string;
+	Icon: LucideIcon; // ✅ type
 }) => (
 	<div className="bg-bg border border-line rounded-xl p-5">
-		<div className={`w-10 h-10 rounded-xl ${bgColor} mb-3`} />
+		<div className={`w-10 h-10 rounded-xl ${bgColor} mb-3 flex items-center justify-center`}>
+			<Icon className="w-5 h-5 text-ink" /> {/* ✅ icon show */}
+		</div>
+
 		<p className="text-[24px] font-bold text-ink leading-none">{value}</p>
 		<p className="text-[12px] text-text-muted mt-1">{label}</p>
+
 		{sub && (
 			<p className={`text-[11px] mt-1 font-medium ${subPositive === false ? "text-brand" : "text-green"}`}>{sub}</p>
 		)}
@@ -175,6 +183,12 @@ const PendingReviewRow = ({ review, onAction }: { review: IAdminReview; onAction
 const AdminDashboardClient = () => {
 	const queryClient = useQueryClient();
 
+	const { data: commentsRes } = useQuery({
+		queryKey: ["admin-comments-count"],
+		queryFn: () => getCommentsForAdmin("page=1&limit=1"),
+	});
+	const totalComments = commentsRes?.meta?.total ?? 0;
+
 	const { data: statsRes, isLoading } = useQuery({
 		queryKey: ["admin-dashboard-stats"],
 		queryFn: getDashboardStats,
@@ -224,8 +238,8 @@ const AdminDashboardClient = () => {
 					label="Total Movies"
 					value={fmt(stats?.summary.totalMovies ?? 0)}
 					sub={`+${stats?.summary.featuredMoviesCount ?? 0} featured`}
-					subPositive={true}
 					bgColor="bg-brand-soft"
+					Icon={Film}
 				/>
 				<SummaryCard
 					label="Total Users"
@@ -233,6 +247,7 @@ const AdminDashboardClient = () => {
 					sub={`+${fmt(stats?.userStats.newUsersLast30Days ?? 0)} this month`}
 					subPositive={true}
 					bgColor="bg-[#F0FDF4]"
+					Icon={Users}
 				/>
 				<SummaryCard
 					label="Total Reviews"
@@ -240,6 +255,7 @@ const AdminDashboardClient = () => {
 					sub={`+${fmt(stats?.reviewStats.pending ?? 0)} pending`}
 					subPositive={true}
 					bgColor="bg-[#FEFCE8]"
+					Icon={Star}
 				/>
 				<SummaryCard
 					label="Monthly Revenue"
@@ -247,6 +263,7 @@ const AdminDashboardClient = () => {
 					sub="+18% vs last month"
 					subPositive={true}
 					bgColor="bg-[#F5F3FF]"
+					Icon={DollarSign}
 				/>
 			</div>
 
@@ -261,12 +278,12 @@ const AdminDashboardClient = () => {
 					href="/admin/dashboard/reviews"
 				/>
 				<ActionCard
-					label="Flagged Comments"
-					subtitle="Need moderation"
-					count={0}
-					dotColor="bg-brand"
-					btnLabel="Moderate"
-					btnStyle="bg-brand/10 text-brand hover:bg-brand/20"
+					label="Comments"
+					subtitle="Review user discussions"
+					count={totalComments}
+					dotColor="bg-blue-500"
+					btnLabel="View All"
+					btnStyle="bg-blue-100 text-blue-600 hover:bg-blue-200"
 					href="/admin/dashboard/comments"
 				/>
 				<ActionCard
