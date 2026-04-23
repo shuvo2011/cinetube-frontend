@@ -67,3 +67,15 @@ export const checkMovieAccess = async (movieId: string): Promise<IMovieAccess | 
 		return null;
 	}
 };
+
+export const checkoutAction = async (payload: {
+	movieId: string;
+	purchaseType: "RENT" | "BUY";
+	rentalDuration?: string;
+}): Promise<ApiResponse<{ checkoutUrl?: string }>> => {
+	return await httpClient.post("/payments/checkout", payload);
+};
+
+export const createSubscription = async (planType: "MONTHLY" | "YEARLY") => {
+	return await httpClient.post<{ checkoutUrl: string }>("/payments/subscribe", { planType });
+};

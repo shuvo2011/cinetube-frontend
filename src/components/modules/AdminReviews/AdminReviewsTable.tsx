@@ -3,14 +3,13 @@
 import DataTable from "@/components/shared/table/DataTable";
 import { useServerManagedDataTable } from "@/hooks/useServerManagedDataTable";
 import { useServerManagedDataTableSearch } from "@/hooks/useServerManagedDataTableSearch";
-import { getReviewsForAdmin, IAdminReview } from "@/services/review.services";
+import { getReviewsForAdmin, IAdminReview, updateReviewStatusAction } from "@/services/review.services";
 import { PaginationMeta } from "@/types/api.types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import { adminReviewColumns } from "./adminReviewColumns";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 10;
 
@@ -35,7 +34,11 @@ const AdminReviewsTable = ({ initialQueryString }: { initialQueryString: string 
 
 	const queryString = queryStringFromUrl || initialQueryString;
 
-	const { data: reviewsResponse, isLoading, isFetching } = useQuery({
+	const {
+		data: reviewsResponse,
+		isLoading,
+		isFetching,
+	} = useQuery({
 		queryKey: ["admin-reviews", queryString],
 		queryFn: () => getReviewsForAdmin(queryString),
 	});
@@ -44,12 +47,9 @@ const AdminReviewsTable = ({ initialQueryString }: { initialQueryString: string 
 	const meta: PaginationMeta | undefined = reviewsResponse?.meta;
 
 	const handleStatusChange = async (id: string, newStatus: string) => {
-		await fetch(`${API_BASE}/reviews/${id}/status`, {
-			method: "PATCH",
-			credentials: "include",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ status: newStatus }),
-		});
+		const res = await updateReviewStatusAction(id, newStatus);
+		if (!res?.success) return;
+
 		queryClient.invalidateQueries({ queryKey: ["admin-reviews"] });
 	};
 

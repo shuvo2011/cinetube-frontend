@@ -4,6 +4,7 @@ import { ApiResponse } from "@/types/api.types";
 import axios from "axios";
 import { cookies, headers } from "next/headers";
 import { isTokenExpiringSoon } from "../tokenUtils";
+import { COOKIE_NAMES } from "@/utils/cookie.constants";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -13,8 +14,10 @@ if (!API_BASE_URL) {
 
 async function tryRefreshToken(accessToken: string, refreshToken: string): Promise<void> {
 	if (!(await isTokenExpiringSoon(accessToken))) return;
+
 	const requestHeader = await headers();
 	if (requestHeader.get("x-token-refreshed") === "1") return;
+
 	try {
 		await getNewTokens(refreshToken);
 	} catch (error: any) {
@@ -24,8 +27,8 @@ async function tryRefreshToken(accessToken: string, refreshToken: string): Promi
 
 const axiosInstance = async (contentType = "application/json") => {
 	const cookieStore = await cookies();
-	const accessToken = cookieStore.get("accessToken")?.value;
-	const refreshToken = cookieStore.get("refreshToken")?.value;
+	const accessToken = cookieStore.get(COOKIE_NAMES.ACCESS_TOKEN)?.value;
+	const refreshToken = cookieStore.get(COOKIE_NAMES.REFRESH_TOKEN)?.value;
 
 	if (accessToken && refreshToken) {
 		await tryRefreshToken(accessToken, refreshToken);
@@ -37,7 +40,7 @@ const axiosInstance = async (contentType = "application/json") => {
 		.join("; ");
 
 	const instance = axios.create({
-		baseURL: `${API_BASE_URL}`,
+		baseURL: API_BASE_URL,
 		timeout: 30000,
 		headers: {
 			...(contentType !== "multipart/form-data" && { "Content-Type": contentType }),

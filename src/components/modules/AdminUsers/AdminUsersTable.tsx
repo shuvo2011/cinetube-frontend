@@ -3,7 +3,14 @@
 import DataTable from "@/components/shared/table/DataTable";
 import { useServerManagedDataTable } from "@/hooks/useServerManagedDataTable";
 import { useServerManagedDataTableSearch } from "@/hooks/useServerManagedDataTableSearch";
-import { getAllUsers, changeUserStatus, changeUserRole, IAdminUser } from "@/services/user.services";
+import {
+	getAllUsers,
+	changeUserStatus,
+	changeUserRole,
+	IAdminUser,
+	softDeleteUser,
+	hardDeleteUser,
+} from "@/services/user.services";
 import { getMyProfile } from "@/services/user.services";
 import { PaginationMeta } from "@/types/api.types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -80,21 +87,15 @@ const AdminUsersTable = ({ initialQueryString }: { initialQueryString: string })
 			toast.warning("You cannot delete your own account.");
 			return;
 		}
+
 		if (!confirm(`Soft delete "${user.name}"? They will be marked as deleted.`)) return;
+
 		try {
-			const res = await fetch(`${API_BASE}/users/${user.id}`, {
-				method: "DELETE",
-				credentials: "include",
-			});
-			if (!res.ok) {
-				const data = await res.json().catch(() => ({}));
-				toast.error(data?.message ?? "Failed to delete user");
-				return;
-			}
+			await softDeleteUser(user.id);
 			toast.success(`${user.name} soft deleted`);
 			queryClient.invalidateQueries({ queryKey: ["admin-users"] });
-		} catch {
-			toast.error("Failed to delete user");
+		} catch (err: any) {
+			toast.error(err?.message ?? "Failed to delete user");
 		}
 	};
 
@@ -103,21 +104,15 @@ const AdminUsersTable = ({ initialQueryString }: { initialQueryString: string })
 			toast.warning("You cannot delete your own account.");
 			return;
 		}
+
 		if (!confirm(`PERMANENTLY delete "${user.name}"? This cannot be undone.`)) return;
+
 		try {
-			const res = await fetch(`${API_BASE}/users/${user.id}/hard`, {
-				method: "DELETE",
-				credentials: "include",
-			});
-			if (!res.ok) {
-				const data = await res.json().catch(() => ({}));
-				toast.error(data?.message ?? "Failed to hard delete user");
-				return;
-			}
+			await hardDeleteUser(user.id);
 			toast.success(`${user.name} permanently deleted`);
 			queryClient.invalidateQueries({ queryKey: ["admin-users"] });
-		} catch {
-			toast.error("Failed to hard delete user");
+		} catch (err: any) {
+			toast.error(err?.message ?? "Failed to hard delete user");
 		}
 	};
 

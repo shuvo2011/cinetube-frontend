@@ -2,6 +2,7 @@
 
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { setCookie } from "./cookieUtils";
+import { COOKIE_NAMES } from "@/utils/cookie.constants";
 
 const getTokenSecondsRemaining = (token: string): number => {
 	if (!token) return 0;
@@ -18,9 +19,11 @@ const getTokenSecondsRemaining = (token: string): number => {
 
 export const setTokenInCookies = async (name: string, token: string, fallbackMaxAgeInSeconds = 60 * 60 * 24) => {
 	let maxAgeInSeconds;
-	if (name !== "better-auth.session_token") {
+
+	if (name !== COOKIE_NAMES.SESSION_TOKEN) {
 		maxAgeInSeconds = getTokenSecondsRemaining(token);
 	}
+
 	await setCookie(name, token, maxAgeInSeconds || fallbackMaxAgeInSeconds);
 };
 

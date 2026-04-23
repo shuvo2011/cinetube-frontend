@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { updateProfileZodSchema as profileSchema } from "@/zod/profile.validation";
 import Image from "next/image";
+import { uploadImageToCloudinary } from "@/lib/uploadImageToCloudinary";
 
 const UserProfileForm = () => {
 	const qc = useQueryClient();
@@ -43,7 +44,7 @@ const UserProfileForm = () => {
 	}, []);
 
 	const imageMutation = useMutation({
-		mutationFn: (fd: FormData) => updateMyProfile(fd),
+		mutationFn: (payload: { image: string }) => updateMyProfile(payload),
 		onSuccess: (res) => {
 			const newUrl = res?.data?.image ?? null;
 			if (prevObjectUrl.current) {
@@ -63,7 +64,7 @@ const UserProfileForm = () => {
 	});
 
 	const saveMutation = useMutation({
-		mutationFn: (fd: FormData) => updateMyProfile(fd),
+		mutationFn: (payload: { name?: string; image?: string }) => updateMyProfile(payload),
 		onSuccess: () => {
 			toast.success("Profile updated");
 			qc.invalidateQueries({ queryKey: ["me"] });
@@ -74,7 +75,7 @@ const UserProfileForm = () => {
 		},
 	});
 
-	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		const f = e.target.files?.[0] ?? null;
 		if (!f) return;
 
@@ -84,24 +85,13 @@ const UserProfileForm = () => {
 		setPreview(url);
 		setImageJustSaved(false);
 
-		const fd = new FormData();
-		fd.append("file", f);
-		imageMutation.mutate(fd);
-	};
-
-	const handleRemoveImage = () => {
-		if (imageMutation.isPending) return;
-		if (prevObjectUrl.current) {
-			URL.revokeObjectURL(prevObjectUrl.current);
-			prevObjectUrl.current = null;
+		try {
+			const cloudinaryUrl = await uploadImageToCloudinary(f);
+			await imageMutation.mutateAsync({ image: cloudinaryUrl });
+		} catch {
+			setPreview(profile?.image ?? null);
+			toast.error("Failed to upload image");
 		}
-		setPreview(null);
-		setImageJustSaved(false);
-		if (fileInputRef.current) fileInputRef.current.value = "";
-
-		const fd = new FormData();
-		fd.append("image", "");
-		imageMutation.mutate(fd);
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -110,11 +100,8 @@ const UserProfileForm = () => {
 		const parsed = profileSchema.safeParse({ name: name?.trim(), email: email?.trim() });
 		if (!parsed.success) return toast.error(parsed.error.issues[0].message);
 
-		const fd = new FormData();
-		if (name) fd.append("name", name.trim());
-
 		try {
-			await saveMutation.mutateAsync(fd);
+			await saveMutation.mutateAsync({ name: name.trim() });
 		} catch (err) {
 			console.error(err);
 		}

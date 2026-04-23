@@ -3,14 +3,13 @@
 import DataTable from "@/components/shared/table/DataTable";
 import { useServerManagedDataTable } from "@/hooks/useServerManagedDataTable";
 import { useServerManagedDataTableSearch } from "@/hooks/useServerManagedDataTableSearch";
-import { getCommentsForAdmin, IAdminComment } from "@/services/comment.services";
+import { deleteCommentAction, getCommentsForAdmin, IAdminComment } from "@/services/comment.services";
 import { PaginationMeta } from "@/types/api.types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
 import { adminCommentColumns } from "./adminCommentColumns";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 10;
 
@@ -49,10 +48,10 @@ const AdminCommentsTable = ({ initialQueryString }: { initialQueryString: string
 
 	const handleDelete = async (comment: IAdminComment) => {
 		if (!confirm(`Delete this comment by "${comment.user.name}"?`)) return;
-		await fetch(`${API_BASE}/comments/${comment.id}`, {
-			method: "DELETE",
-			credentials: "include",
-		});
+
+		const res = await deleteCommentAction(comment.id);
+		if (!res?.success) return;
+
 		queryClient.invalidateQueries({ queryKey: ["admin-comments"] });
 	};
 

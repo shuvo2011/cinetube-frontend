@@ -1,11 +1,10 @@
 "use client";
 
 import { cn } from "@/lib/utils";
+import { createSubscription } from "@/services/payment.services";
 import { BadgeCheck, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 interface Props {
 	planType: "MONTHLY" | "YEARLY" | null;
@@ -62,16 +61,13 @@ const SubscribePlanButton = ({ planType, isLoggedIn, hasActiveSub, highlighted }
 	const handleSubscribe = async () => {
 		setLoading(true);
 		try {
-			const res = await fetch(`${API_BASE}/payments/subscribe`, {
-				method: "POST",
-				credentials: "include",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ planType }),
-			});
-			const data = await res.json();
-			if (res.ok && data.data?.checkoutUrl) {
-				window.location.href = data.data.checkoutUrl;
+			const res = await createSubscription(planType);
+
+			if (res?.success && res.data?.checkoutUrl) {
+				window.location.href = res.data.checkoutUrl;
 			}
+		} catch (err: any) {
+			console.error(err);
 		} finally {
 			setLoading(false);
 		}

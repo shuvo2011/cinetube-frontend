@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ITag } from "@/types/tag.types";
 import { createReviewZodSchema } from "@/zod/review.validation";
+import { createReviewAction } from "@/services/review.services";
 
 interface IUser {
 	id: string;
@@ -96,16 +97,16 @@ const WriteReviewForm = ({ movieId, user, tags }: Props) => {
 		}
 
 		try {
-			const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews`, {
-				method: "POST",
-				credentials: "include",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ movieId, rating, content, hasSpoiler, tagIds: selectedTags }),
+			const res = await createReviewAction({
+				movieId,
+				rating,
+				content,
+				hasSpoiler,
+				tagIds: selectedTags,
 			});
 
-			const data = await res.json();
-			if (!res.ok) {
-				setError(data.message ?? "Something went wrong");
+			if (!res?.success) {
+				setError(res?.message ?? "Something went wrong");
 				return;
 			}
 

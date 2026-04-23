@@ -18,6 +18,7 @@ import { ICastMember } from "@/types/castMember.types";
 import { createMovieAction, updateMovieAction } from "@/app/(dashboard)/admin/dashboard/movies/_action";
 import { movieFormSchema } from "@/zod/movie.validation";
 import Image from "next/image";
+import { uploadImageToCloudinary } from "@/lib/uploadImageToCloudinary";
 
 type MovieFormSchema = z.infer<typeof movieFormSchema>;
 
@@ -131,9 +132,9 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 		setSelected(selected.includes(id) ? selected.filter((i) => i !== id) : [...selected, id]);
 	};
 
-	const { mutateAsync, isPending } = useMutation({
-		mutationFn: async (formData: FormData) =>
-			mode === "edit" && movie ? updateMovieAction(movie.id, formData) : createMovieAction(formData),
+	const { isPending } = useMutation({
+		mutationFn: async (payload: any) =>
+			mode === "edit" && movie ? updateMovieAction(movie.id, payload) : createMovieAction(payload),
 		onError: (error: unknown) => {
 			toast.error(error instanceof Error ? error.message : "Something went wrong.");
 		},
@@ -157,44 +158,54 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 
 		const validationResult = movieFormSchema.safeParse(validationData);
 		if (!validationResult.success) {
-			const fieldErrors: Partial<Record<keyof MovieFormSchema, string>> = {};
+			const fieldErrors: any = {};
 			validationResult.error.issues.forEach((issue) => {
-				const fieldName = issue.path[0] as keyof MovieFormSchema;
-				fieldErrors[fieldName] = issue.message;
+				fieldErrors[issue.path[0]] = issue.message;
 			});
 			setErrors(fieldErrors);
 			toast.error("Please fix the errors in the form.");
 			return;
 		}
 
-		const formData = new FormData();
-		formData.append("title", title.trim());
-		formData.append("synopsis", synopsis.trim());
-		formData.append("releaseYear", releaseYear);
-		formData.append("director", director.trim());
-		if (trailerUrl.trim()) formData.append("trailerUrl", trailerUrl.trim());
-		if (streamingUrl.trim()) formData.append("streamingUrl", streamingUrl.trim());
-		if (rentPrice) formData.append("rentPrice", rentPrice);
-		if (buyPrice) formData.append("buyPrice", buyPrice);
-		if (rentDuration) formData.append("rentDuration", rentDuration);
-		formData.append("isFeatured", isFeatured ? "1" : "0");
-		selectedGenreIds.forEach((id) => formData.append("genreIds", id));
-		selectedPlatformIds.forEach((id) => formData.append("platformIds", id));
-		selectedCastIds.forEach((id) => formData.append("castMemberIds", id));
-		if (posterFile) formData.append("file", posterFile);
-
 		try {
-			const result = await mutateAsync(formData);
+			let posterImage = movie?.posterImage ?? undefined;
+
+			if (posterFile) {
+				posterImage = await uploadImageToCloudinary(posterFile);
+			}
+
+			const payload = {
+				title: title.trim(),
+				synopsis: synopsis.trim(),
+				releaseYear: Number(releaseYear),
+				director: director.trim(),
+				trailerUrl: trailerUrl.trim() || undefined,
+				streamingUrl: streamingUrl.trim() || undefined,
+				rentPrice: rentPrice ? Number(rentPrice) : 0,
+				buyPrice: buyPrice ? Number(buyPrice) : 0,
+				rentDuration: rentDuration || undefined,
+				isFeatured,
+				...(posterImage ? { posterImage } : {}), // ⭐ IMPORTANT
+				genreIds: selectedGenreIds,
+				platformIds: selectedPlatformIds,
+				castMemberIds: selectedCastIds,
+			};
+
+			const result =
+				mode === "edit" && movie ? await updateMovieAction(movie.id, payload) : await createMovieAction(payload);
+
 			if (!result.success) {
-				toast.error(result.message || "Failed to save movie.");
+				toast.error(result.message);
 				return;
 			}
-			toast.success(result.message || `Movie ${mode === "create" ? "created" : "updated"} successfully.`);
+
+			toast.success(result.message);
 			await queryClient.invalidateQueries({ queryKey: ["movies"] });
-			if (mode === "create") {
-				resetForm();
-			}
-		} catch {}
+
+			if (mode === "create") resetForm();
+		} catch {
+			toast.error("Failed to save movie");
+		}
 	};
 
 	return (

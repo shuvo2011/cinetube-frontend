@@ -1,36 +1,40 @@
 "use server";
 
 import { httpClient } from "@/lib/axios/httpClient";
+import { ApiResponse } from "@/types/api.types";
 import { IComment } from "@/types/comment.types";
-
 export interface IAdminComment {
 	id: string;
 	content: string;
+	status: string;
 	parentId: string | null;
 	createdAt: string;
-	user: { id: string; name: string; email: string };
-	review: {
+	user: {
+		id: string;
+		name: string;
+		email: string;
+	};
+	review?: {
 		id: string;
 		movie: { id: string; title: string };
 	};
 }
 
+// ✅ admin comments (only once)
 export const getCommentsForAdmin = async (queryString?: string) => {
-	try {
-		const result = await httpClient.get<IAdminComment[]>(queryString ? `/comments?${queryString}` : "/comments");
-		return result;
-	} catch (error) {
-		console.log("Error fetching admin comments:", error);
-		throw error;
-	}
+	return await httpClient.get<IAdminComment[]>(queryString ? `/comments/admin?${queryString}` : "/comments/admin");
 };
 
-export const getCommentsByReview = async (reviewId: string) => {
-	try {
-		const result = await httpClient.get<IComment[]>(`/comments/review/${reviewId}?limit=100`);
-		return result.data ?? [];
-	} catch (error) {
-		console.log("Error fetching comments:", error);
-		return [];
-	}
+// ✅ delete comment (only once)
+export const deleteCommentAction = async (id: string): Promise<ApiResponse<null>> => {
+	return await httpClient.delete<null>(`/comments/${id}`);
+};
+
+// ✅ user side (review comments)
+export const getCommentsAction = async (reviewId: string) => {
+	return await httpClient.get<IComment[]>(`/comments/review/${reviewId}?limit=100`);
+};
+
+export const createCommentAction = async (payload: { reviewId: string; content: string; parentId?: string }) => {
+	return await httpClient.post<IComment>("/comments", payload);
 };

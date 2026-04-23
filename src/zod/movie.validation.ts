@@ -18,4 +18,5 @@ export const movieFormSchema = z.object({
 	rentDuration: rentalDurationEnum.optional().or(z.literal("")),
 	rentPrice: z.coerce.number().optional(),
 	buyPrice: z.coerce.number().optional(),
+	posterImage: z.string().url("Invalid poster image URL").optional().or(z.literal("")),
 });

@@ -26,22 +26,26 @@ const DeleteMovieDialog = ({ open, onOpenChange, movie }: DeleteMovieDialogProps
 	const queryClient = useQueryClient();
 	const router = useRouter();
 
-	const { mutateAsync, isPending } = useMutation({ mutationFn: deleteMovieAction });
+	const { mutateAsync, isPending } = useMutation({
+		mutationFn: deleteMovieAction,
+	});
 
 	const handleConfirmDelete = async () => {
 		if (!movie) {
 			toast.error("Movie not found.");
 			return;
 		}
+
 		const result = await mutateAsync(movie.id);
+
 		if (!result.success) {
 			toast.error(result.message || "Failed to delete movie.");
 			return;
 		}
+
 		toast.success(result.message || "Movie deleted successfully.");
 		onOpenChange(false);
-		void queryClient.invalidateQueries({ queryKey: ["movies"] });
-		void queryClient.refetchQueries({ queryKey: ["movies"], type: "active" });
+		await queryClient.invalidateQueries({ queryKey: ["movies"] });
 		router.refresh();
 	};
 

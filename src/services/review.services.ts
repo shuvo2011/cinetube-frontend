@@ -1,6 +1,7 @@
 "use server";
 
 import { httpClient } from "@/lib/axios/httpClient";
+import { ApiResponse } from "@/types/api.types";
 
 export interface IReview {
 	id: string;
@@ -30,24 +31,28 @@ export interface IReview {
 
 export interface IAdminReview {
 	id: string;
-	rating: number;
 	content: string;
+	rating: number;
 	status: "PENDING" | "PUBLISHED" | "UNPUBLISHED" | "DRAFT";
-	hasSpoiler: boolean;
 	createdAt: string;
-	user: { id: string; name: string; email: string };
-	movie: { id: string; title: string };
+	user: {
+		id: string;
+		name: string;
+		email: string;
+	};
+	movie: {
+		id: string;
+		title: string;
+	};
 	_count: { likes: number; comments: number };
 }
 
 export const getReviewsForAdmin = async (queryString?: string) => {
-	try {
-		const result = await httpClient.get<IAdminReview[]>(queryString ? `/reviews?${queryString}` : "/reviews");
-		return result;
-	} catch (error) {
-		console.log("Error fetching admin reviews:", error);
-		throw error;
-	}
+	return await httpClient.get<IAdminReview[]>(queryString ? `/reviews/admin?${queryString}` : "/reviews/admin");
+};
+
+export const updateReviewStatusAction = async (id: string, status: string): Promise<ApiResponse<null>> => {
+	return await httpClient.patch(`/reviews/${id}/status`, { status });
 };
 
 export const getReviewsByMovie = async (movieId: string, page = 1) => {
@@ -110,4 +115,30 @@ export const updateReviewStatus = async (id: string, status: string) => {
 		console.log("Error updating review status:", error);
 		return null;
 	}
+};
+
+export const updateReviewAction = async (
+	reviewId: string,
+	payload: {
+		rating: number;
+		content: string;
+		hasSpoiler: boolean;
+		tagIds: string[];
+	},
+) => {
+	return await httpClient.patch(`/reviews/${reviewId}`, payload);
+};
+
+export const createReviewAction = async (payload: {
+	movieId: string;
+	rating: number;
+	content: string;
+	hasSpoiler: boolean;
+	tagIds: string[];
+}) => {
+	return await httpClient.post("/reviews", payload);
+};
+
+export const toggleReviewLikeAction = async (reviewId: string) => {
+	return await httpClient.post<{ liked: boolean }>(`/review-likes/${reviewId}`, {});
 };

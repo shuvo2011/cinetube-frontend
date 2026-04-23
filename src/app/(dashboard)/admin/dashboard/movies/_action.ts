@@ -22,19 +22,28 @@ const getErrorMessage = (error: unknown): string => {
 	return "Something went wrong.";
 };
 
-export async function createMovieAction(formData: FormData): Promise<ApiResponse<IMovie>> {
+export async function createMovieAction(payload: any): Promise<ApiResponse<IMovie>> {
 	try {
-		return await httpClient.post<IMovie>("/movies", formData, { isFormData: true });
+		return await httpClient.post<IMovie>("/movies", payload);
 	} catch (error) {
-		return { success: false, message: getErrorMessage(error), data: null as unknown as IMovie };
+		return { success: false, message: getErrorMessage(error), data: null as any };
 	}
 }
 
-export async function updateMovieAction(id: string, formData: FormData): Promise<ApiResponse<IMovie>> {
+export async function updateMovieAction(id: string, payload: any): Promise<ApiResponse<IMovie>> {
 	try {
-		return await httpClient.patch<IMovie>(`/movies/${id}`, formData, { isFormData: true });
-	} catch (error) {
-		return { success: false, message: getErrorMessage(error), data: null as unknown as IMovie };
+		return await httpClient.patch<IMovie>(`/movies/${id}`, payload);
+	} catch (error: any) {
+		console.log("update movie error:", JSON.stringify(error?.response?.data, null, 2));
+		return {
+			success: false,
+			message:
+				error?.response?.data?.errorSources?.[0]?.message ||
+				error?.response?.data?.message ||
+				error?.message ||
+				"Something went wrong",
+			data: null as any,
+		};
 	}
 }
 

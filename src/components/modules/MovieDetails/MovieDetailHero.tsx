@@ -7,9 +7,9 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toggleWatchlistAction } from "@/services/watchlist.services";
 
 const AVATAR_COLORS = ["#F472B6", "#60A5FA", "#A78BFA", "#FBBF24", "#34D399", "#FB923C"];
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 interface Props {
 	movie: IMovie;
@@ -30,14 +30,15 @@ const MovieDetailHero = ({ movie, access, isLoggedIn, initialInWatchlist }: Prop
 			router.push("/login");
 			return;
 		}
+
 		setWatchlistLoading(true);
+
 		try {
-			const method = inWatchlist ? "DELETE" : "POST";
-			const res = await fetch(`${API_BASE}/watchlist/${movie.id}`, {
-				method,
-				credentials: "include",
-			});
-			if (res.ok) setInWatchlist((v) => !v);
+			const res = await toggleWatchlistAction(movie.id, inWatchlist);
+
+			if (res?.success) {
+				setInWatchlist((v) => !v);
+			}
 		} finally {
 			setWatchlistLoading(false);
 		}

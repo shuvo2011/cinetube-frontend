@@ -4,6 +4,7 @@
 import { getDefaultDashboardRoute, isValidRedirectForRole, UserRole } from "@/lib/authUtils";
 import { httpClient } from "@/lib/axios/httpClient";
 import { setTokenInCookies } from "@/lib/tokenUtils";
+import { COOKIE_NAMES } from "@/utils/cookie.constants";
 import { ApiErrorResponse } from "@/types/api.types";
 import { ILoginResponse } from "@/types/auth.types";
 import { ILoginPayload, loginZodSchema } from "@/zod/auth.validation";
@@ -35,14 +36,17 @@ export const loginAction = async (
 			};
 		}
 
-		await setTokenInCookies("accessToken", accessToken);
-		await setTokenInCookies("refreshToken", refreshToken);
-		await setTokenInCookies("better-auth.session_token", token, 24 * 60 * 60);
+		// ✅ cookie set using constants
+		await setTokenInCookies(COOKIE_NAMES.ACCESS_TOKEN, accessToken);
+		await setTokenInCookies(COOKIE_NAMES.REFRESH_TOKEN, refreshToken);
+		await setTokenInCookies(COOKIE_NAMES.SESSION_TOKEN, token, 24 * 60 * 60);
 
+		// ✅ verify email check
 		if (!emailVerified) {
 			redirect(`/verify-email?email=${email}`);
 		}
 
+		// ✅ safe redirect
 		const targetPath =
 			redirectPath && isValidRedirectForRole(redirectPath, role as UserRole)
 				? redirectPath
@@ -50,6 +54,7 @@ export const loginAction = async (
 
 		redirect(targetPath);
 	} catch (error: any) {
+		// ✅ Next redirect pass-through
 		if (
 			error &&
 			typeof error === "object" &&

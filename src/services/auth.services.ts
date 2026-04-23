@@ -1,6 +1,8 @@
 "use server";
 
+import axios from "axios";
 import { setTokenInCookies } from "@/lib/tokenUtils";
+import { COOKIE_NAMES } from "@/utils/cookie.constants";
 import { cookies } from "next/headers";
 
 const BASE_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -11,32 +13,30 @@ if (!BASE_API_URL) {
 
 export async function getNewTokens(refreshToken: string): Promise<boolean> {
 	try {
-		const res = await fetch(`${BASE_API_URL}/auth/refresh-token`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Cookie: `refreshToken=${refreshToken}`,
+		const res = await axios.post(
+			`${BASE_API_URL}/auth/refresh-token`,
+			{},
+			{
+				headers: {
+					"Content-Type": "application/json",
+					Cookie: `${COOKIE_NAMES.REFRESH_TOKEN}=${refreshToken}`,
+				},
 			},
-		});
+		);
 
-		if (!res.ok) {
-			return false;
-		}
-
-		const { data } = await res.json();
-
+		const { data } = res.data;
 		const { accessToken, refreshToken: newRefreshToken, token } = data;
 
 		if (accessToken) {
-			await setTokenInCookies("accessToken", accessToken);
+			await setTokenInCookies(COOKIE_NAMES.ACCESS_TOKEN, accessToken);
 		}
 
 		if (newRefreshToken) {
-			await setTokenInCookies("refreshToken", newRefreshToken);
+			await setTokenInCookies(COOKIE_NAMES.REFRESH_TOKEN, newRefreshToken);
 		}
 
 		if (token) {
-			await setTokenInCookies("better-auth.session_token", token, 24 * 60 * 60);
+			await setTokenInCookies(COOKIE_NAMES.SESSION_TOKEN, token, 24 * 60 * 60);
 		}
 
 		return true;
@@ -49,31 +49,28 @@ export async function getNewTokens(refreshToken: string): Promise<boolean> {
 export async function getUserInfo() {
 	try {
 		const cookieStore = await cookies();
-		const accessToken = cookieStore.get("accessToken")?.value;
-		const sessionToken = cookieStore.get("better-auth.session_token")?.value;
+		const accessToken = cookieStore.get(COOKIE_NAMES.ACCESS_TOKEN)?.value;
+		const sessionToken = cookieStore.get(COOKIE_NAMES.SESSION_TOKEN)?.value;
 
 		if (!accessToken) {
 			return null;
 		}
 
-		const res = await fetch(`${BASE_API_URL}/auth/me`, {
-			method: "GET",
+		const cookieParts = [`${COOKIE_NAMES.ACCESS_TOKEN}=${accessToken}`];
+		if (sessionToken) {
+			cookieParts.push(`${COOKIE_NAMES.SESSION_TOKEN}=${sessionToken}`);
+		}
+
+		const res = await axios.get(`${BASE_API_URL}/auth/me`, {
 			headers: {
 				"Content-Type": "application/json",
-				Cookie: `accessToken=${accessToken}; better-auth.session_token=${sessionToken}`,
+				Cookie: cookieParts.join("; "),
 			},
 		});
 
-		if (!res.ok) {
-			console.error("Failed to fetch user info:", res.status, res.statusText);
-			return null;
-		}
-
-		const { data } = await res.json();
-
-		return data;
-	} catch (error) {
-		console.error("Error fetching user info:", error);
+		return res.data.data;
+	} catch (error: any) {
+		console.error("Error fetching user info:", error?.response?.data ?? error?.message ?? error);
 		return null;
 	}
 }
@@ -81,22 +78,35 @@ export async function getUserInfo() {
 export async function logout() {
 	try {
 		const cookieStore = await cookies();
-		const accessToken = cookieStore.get("accessToken")?.value;
-		const sessionToken = cookieStore.get("better-auth.session_token")?.value;
+		const accessToken = cookieStore.get(COOKIE_NAMES.ACCESS_TOKEN)?.value;
+		const sessionToken = cookieStore.get(COOKIE_NAMES.SESSION_TOKEN)?.value;
 
-		await fetch(`${BASE_API_URL}/auth/logout`, {
-			method: "POST",
-			headers: {
-				Cookie: `accessToken=${accessToken}; better-auth.session_token=${sessionToken}`,
+		const cookieParts: string[] = [];
+
+		if (accessToken) {
+			cookieParts.push(`${COOKIE_NAMES.ACCESS_TOKEN}=${accessToken}`);
+		}
+
+		if (sessionToken) {
+			cookieParts.push(`${COOKIE_NAMES.SESSION_TOKEN}=${sessionToken}`);
+		}
+
+		await axios.post(
+			`${BASE_API_URL}/auth/logout`,
+			{},
+			{
+				headers: {
+					...(cookieParts.length > 0 ? { Cookie: cookieParts.join("; ") } : {}),
+				},
 			},
-		});
-	} catch (error) {
-		console.error("Logout error:", error);
+		);
+	} catch (error: any) {
+		console.error("Logout error:", error?.response?.data ?? error?.message ?? error);
 	} finally {
 		const cookieStore = await cookies();
-		cookieStore.delete("accessToken");
-		cookieStore.delete("refreshToken");
-		cookieStore.delete("better-auth.session_token");
-		cookieStore.delete("better-auth.session_data");
+		cookieStore.delete(COOKIE_NAMES.ACCESS_TOKEN);
+		cookieStore.delete(COOKIE_NAMES.REFRESH_TOKEN);
+		cookieStore.delete(COOKIE_NAMES.SESSION_TOKEN);
+		cookieStore.delete(COOKIE_NAMES.SESSION_DATA);
 	}
 }

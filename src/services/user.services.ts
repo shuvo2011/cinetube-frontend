@@ -2,6 +2,7 @@
 
 import { httpClient } from "@/lib/axios/httpClient";
 import { ApiResponse } from "@/types/api.types";
+import { COOKIE_NAMES } from "@/utils/cookie.constants";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -15,12 +16,11 @@ export const getMyProfile = async () => {
 	}
 };
 
-export const updateMyProfile = async (formData: FormData): Promise<ApiResponse<any>> => {
+export const updateMyProfile = async (payload: { name?: string; image?: string }): Promise<ApiResponse<any>> => {
 	try {
-		return await httpClient.patch<any>("/users/update-profile", formData, { isFormData: true });
+		return await httpClient.patch<any>("/users/update-profile", payload);
 	} catch (error) {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const e: any = error;
+		const e = error as any;
 		const msg = e?.response?.data?.message ?? e?.message ?? "Error updating profile";
 		throw new Error(msg);
 	}
@@ -30,8 +30,7 @@ export const changeEmail = async (payload: { newEmail: string }): Promise<ApiRes
 	try {
 		return await httpClient.patch<any>("/users/change-email", payload);
 	} catch (error) {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const e: any = error;
+		const e = error as any;
 		console.error("Error changing email:", e?.response?.data ?? e);
 		const msg = e?.response?.data?.message ?? e?.message ?? "Error changing email";
 		throw new Error(msg);
@@ -55,8 +54,7 @@ export const getAllUsers = async (queryString?: string): Promise<ApiResponse<IAd
 	try {
 		return await httpClient.get<IAdminUser[]>(queryString ? `/users?${queryString}` : "/users");
 	} catch (error) {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const e: any = error;
+		const e = error as any;
 		throw new Error(e?.response?.data?.message ?? e?.message ?? "Error fetching users");
 	}
 };
@@ -65,8 +63,7 @@ export const changeUserStatus = async (userId: string, status: string): Promise<
 	try {
 		return await httpClient.patch<any>("/users/change-user-status", { userId, status });
 	} catch (error) {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const e: any = error;
+		const e = error as any;
 		throw new Error(e?.response?.data?.message ?? e?.message ?? "Error changing status");
 	}
 };
@@ -75,8 +72,7 @@ export const changeUserRole = async (userId: string, role: string): Promise<ApiR
 	try {
 		return await httpClient.patch<any>("/users/change-user-role", { userId, role });
 	} catch (error) {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const e: any = error;
+		const e = error as any;
 		throw new Error(e?.response?.data?.message ?? e?.message ?? "Error changing role");
 	}
 };
@@ -85,18 +81,34 @@ export const changeEmailAndLogout = async (newEmail: string): Promise<void> => {
 	try {
 		await httpClient.patch<any>("/users/change-email", { newEmail });
 	} catch (error) {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const e: any = error;
+		const e = error as any;
 		const msg = e?.response?.data?.message ?? e?.message ?? "Error changing email";
 		throw new Error(msg);
 	}
 
-	// Clear auth cookies so old JWT is gone before verify-email
 	const cookieStore = await cookies();
-	cookieStore.delete("accessToken");
-	cookieStore.delete("refreshToken");
-	cookieStore.delete("better-auth.session_token");
-	cookieStore.delete("better-auth.session_data");
+	cookieStore.delete(COOKIE_NAMES.ACCESS_TOKEN);
+	cookieStore.delete(COOKIE_NAMES.REFRESH_TOKEN);
+	cookieStore.delete(COOKIE_NAMES.SESSION_TOKEN);
+	cookieStore.delete(COOKIE_NAMES.SESSION_DATA);
 
 	redirect(`/verify-email?email=${encodeURIComponent(newEmail)}`);
+};
+
+export const softDeleteUser = async (userId: string): Promise<ApiResponse<any>> => {
+	try {
+		return await httpClient.delete<any>(`/users/${userId}`);
+	} catch (error) {
+		const e = error as any;
+		throw new Error(e?.response?.data?.message ?? e?.message ?? "Failed to delete user");
+	}
+};
+
+export const hardDeleteUser = async (userId: string): Promise<ApiResponse<any>> => {
+	try {
+		return await httpClient.delete<any>(`/users/${userId}/hard`);
+	} catch (error) {
+		const e = error as any;
+		throw new Error(e?.response?.data?.message ?? e?.message ?? "Failed to hard delete user");
+	}
 };

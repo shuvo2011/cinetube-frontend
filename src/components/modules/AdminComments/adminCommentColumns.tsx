@@ -17,9 +17,7 @@ export const adminCommentColumns = ({ onDelete }: Options): ColumnDef<IAdminComm
 			const { content, parentId } = row.original;
 			return (
 				<div className="max-w-sm">
-					{parentId && (
-						<span className="text-[10px] text-text-muted bg-bg-2 px-1.5 py-0.5 rounded mr-1.5">reply</span>
-					)}
+					{parentId && <span className="text-[10px] text-text-muted bg-bg-2 px-1.5 py-0.5 rounded mr-1.5">reply</span>}
 					<span className="text-[13px] text-ink line-clamp-2">{content}</span>
 				</div>
 			);
@@ -28,14 +26,22 @@ export const adminCommentColumns = ({ onDelete }: Options): ColumnDef<IAdminComm
 	{
 		accessorKey: "review.movie.title",
 		header: "Movie",
-		cell: ({ row }) => (
-			<Link
-				href={`/movies/${row.original.review.movie.id}`}
-				className="text-[13px] font-semibold text-ink hover:text-brand transition-colors"
-			>
-				{row.original.review.movie.title}
-			</Link>
-		),
+		cell: ({ row }) => {
+			const review = row.original.review;
+
+			if (!review?.movie) {
+				return <span className="text-[13px] text-text-muted">N/A</span>;
+			}
+
+			return (
+				<Link
+					href={`/movies/${review.movie.id}`}
+					className="text-[13px] font-semibold text-ink hover:text-brand transition-colors"
+				>
+					{review.movie.title}
+				</Link>
+			);
+		},
 	},
 	{
 		accessorKey: "user.email",

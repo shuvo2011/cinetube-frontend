@@ -1,9 +1,10 @@
 "use client";
 
-import { IComment } from "@/types/comment.types";
+import { IComment, ICommentReply } from "@/types/comment.types";
 import { MessageCircle, Plus, X } from "lucide-react";
 import { useState } from "react";
 import CommentCard from "./CommentCard";
+import { createCommentAction, deleteCommentAction, getCommentsAction } from "@/services/comment.services";
 
 const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -27,15 +28,12 @@ const CommentSection = ({ reviewId, currentUser, initialCount }: Props) => {
 	const loadComments = async () => {
 		setLoading(true);
 		try {
-			const res = await fetch(`${API_BASE}/comments/review/${reviewId}?limit=100`, {
-				credentials: "include",
-			});
-			const data = await res.json();
-			const fetched: IComment[] = data.data ?? [];
+			const res = await getCommentsAction(reviewId);
+			const fetched = (res?.data as IComment[]) ?? [];
 			setComments(fetched);
+
 			const total = fetched.reduce((acc, c) => acc + 1 + (c.replies?.length ?? 0), 0);
 			setCount(total);
-		} catch {
 		} finally {
 			setLoading(false);
 			setLoaded(true);
@@ -59,21 +57,22 @@ const CommentSection = ({ reviewId, currentUser, initialCount }: Props) => {
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (!newComment.trim()) return;
+
 		setError("");
 		setSubmitting(true);
+
 		try {
-			const res = await fetch(`${API_BASE}/comments`, {
-				method: "POST",
-				credentials: "include",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ reviewId, content: newComment.trim() }),
+			const res = await createCommentAction({
+				reviewId,
+				content: newComment.trim(),
 			});
-			const data = await res.json();
-			if (!res.ok) {
-				setError(data.message ?? "Something went wrong");
+
+			if (!res?.success) {
+				setError(res?.message ?? "Something went wrong");
 				return;
 			}
-			setComments((prev) => [data.data, ...prev]);
+
+			setComments((prev) => [res.data, ...prev]);
 			setCount((c) => c + 1);
 			setNewComment("");
 			setShowForm(false);
@@ -85,34 +84,33 @@ const CommentSection = ({ reviewId, currentUser, initialCount }: Props) => {
 	};
 
 	const handleReply = async (parentId: string, content: string) => {
-		const res = await fetch(`${API_BASE}/comments`, {
-			method: "POST",
-			credentials: "include",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ reviewId, content, parentId }),
+		const res = await createCommentAction({
+			reviewId,
+			content,
+			parentId,
 		});
-		const data = await res.json();
-		if (!res.ok) return;
+
+		if (!res?.success) return;
 
 		setComments((prev) =>
-			prev.map((c) => (c.id === parentId ? { ...c, replies: [...(c.replies ?? []), data.data] } : c)),
+			prev.map((c) => (c.id === parentId ? { ...c, replies: [...(c.replies ?? []), res.data as ICommentReply] } : c)),
 		);
 	};
 
 	const handleDelete = async (id: string) => {
 		if (!confirm("Delete this comment?")) return;
-		const res = await fetch(`${API_BASE}/comments/${id}`, {
-			method: "DELETE",
-			credentials: "include",
-		});
-		if (!res.ok) return;
+
+		const res = await deleteCommentAction(id);
+		if (!res?.success) return;
 
 		setComments((prev) => {
 			const isTopLevel = prev.some((c) => c.id === id);
+
 			if (isTopLevel) {
 				setCount((c) => c - 1);
 				return prev.filter((c) => c.id !== id);
 			}
+
 			return prev.map((c) => ({
 				...c,
 				replies: c.replies?.filter((r) => r.id !== id) ?? [],

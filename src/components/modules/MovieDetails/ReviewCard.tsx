@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Heart } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { approveReview, deleteReview } from "@/services/review.services";
+import { approveReview, deleteReview, toggleReviewLikeAction } from "@/services/review.services";
 import CommentSection from "@/components/modules/Comments/CommentSection";
 import Image from "next/image";
 
@@ -15,8 +15,6 @@ interface Props {
 	currentUser?: any;
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
-
 const ReviewCard = ({ review, currentUser }: Props) => {
 	const router = useRouter();
 	const [deleted, setDeleted] = useState(false);
@@ -24,15 +22,17 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 	const [likeCount, setLikeCount] = useState<number>(review.likes?.length ?? review.totalLikes ?? 0);
 	const [liked, setLiked] = useState<boolean>(review.isLikedByCurrentUser ?? false);
 	const [likeLoading, setLikeLoading] = useState(false);
+
 	const isPending = review.status === "PENDING";
 	const isAdmin = currentUser?.role === "ADMIN" || currentUser?.role === "SUPER_ADMIN";
 	const isOwnReview = currentUser?.id === review.userId;
 
 	if (deleted) return null;
 
-	const name = review.user?.name ?? "Anonymous";
-	const initials = name.slice(0, 2).toUpperCase();
-	const colorIndex = name.charCodeAt(0) % AVATAR_COLORS.length;
+	const userName = review.user?.name ?? "Anonymous";
+	const userImage = review.user?.image ?? null;
+	const initials = userName.slice(0, 2).toUpperCase();
+	const colorIndex = userName.charCodeAt(0) % AVATAR_COLORS.length;
 
 	const handleStatusChange = async (newStatus: string) => {
 		await approveReview(review.id, newStatus);
@@ -48,21 +48,21 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 
 	const handleLike = async () => {
 		if (!currentUser || isOwnReview || likeLoading) return;
+
 		setLikeLoading(true);
+
 		try {
-			const res = await fetch(`${API_BASE}/review-likes/${review.id}`, {
-				method: "POST",
-				credentials: "include",
-			});
-			const data = await res.json();
-			if (res.ok) {
-				setLiked(data.data.liked);
-				setLikeCount((c) => (data.data.liked ? c + 1 : c - 1));
+			const res = await toggleReviewLikeAction(review.id);
+
+			if (res?.success && res.data) {
+				setLiked(res.data.liked);
+				setLikeCount((c) => (res.data.liked ? c + 1 : c - 1));
 			}
 		} finally {
 			setLikeLoading(false);
 		}
 	};
+
 	return (
 		<div className="py-5 first:pt-0 last:pb-0">
 			{isPending && isAdmin && (
@@ -79,17 +79,18 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 
 			<div className="flex items-start gap-3 mb-3">
 				<div
-					className="relative w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold text-white shrink-0"
+					className="relative w-9 h-9 rounded-full flex items-center justify-center text-[11px] font-bold text-white shrink-0 overflow-hidden"
 					style={{ background: AVATAR_COLORS[colorIndex] }}
 				>
-					{review.user.image ? (
-						<Image src={review.user.image} alt={review.user.name} fill className="object-cover rounded-full" />
+					{userImage ? (
+						<Image src={userImage} alt={userName} fill className="object-cover rounded-full" />
 					) : (
-						<div className="">{initials}</div>
+						<div>{initials}</div>
 					)}
 				</div>
+
 				<div className="flex-1 min-w-0">
-					<p className="text-[14px] font-semibold text-ink">{name}</p>
+					<p className="text-[14px] font-semibold text-ink">{userName}</p>
 					<p className="text-[12px] text-text-muted">
 						{new Date(review.createdAt).toLocaleDateString("en-US", {
 							month: "long",
@@ -98,6 +99,7 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 						})}
 					</p>
 				</div>
+
 				<span className="text-[15px] font-black text-ink shrink-0">{review.rating}/10</span>
 			</div>
 

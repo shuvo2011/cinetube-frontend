@@ -3,12 +3,10 @@
 import { cn } from "@/lib/utils";
 import { IMovie } from "@/types/movie.types";
 import { RentalDuration } from "@/types/enums.types";
-import { IMovieAccess } from "@/services/payment.services";
+import { checkoutAction, IMovieAccess } from "@/services/payment.services";
 import { ShoppingCart, Clock, BadgeCheck, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const DURATION_LABELS: Record<RentalDuration, string> = {
 	DAYS_1: "1 Day",
@@ -29,7 +27,7 @@ interface Props {
 const RentBuyCard = ({ movie, access, isLoggedIn }: Props) => {
 	const rentDuration = movie.rentDuration as RentalDuration | null;
 	const [loadingType, setLoadingType] = useState<"RENT" | "BUY" | null>(null);
-	const [error, setError] = useState<string>("");
+	const [error, setError] = useState("");
 
 	useEffect(() => {
 		const handlePageShow = (e: PageTransitionEvent) => {
@@ -42,22 +40,18 @@ const RentBuyCard = ({ movie, access, isLoggedIn }: Props) => {
 	const handleCheckout = async (purchaseType: "RENT" | "BUY") => {
 		setLoadingType(purchaseType);
 		setError("");
+
 		try {
-			const res = await fetch(`${API_BASE}/payments/checkout`, {
-				method: "POST",
-				credentials: "include",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({
-					movieId: movie.id,
-					purchaseType,
-					...(purchaseType === "RENT" && rentDuration && { rentalDuration: rentDuration }),
-				}),
+			const res = await checkoutAction({
+				movieId: movie.id,
+				purchaseType,
+				...(purchaseType === "RENT" && rentDuration ? { rentalDuration: rentDuration } : {}),
 			});
-			const data = await res.json();
-			if (res.ok && data.data?.checkoutUrl) {
-				window.location.href = data.data.checkoutUrl;
+
+			if (res?.success && res.data?.checkoutUrl) {
+				window.location.href = res.data.checkoutUrl;
 			} else {
-				setError(data.message ?? "Checkout failed. Please try again.");
+				setError(res?.message ?? "Checkout failed. Please try again.");
 			}
 		} catch {
 			setError("Something went wrong. Please try again.");
@@ -199,6 +193,7 @@ const RentBuyCard = ({ movie, access, isLoggedIn }: Props) => {
 					</div>
 				)}
 			</div>
+
 			{error && <p className="text-[12px] text-red-500 mt-3">{error}</p>}
 		</div>
 	);

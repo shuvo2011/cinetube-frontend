@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import DashboardShell from "@/components/dashboard/DashboardShell";
+import { COOKIE_NAMES } from "@/utils/cookie.constants";
 
 type JwtPayload = {
 	id: string;
@@ -11,7 +12,8 @@ type JwtPayload = {
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
 	const cookieStore = await cookies();
-	const accessToken = cookieStore.get("accessToken")?.value;
+	const accessToken = cookieStore.get(COOKIE_NAMES.ACCESS_TOKEN)?.value;
+
 	if (!accessToken) redirect("/login");
 
 	let payload: JwtPayload;

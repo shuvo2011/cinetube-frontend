@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ITag } from "@/types/tag.types";
+import { updateReviewAction } from "@/services/review.services";
 
 interface Props {
 	review: any;
@@ -61,20 +62,20 @@ const EditReviewForm = ({ review, tags }: Props) => {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		if (!rating || !content.trim()) return;
+
 		setError("");
 		setLoading(true);
 
 		try {
-			const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/reviews/${review.id}`, {
-				method: "PATCH",
-				credentials: "include",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ rating, content, hasSpoiler, tagIds: selectedTags }),
+			const res = await updateReviewAction(review.id, {
+				rating,
+				content,
+				hasSpoiler,
+				tagIds: selectedTags,
 			});
 
-			const data = await res.json();
-			if (!res.ok) {
-				setError(data.message ?? "Something went wrong");
+			if (!res?.success) {
+				setError(res?.message ?? "Something went wrong");
 				return;
 			}
 

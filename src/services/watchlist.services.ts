@@ -1,6 +1,7 @@
 "use server";
 
 import { httpClient } from "@/lib/axios/httpClient";
+import { ApiResponse } from "@/types/api.types";
 
 export interface IWatchlistItem {
 	id: string;
@@ -37,4 +38,16 @@ export const isMovieInWatchlist = async (movieId: string): Promise<boolean> => {
 	} catch {
 		return false;
 	}
+};
+
+export const toggleWatchlistAction = async (movieId: string, inWatchlist: boolean) => {
+	if (inWatchlist) {
+		return await httpClient.delete<null>(`/watchlist/${movieId}`);
+	}
+
+	return await httpClient.post<null>(`/watchlist/${movieId}`, {});
+};
+
+export const removeFromWatchlistAction = async (movieId: string): Promise<ApiResponse<null>> => {
+	return await httpClient.delete<null>(`/watchlist/${movieId}`);
 };

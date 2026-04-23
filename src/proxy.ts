@@ -3,12 +3,12 @@ import { getDefaultDashboardRoute, getRouteOwner, isAuthRoute, UserRole } from "
 import { jwtUtils } from "./lib/jwtUtils";
 import { isTokenExpiringSoon } from "./lib/tokenUtils";
 import { getNewTokens, getUserInfo } from "./services/auth.services";
+import { COOKIE_NAMES } from "./utils/cookie.constants";
 
 async function refreshTokenMiddleware(refreshToken: string): Promise<boolean> {
 	try {
 		const refresh = await getNewTokens(refreshToken);
-		if (!refresh) return false;
-		return true;
+		return !!refresh;
 	} catch (error) {
 		console.error("Error refreshing token in middleware:", error);
 		return false;
@@ -18,88 +18,87 @@ async function refreshTokenMiddleware(refreshToken: string): Promise<boolean> {
 export async function proxy(request: NextRequest) {
 	try {
 		const { pathname } = request.nextUrl;
-		const accessToken = request.cookies.get("accessToken")?.value;
-		const refreshToken = request.cookies.get("refreshToken")?.value;
 
-		const decodedAccessToken =
-			accessToken && jwtUtils.verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET as string).data;
+		// ✅ use constants
+		const accessToken = request.cookies.get(COOKIE_NAMES.ACCESS_TOKEN)?.value;
+		const refreshToken = request.cookies.get(COOKIE_NAMES.REFRESH_TOKEN)?.value;
 
-		const isValidAccessToken =
-			accessToken && jwtUtils.verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET as string).success;
+		// ✅ avoid double verify
+		const verified = accessToken ? jwtUtils.verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET as string) : null;
 
-		let userRole: UserRole | null = null;
+		const isValidAccessToken = verified?.success;
+		const decodedAccessToken = verified?.data;
 
-		if (decodedAccessToken) {
-			userRole = decodedAccessToken.role as UserRole;
-		}
+		let userRole: UserRole | null = decodedAccessToken?.role ?? null;
 
 		const routerOwner = getRouteOwner(pathname);
-		const unifySuperAdminAndAdminRole = userRole === "SUPER_ADMIN" ? "ADMIN" : userRole;
-		userRole = unifySuperAdminAndAdminRole;
 		const isAuth = isAuthRoute(pathname);
 
-		// proactively refresh token if expiring soon
-		if (isValidAccessToken && refreshToken && (await isTokenExpiringSoon(accessToken as string))) {
+		// normalize role
+		if (userRole === "SUPER_ADMIN") userRole = "ADMIN";
+
+		// 🔥 refresh token
+		if (isValidAccessToken && refreshToken && (await isTokenExpiringSoon(accessToken!))) {
 			const requestHeaders = new Headers(request.headers);
-			const response = NextResponse.next({ request: { headers: requestHeaders } });
 
 			try {
 				const refreshed = await refreshTokenMiddleware(refreshToken);
 				if (refreshed) {
 					requestHeaders.set("x-token-refreshed", "1");
 				}
-				return NextResponse.next({
-					request: { headers: requestHeaders },
-					headers: response.headers,
-				});
 			} catch (error) {
 				console.error("Error refreshing token:", error);
 			}
 
-			return response;
+			return NextResponse.next({ request: { headers: requestHeaders } });
 		}
 
-		// Rule-1: logged in + auth route → redirect to dashboard
+		// Rule-1
 		if (isAuth && isValidAccessToken) {
 			return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));
 		}
 
-		// Rule-2: reset-password page
+		// Rule-2
 		if (pathname === "/reset-password") {
 			const email = request.nextUrl.searchParams.get("email");
 			if (email) return NextResponse.next();
+
 			const loginUrl = new URL("/login", request.url);
 			loginUrl.searchParams.set("redirect", pathname);
 			return NextResponse.redirect(loginUrl);
 		}
 
-		// Rule-3: public route → allow
+		// Rule-3
 		if (routerOwner === null) {
 			return NextResponse.next();
 		}
 
-		// Rule-4: not logged in + protected route → redirect to login
+		// Rule-4
 		if (!accessToken || !isValidAccessToken) {
 			const loginUrl = new URL("/login", request.url);
 			loginUrl.searchParams.set("redirect", pathname);
 			return NextResponse.redirect(loginUrl);
 		}
 
-		// Rule-5: enforce email verification + blocked user logout
+		// Rule-5
 		if (accessToken) {
 			const userInfo = await getUserInfo();
+
 			if (userInfo) {
 				if (userInfo.status === "BLOCKED" || userInfo.isDeleted || userInfo.status === "DELETED") {
 					const loginUrl = new URL("/login", request.url);
 					const response = NextResponse.redirect(loginUrl);
-					response.cookies.delete("accessToken");
-					response.cookies.delete("refreshToken");
-					response.cookies.delete("better-auth.session_token");
-					response.cookies.delete("better-auth.session_data");
+
+					// ✅ use constants
+					response.cookies.delete(COOKIE_NAMES.ACCESS_TOKEN);
+					response.cookies.delete(COOKIE_NAMES.REFRESH_TOKEN);
+					response.cookies.delete(COOKIE_NAMES.SESSION_TOKEN);
+					response.cookies.delete(COOKIE_NAMES.SESSION_DATA);
+
 					return response;
 				}
 
-				if (userInfo.emailVerified === false) {
+				if (!userInfo.emailVerified) {
 					if (pathname !== "/verify-email") {
 						const verifyEmailUrl = new URL("/verify-email", request.url);
 						verifyEmailUrl.searchParams.set("email", userInfo.email);
@@ -114,16 +113,14 @@ export async function proxy(request: NextRequest) {
 			}
 		}
 
-		// Rule-6: common protected route → allow
+		// Rule-6
 		if (routerOwner === "COMMON") {
 			return NextResponse.next();
 		}
 
-		// Rule-7: wrong role → redirect to own dashboard
-		if (routerOwner === "ADMIN" || routerOwner === "USER") {
-			if (routerOwner !== userRole) {
-				return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));
-			}
+		// Rule-7
+		if ((routerOwner === "ADMIN" || routerOwner === "USER") && routerOwner !== userRole) {
+			return NextResponse.redirect(new URL(getDefaultDashboardRoute(userRole as UserRole), request.url));
 		}
 
 		return NextResponse.next();
