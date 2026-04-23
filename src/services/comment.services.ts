@@ -22,7 +22,7 @@ export interface IAdminComment {
 
 // ✅ admin comments (only once)
 export const getCommentsForAdmin = async (queryString?: string) => {
-	return await httpClient.get<IAdminComment[]>(queryString ? `/comments/admin?${queryString}` : "/comments/admin");
+	return await httpClient.get<IAdminComment[]>(queryString ? `/comments/?${queryString}` : "/comments");
 };
 
 // ✅ delete comment (only once)

@@ -67,8 +67,11 @@ const MoviesFilter = ({ genres, platforms, availableYears }: MoviesFilterProps) 
 	const minYear = availableYears.length > 0 ? Math.min(...availableYears) : 2000;
 	const maxYear = availableYears.length > 0 ? Math.max(...availableYears) : new Date().getFullYear();
 
-	const parsedYearFrom = Number(searchParams.get("releaseYearFrom"));
-	const parsedYearTo = Number(searchParams.get("releaseYearTo"));
+	const yearFromParam = searchParams.get("releaseYearFrom");
+	const yearToParam = searchParams.get("releaseYearTo");
+
+	const parsedYearFrom = yearFromParam ? Number(yearFromParam) : NaN;
+	const parsedYearTo = yearToParam ? Number(yearToParam) : NaN;
 
 	const currentYearFrom = Number.isFinite(parsedYearFrom) ? parsedYearFrom : minYear;
 	const currentYearTo = Number.isFinite(parsedYearTo) ? parsedYearTo : maxYear;

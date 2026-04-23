@@ -27,6 +27,10 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 	const isAdmin = currentUser?.role === "ADMIN" || currentUser?.role === "SUPER_ADMIN";
 	const isOwnReview = currentUser?.id === review.userId;
 
+	const canDelete =
+		isAdmin ||
+		(isOwnReview && (review.status === "DRAFT" || review.status === "PENDING" || review.status === "UNPUBLISHED"));
+
 	if (deleted) return null;
 
 	const userName = review.user?.name ?? "Anonymous";
@@ -41,7 +45,13 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 
 	const handleDelete = async () => {
 		if (!confirm("Are you sure you want to delete this review?")) return;
-		await deleteReview(review.id);
+
+		const res = await deleteReview(review.id);
+
+		if (!res?.success) {
+			return;
+		}
+
 		setDeleted(true);
 		router.refresh();
 	};
@@ -141,9 +151,9 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 					{likeCount} Likes
 				</button>
 
-				{isAdmin && (
+				{(isAdmin || canDelete) && (
 					<div className="ml-auto flex items-center gap-3">
-						{review.status === "PENDING" && (
+						{isAdmin && review.status === "PENDING" && (
 							<button
 								onClick={() => handleStatusChange("PUBLISHED")}
 								className="text-green font-semibold hover:opacity-80 transition-opacity"
@@ -151,12 +161,14 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 								✓ Approve
 							</button>
 						)}
-						{review.status === "PUBLISHED" && (
+
+						{isAdmin && review.status === "PUBLISHED" && (
 							<button onClick={() => handleStatusChange("UNPUBLISHED")} className="hover:text-ink transition-colors">
 								⊘ Unpublish
 							</button>
 						)}
-						{review.status === "UNPUBLISHED" && (
+
+						{isAdmin && review.status === "UNPUBLISHED" && (
 							<button
 								onClick={() => handleStatusChange("PUBLISHED")}
 								className="text-green font-semibold hover:opacity-80 transition-opacity"
@@ -164,9 +176,12 @@ const ReviewCard = ({ review, currentUser }: Props) => {
 								↑ Republish
 							</button>
 						)}
-						<button onClick={handleDelete} className="text-red-500 hover:opacity-80 transition-opacity">
-							✕ Delete
-						</button>
+
+						{canDelete && (
+							<button onClick={handleDelete} className="text-red-500 hover:opacity-80 transition-opacity">
+								✕ Delete
+							</button>
+						)}
 					</div>
 				)}
 			</div>

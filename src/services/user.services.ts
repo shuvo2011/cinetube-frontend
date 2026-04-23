@@ -106,7 +106,7 @@ export const softDeleteUser = async (userId: string): Promise<ApiResponse<any>> 
 
 export const hardDeleteUser = async (userId: string): Promise<ApiResponse<any>> => {
 	try {
-		return await httpClient.delete<any>(`/users/${userId}/hard`);
+		return await httpClient.delete<any>(`/users/hard/${userId}`);
 	} catch (error) {
 		const e = error as any;
 		throw new Error(e?.response?.data?.message ?? e?.message ?? "Failed to hard delete user");

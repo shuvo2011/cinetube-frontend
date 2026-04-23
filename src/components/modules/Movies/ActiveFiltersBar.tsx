@@ -17,21 +17,33 @@ const ActiveFiltersBar = ({ genres, platforms }: ActiveFiltersBarProps) => {
 	const platformId = searchParams.get("platformId");
 	const minRating = searchParams.get("minRating");
 	const searchTerm = searchParams.get("searchTerm");
-	const releaseYear = searchParams.get("releaseYear");
+	const releaseYearFrom = searchParams.get("releaseYearFrom");
+	const releaseYearTo = searchParams.get("releaseYearTo");
 
 	const activeFilters = [
 		genreId && { label: genres.find((g) => g.id === genreId)?.name ?? "Genre", key: "genreId" },
 		platformId && { label: platforms.find((p) => p.id === platformId)?.name ?? "Platform", key: "platformId" },
 		minRating && { label: `${minRating}+ Stars`, key: "minRating" },
 		searchTerm && { label: `"${searchTerm}"`, key: "searchTerm" },
-		releaseYear && { label: releaseYear, key: "releaseYear" },
+		releaseYearFrom &&
+			releaseYearTo && {
+				label: `${releaseYearFrom} - ${releaseYearTo}`,
+				key: "releaseYearRange",
+			},
 	].filter(Boolean) as { label: string; key: string }[];
 
 	if (activeFilters.length === 0) return null;
 
 	const removeFilter = (key: string) => {
 		const params = new URLSearchParams(searchParams.toString());
-		params.delete(key);
+
+		if (key === "releaseYearRange") {
+			params.delete("releaseYearFrom");
+			params.delete("releaseYearTo");
+		} else {
+			params.delete(key);
+		}
+
 		params.delete("page");
 		router.push(`/movies?${params.toString()}`);
 	};

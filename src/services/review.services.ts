@@ -48,7 +48,7 @@ export interface IAdminReview {
 }
 
 export const getReviewsForAdmin = async (queryString?: string) => {
-	return await httpClient.get<IAdminReview[]>(queryString ? `/reviews/admin?${queryString}` : "/reviews/admin");
+	return await httpClient.get<IAdminReview[]>(queryString ? `/reviews/?${queryString}` : "/reviews");
 };
 
 export const updateReviewStatusAction = async (id: string, status: string): Promise<ApiResponse<null>> => {
@@ -99,8 +99,7 @@ export const approveReview = async (id: string, status: string) => {
 
 export const deleteReview = async (id: string) => {
 	try {
-		const result = await httpClient.delete(`/reviews/${id}`);
-		return result.data;
+		return await httpClient.delete(`/reviews/${id}`);
 	} catch (error) {
 		console.log("Error deleting review:", error);
 		return null;
