@@ -21,6 +21,7 @@ const UserProfileForm = () => {
 	const [email, setEmail] = useState("");
 	const [preview, setPreview] = useState<string | null>(null);
 	const [imageJustSaved, setImageJustSaved] = useState(false);
+	const [isLocalImageUploading, setIsLocalImageUploading] = useState(false);
 	const prevObjectUrl = useRef<string | null>(null);
 	const fileInputRef = useRef<HTMLInputElement | null>(null);
 	const [isChangeEmailDisabled, setIsChangeEmailDisabled] = useState(false);
@@ -44,7 +45,7 @@ const UserProfileForm = () => {
 	}, []);
 
 	const imageMutation = useMutation({
-		mutationFn: (payload: { image: string }) => updateMyProfile(payload),
+		mutationFn: (payload: { image: string; imagePublicId: string }) => updateMyProfile(payload),
 		onSuccess: (res) => {
 			const newUrl = res?.data?.image ?? null;
 			if (prevObjectUrl.current) {
@@ -64,7 +65,7 @@ const UserProfileForm = () => {
 	});
 
 	const saveMutation = useMutation({
-		mutationFn: (payload: { name?: string; image?: string }) => updateMyProfile(payload),
+		mutationFn: (payload: { name?: string; image?: string; imagePublicId?: string }) => updateMyProfile(payload),
 		onSuccess: () => {
 			toast.success("Profile updated");
 			qc.invalidateQueries({ queryKey: ["me"] });
@@ -84,13 +85,23 @@ const UserProfileForm = () => {
 		prevObjectUrl.current = url;
 		setPreview(url);
 		setImageJustSaved(false);
+		setIsLocalImageUploading(true);
 
 		try {
-			const cloudinaryUrl = await uploadImageToCloudinary(f);
-			await imageMutation.mutateAsync({ image: cloudinaryUrl });
+			const uploaded = await uploadImageToCloudinary(f);
+
+			await imageMutation.mutateAsync({
+				image: uploaded.url,
+				imagePublicId: uploaded.publicId,
+			});
 		} catch {
 			setPreview(profile?.image ?? null);
 			toast.error("Failed to upload image");
+		} finally {
+			setIsLocalImageUploading(false);
+			if (e.target) {
+				e.target.value = "";
+			}
 		}
 	};
 
@@ -133,7 +144,7 @@ const UserProfileForm = () => {
 
 	if (isLoading) return <div>Loading...</div>;
 
-	const isImageUploading = imageMutation.isPending;
+	const isImageUploading = isLocalImageUploading || imageMutation.isPending;
 
 	return (
 		<form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -141,7 +152,6 @@ const UserProfileForm = () => {
 				<div className="bg-bg border border-line rounded-xl p-4 flex flex-col items-center gap-3">
 					<div className="relative w-28 h-28">
 						{preview ? (
-							// eslint-disable-next-line @next/next/no-img-element
 							<Image src={preview} alt="avatar" fill className="w-28 h-28 rounded-full object-cover" />
 						) : (
 							<div className="w-28 h-28 rounded-full bg-linear-to-br from-gray-100 to-gray-200 flex items-center justify-center text-lg font-bold text-gray-500">
@@ -195,7 +205,7 @@ const UserProfileForm = () => {
 					</div>
 
 					<div className="pt-3">
-						<Button type="submit" disabled={saveMutation.isPending}>
+						<Button type="submit" disabled={saveMutation.isPending || isImageUploading}>
 							{saveMutation.isPending ? "Saving..." : "Save Changes"}
 						</Button>
 					</div>

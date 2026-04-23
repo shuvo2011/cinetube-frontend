@@ -15,6 +15,7 @@ export interface IMovie {
 	totalReviews?: number;
 	createdAt: string;
 	totalLikes?: number;
+	posterPublicId?: string;
 	_count?: {
 		watchlists: number;
 	};

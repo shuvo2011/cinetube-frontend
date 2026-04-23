@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
+import { Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -43,6 +44,7 @@ const RENTAL_DURATIONS = [
 const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormProps) => {
 	const [posterPreview, setPosterPreview] = useState<string | null>(null);
 	const [posterFile, setPosterFile] = useState<File | null>(null);
+	const [isPosterUploading, setIsPosterUploading] = useState(false);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const [title, setTitle] = useState(movie?.title ?? "");
@@ -99,6 +101,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 			setSelectedGenreIds([]);
 			setSelectedPlatformIds([]);
 			setSelectedCastIds([]);
+			setErrors({});
 		}
 	}, [mode, movie]);
 
@@ -169,9 +172,17 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 
 		try {
 			let posterImage = movie?.posterImage ?? undefined;
+			let posterPublicId = movie?.posterPublicId ?? undefined;
 
 			if (posterFile) {
-				posterImage = await uploadImageToCloudinary(posterFile);
+				setIsPosterUploading(true);
+				try {
+					const uploaded = await uploadImageToCloudinary(posterFile);
+					posterImage = uploaded.url;
+					posterPublicId = uploaded.publicId;
+				} finally {
+					setIsPosterUploading(false);
+				}
 			}
 
 			const payload = {
@@ -185,7 +196,8 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 				buyPrice: buyPrice ? Number(buyPrice) : 0,
 				rentDuration: rentDuration || undefined,
 				isFeatured,
-				...(posterImage ? { posterImage } : {}), // ⭐ IMPORTANT
+				...(posterImage ? { posterImage } : {}),
+				...(posterPublicId ? { posterPublicId } : {}),
 				genreIds: selectedGenreIds,
 				platformIds: selectedPlatformIds,
 				castMemberIds: selectedCastIds,
@@ -204,6 +216,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 
 			if (mode === "create") resetForm();
 		} catch {
+			setIsPosterUploading(false);
 			toast.error("Failed to save movie");
 		}
 	};
@@ -222,32 +235,62 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 					<div className="space-y-1.5">
 						<Label>Poster Image</Label>
 						<div
-							onClick={() => fileInputRef.current?.click()}
-							className="flex aspect-2/3 w-48 cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/30 hover:border-muted-foreground/60 transition-colors overflow-hidden relative"
+							onClick={() => {
+								if (!isPosterUploading) fileInputRef.current?.click();
+							}}
+							className={`flex aspect-2/3 w-48 items-center justify-center rounded-lg border-2 border-dashed border-muted-foreground/30 overflow-hidden relative transition-colors ${
+								isPosterUploading ? "cursor-not-allowed opacity-80" : "cursor-pointer hover:border-muted-foreground/60"
+							}`}
 						>
 							{posterPreview ? (
 								<>
 									<Image src={posterPreview} alt="poster" fill className="h-full w-full object-cover" />
-									<button
-										type="button"
-										onClick={(e) => {
-											e.stopPropagation();
-											setPosterPreview(null);
-											setPosterFile(null);
-										}}
-										className="absolute right-2 top-2 rounded-full bg-black/60 p-1 text-white hover:bg-black"
-									>
-										×
-									</button>
+
+									{isPosterUploading && (
+										<div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/60 text-white">
+											<Loader2 className="h-6 w-6 animate-spin" />
+											<span className="mt-2 text-xs font-medium">Uploading poster...</span>
+										</div>
+									)}
+
+									{!isPosterUploading && (
+										<button
+											type="button"
+											onClick={(e) => {
+												e.stopPropagation();
+												setPosterPreview(null);
+												setPosterFile(null);
+											}}
+											className="absolute right-2 top-2 z-20 rounded-full bg-black/60 p-1 text-white hover:bg-black"
+										>
+											×
+										</button>
+									)}
 								</>
 							) : (
 								<div className="flex flex-col items-center gap-2 text-muted-foreground">
-									<span className="text-2xl">+</span>
-									<span className="text-xs text-center">Click to upload poster</span>
+									{isPosterUploading ? (
+										<>
+											<Loader2 className="h-6 w-6 animate-spin" />
+											<span className="text-xs text-center">Uploading poster...</span>
+										</>
+									) : (
+										<>
+											<span className="text-2xl">+</span>
+											<span className="text-xs text-center">Click to upload poster</span>
+										</>
+									)}
 								</div>
 							)}
 						</div>
-						<input ref={fileInputRef} type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+						<input
+							ref={fileInputRef}
+							type="file"
+							accept="image/*"
+							onChange={handleFileChange}
+							className="hidden"
+							disabled={isPosterUploading}
+						/>
 					</div>
 
 					<div className="grid gap-6 lg:grid-cols-2">
@@ -262,7 +305,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 									setTitle(e.target.value);
 									if (errors.title) setErrors({ ...errors, title: undefined });
 								}}
-								disabled={isPending}
+								disabled={isPending || isPosterUploading}
 								className={errors.title ? "border-destructive" : ""}
 							/>
 							{errors.title && <p className="text-xs text-destructive">{errors.title}</p>}
@@ -278,7 +321,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 									setDirector(e.target.value);
 									if (errors.director) setErrors({ ...errors, director: undefined });
 								}}
-								disabled={isPending}
+								disabled={isPending || isPosterUploading}
 								className={errors.director ? "border-destructive" : ""}
 							/>
 							{errors.director && <p className="text-xs text-destructive">{errors.director}</p>}
@@ -298,7 +341,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 									setReleaseYear(e.target.value);
 									if (errors.releaseYear) setErrors({ ...errors, releaseYear: undefined });
 								}}
-								disabled={isPending}
+								disabled={isPending || isPosterUploading}
 								className={errors.releaseYear ? "border-destructive" : ""}
 							/>
 							{errors.releaseYear && <p className="text-xs text-destructive">{errors.releaseYear}</p>}
@@ -308,7 +351,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 							<Select
 								value={rentDuration || movie?.rentDuration || ""}
 								onValueChange={setRentDuration}
-								disabled={isPending}
+								disabled={isPending || isPosterUploading}
 							>
 								<SelectTrigger className="w-full">
 									<SelectValue placeholder="Select a rental duration" />
@@ -335,7 +378,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 								setSynopsis(e.target.value);
 								if (errors.synopsis) setErrors({ ...errors, synopsis: undefined });
 							}}
-							disabled={isPending}
+							disabled={isPending || isPosterUploading}
 							rows={4}
 							className={errors.synopsis ? "border-destructive" : ""}
 						/>
@@ -354,7 +397,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 									setTrailerUrl(e.target.value);
 									if (errors.trailerUrl) setErrors({ ...errors, trailerUrl: undefined });
 								}}
-								disabled={isPending}
+								disabled={isPending || isPosterUploading}
 								className={errors.trailerUrl ? "border-destructive" : ""}
 							/>
 							{errors.trailerUrl && <p className="text-xs text-destructive">{errors.trailerUrl}</p>}
@@ -370,7 +413,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 									setStreamingUrl(e.target.value);
 									if (errors.streamingUrl) setErrors({ ...errors, streamingUrl: undefined });
 								}}
-								disabled={isPending}
+								disabled={isPending || isPosterUploading}
 								className={errors.streamingUrl ? "border-destructive" : ""}
 							/>
 							{errors.streamingUrl && <p className="text-xs text-destructive">{errors.streamingUrl}</p>}
@@ -388,7 +431,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 									setRentPrice(e.target.value);
 									if (errors?.rentPrice) setErrors({ ...errors, rentPrice: undefined });
 								}}
-								disabled={isPending}
+								disabled={isPending || isPosterUploading}
 								className={errors.rentPrice ? "border-destructive" : ""}
 							/>
 							{errors.rentPrice && <p className="text-xs text-destructive">{errors.rentPrice}</p>}
@@ -403,7 +446,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 									setBuyPrice(e.target.value);
 									if (errors.buyPrice) setErrors({ ...errors, buyPrice: undefined });
 								}}
-								disabled={isPending}
+								disabled={isPending || isPosterUploading}
 								className={errors.buyPrice ? "border-destructive" : ""}
 							/>
 							{errors.buyPrice && <p className="text-xs text-destructive">{errors.buyPrice}</p>}
@@ -415,7 +458,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 									id="featured"
 									checked={isFeatured}
 									onCheckedChange={(v) => setIsFeatured(v === true)}
-									disabled={isPending}
+									disabled={isPending || isPosterUploading}
 								/>
 								<Label htmlFor="featured" className="cursor-pointer font-normal">
 									Mark as featured movie
@@ -433,6 +476,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 										key={g.id}
 										type="button"
 										onClick={() => toggleItem(g.id, selectedGenreIds, setSelectedGenreIds)}
+										disabled={isPending || isPosterUploading}
 										className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
 											selectedGenreIds.includes(g.id)
 												? "border-primary bg-primary text-primary-foreground"
@@ -453,6 +497,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 										key={p.id}
 										type="button"
 										onClick={() => toggleItem(p.id, selectedPlatformIds, setSelectedPlatformIds)}
+										disabled={isPending || isPosterUploading}
 										className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
 											selectedPlatformIds.includes(p.id)
 												? "border-primary bg-primary text-primary-foreground"
@@ -473,6 +518,7 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 										key={c.id}
 										type="button"
 										onClick={() => toggleItem(c.id, selectedCastIds, setSelectedCastIds)}
+										disabled={isPending || isPosterUploading}
 										className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
 											selectedCastIds.includes(c.id)
 												? "border-primary bg-primary text-primary-foreground"
@@ -491,13 +537,19 @@ const MovieForm = ({ mode, movie, genres, platforms, castMembers }: MovieFormPro
 							type="button"
 							variant="outline"
 							onClick={() => router.push("/admin/dashboard/movies")}
-							disabled={isPending}
+							disabled={isPending || isPosterUploading}
 							className="sm:min-w-30"
 						>
 							Cancel
 						</Button>
-						<Button type="submit" disabled={isPending} className="sm:min-w-35">
-							{isPending ? "Saving..." : mode === "create" ? "Create Movie" : "Save Changes"}
+						<Button type="submit" disabled={isPending || isPosterUploading} className="sm:min-w-35">
+							{isPosterUploading
+								? "Uploading Poster..."
+								: isPending
+									? "Saving..."
+									: mode === "create"
+										? "Create Movie"
+										: "Save Changes"}
 						</Button>
 					</div>
 				</form>

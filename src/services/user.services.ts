@@ -16,7 +16,11 @@ export const getMyProfile = async () => {
 	}
 };
 
-export const updateMyProfile = async (payload: { name?: string; image?: string }): Promise<ApiResponse<any>> => {
+export const updateMyProfile = async (payload: {
+	name?: string;
+	image?: string;
+	imagePublicId?: string;
+}): Promise<ApiResponse<any>> => {
 	try {
 		return await httpClient.patch<any>("/users/update-profile", payload);
 	} catch (error) {
