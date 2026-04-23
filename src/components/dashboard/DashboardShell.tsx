@@ -17,8 +17,10 @@ export default function DashboardShell({ role, userName, userEmail, children }: 
 	const [sidebarOpen, setSidebarOpen] = useState(false);
 
 	const { data: profileRes } = useQuery({ queryKey: ["me"], queryFn: getMyProfile });
+
 	const liveUserName = profileRes?.data?.name ?? userName;
 	const liveUserEmail = profileRes?.data?.email ?? userEmail;
+	const liveUserImage = profileRes?.data?.image ?? null;
 
 	return (
 		<div className="flex min-h-screen bg-gray-50">
@@ -26,6 +28,7 @@ export default function DashboardShell({ role, userName, userEmail, children }: 
 				role={role}
 				userName={liveUserName}
 				userEmail={liveUserEmail}
+				userImage={liveUserImage}
 				open={sidebarOpen}
 				onClose={() => setSidebarOpen(false)}
 			/>
@@ -35,6 +38,7 @@ export default function DashboardShell({ role, userName, userEmail, children }: 
 					role={role}
 					userName={liveUserName}
 					userEmail={liveUserEmail}
+					userImage={liveUserImage}
 					onMenuClick={() => setSidebarOpen(true)}
 				/>
 				<main className="flex-1 p-4 lg:p-7">{children}</main>

@@ -14,11 +14,13 @@ import { adminNavSections, userNavSections } from "@/lib/dashboardNavItems";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { logout } from "@/services/auth.services";
+import Image from "next/image";
 
 type Props = {
 	role: "ADMIN" | "USER";
 	userName: string;
 	userEmail: string;
+	userImage?: string | null;
 	onMenuClick: () => void;
 };
 
@@ -37,7 +39,7 @@ function getPageTitle(pathname: string, role: "ADMIN" | "USER"): { title: string
 	return { title: "Dashboard", sub: "Overview" };
 }
 
-export default function AppHeader({ role, userName, userEmail, onMenuClick }: Props) {
+export default function AppHeader({ role, userName, userEmail, userImage, onMenuClick }: Props) {
 	const pathname = usePathname();
 	const router = useRouter();
 	const { title, sub } = getPageTitle(pathname, role);
@@ -48,6 +50,7 @@ export default function AppHeader({ role, userName, userEmail, onMenuClick }: Pr
 		.join("")
 		.toUpperCase()
 		.slice(0, 2);
+
 	const profileHref = role === "ADMIN" ? "/admin/dashboard/profile" : "/dashboard/profile";
 	const accentBg = role === "ADMIN" ? "bg-rose-50" : "bg-blue-50";
 	const accentText = role === "ADMIN" ? "text-rose-600" : "text-blue-600";
@@ -74,15 +77,22 @@ export default function AppHeader({ role, userName, userEmail, onMenuClick }: Pr
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
 					<button className="flex items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-gray-50">
-						<div
-							className={cn(
-								"flex h-8 w-8 items-center justify-center rounded-full text-[11px] font-extrabold",
-								accentBg,
-								accentText,
-							)}
-						>
-							{initials}
-						</div>
+						{userImage ? (
+							<div className="relative h-8 w-8 overflow-hidden rounded-full">
+								<Image src={userImage} alt={userName} fill className="object-cover" />
+							</div>
+						) : (
+							<div
+								className={cn(
+									"flex h-8 w-8 items-center justify-center rounded-full text-[11px] font-extrabold",
+									accentBg,
+									accentText,
+								)}
+							>
+								{initials}
+							</div>
+						)}
+
 						<div className="hidden flex-col items-start md:flex">
 							<span className="text-[12px] font-bold leading-tight text-gray-900">{userName}</span>
 							<span className="text-[10px] leading-tight text-gray-400">{userEmail}</span>
@@ -90,6 +100,7 @@ export default function AppHeader({ role, userName, userEmail, onMenuClick }: Pr
 						<ChevronDown className="h-3.5 w-3.5 text-gray-400" />
 					</button>
 				</DropdownMenuTrigger>
+
 				<DropdownMenuContent align="end" className="w-48">
 					<DropdownMenuLabel className="text-[12px] text-gray-500">My Account</DropdownMenuLabel>
 					<DropdownMenuSeparator />

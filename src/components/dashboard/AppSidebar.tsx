@@ -8,16 +8,18 @@ import { LogOut, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Logo from "../shared/Logo/Logo";
 import { logout } from "@/services/auth.services";
+import Image from "next/image";
 
 type Props = {
 	role: "ADMIN" | "USER";
 	userName: string;
 	userEmail: string;
+	userImage?: string | null;
 	open: boolean;
 	onClose: () => void;
 };
 
-export default function AppSidebar({ role, userName, userEmail, open, onClose }: Props) {
+export default function AppSidebar({ role, userName, userEmail, userImage, open, onClose }: Props) {
 	const pathname = usePathname();
 	const router = useRouter();
 
@@ -84,7 +86,15 @@ export default function AppSidebar({ role, userName, userEmail, open, onClose }:
 								accentText,
 							)}
 						>
-							{initials}
+							{userImage ? (
+								<div className="relative h-10 w-10 overflow-hidden rounded-full">
+									<Image src={userImage} alt={userName} fill className="object-cover" />
+								</div>
+							) : (
+								<div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-50 text-sm font-bold text-blue-600">
+									{initials}
+								</div>
+							)}
 						</div>
 						<div className="min-w-0">
 							<p className="truncate text-[13px] font-bold text-gray-900">{userName}</p>
