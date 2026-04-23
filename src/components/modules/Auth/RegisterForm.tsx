@@ -157,7 +157,7 @@ const RegisterForm = () => {
 						variant="outline"
 						className="w-full"
 						onClick={() => {
-							window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/google`;
+							window.location.href = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/google?redirect=/dashboard`;
 						}}
 					>
 						<svg className="size-4 mr-2" viewBox="0 0 24 24">
