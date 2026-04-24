@@ -18,13 +18,21 @@ import EditReviewForm from "@/components/modules/MovieDetails/EditReviewForm";
 export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
 	const { id } = await params;
-	const res = await getMovieById(id);
-	const movie = res?.data;
 
-	return {
-		title: movie ? `${movie.title} (${movie.releaseYear}) — CineTube` : "Movie Details — CineTube",
-		description: movie?.synopsis ?? `Watch reviews, ratings, and details for ${movie?.title} on CineTube.`,
-	};
+	try {
+		const res = await getMovieById(id);
+		const movie = res?.data;
+
+		return {
+			title: movie ? `${movie.title} (${movie.releaseYear}) — CineTube` : "Movie Not Found — CineTube",
+			description: movie?.synopsis ?? "This movie is not available on CineTube.",
+		};
+	} catch {
+		return {
+			title: "Movie Not Found — CineTube",
+			description: "This movie is not available on CineTube.",
+		};
+	}
 }
 
 interface MovieDetailsPageProps {
@@ -37,16 +45,22 @@ const MovieDetailsPage = async ({ params, searchParams }: MovieDetailsPageProps)
 	const sp = await searchParams;
 	const reviewPage = parseInt(sp.reviewPage ?? "1");
 
-	const [movieRes, reviewsRes, user, tags] = await Promise.all([
-		getMovieById(id),
-		getReviewsByMovie(id, reviewPage),
-		getUserInfo(),
-		getTags(),
-	]);
+	let movieRes;
 
-	if (!movieRes?.data) return notFound();
+	try {
+		movieRes = await getMovieById(id);
+	} catch {
+		notFound();
+	}
+
+	if (!movieRes?.data) {
+		notFound();
+	}
 
 	const movie = movieRes.data;
+
+	const [reviewsRes, user, tags] = await Promise.all([getReviewsByMovie(id, reviewPage), getUserInfo(), getTags()]);
+
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const publishedReviews: any[] = reviewsRes.data ?? [];
 	const reviewMeta = reviewsRes.meta;

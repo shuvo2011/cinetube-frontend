@@ -2,6 +2,7 @@
 
 import { httpClient } from "@/lib/axios/httpClient";
 import { ApiResponse } from "@/types/api.types";
+import { IMyReview } from "@/types/reviews.types";
 
 export interface IReview {
 	id: string;
@@ -144,4 +145,8 @@ export const createReviewAction = async (payload: {
 
 export const toggleReviewLikeAction = async (reviewId: string) => {
 	return await httpClient.post<{ liked: boolean }>(`/review-likes/${reviewId}`, {});
+};
+
+export const getMyReviews = async (queryString?: string): Promise<ApiResponse<IMyReview[]>> => {
+	return await httpClient.get<IMyReview[]>(queryString ? `/reviews/my/reviews?${queryString}` : "/reviews/my/reviews");
 };
