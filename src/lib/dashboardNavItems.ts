@@ -14,7 +14,6 @@ import {
 	UserStar,
 	Tags,
 	ClipboardList,
-	Star,
 } from "lucide-react";
 
 export type NavItem = {
@@ -87,7 +86,7 @@ export const userNavSections: NavSection[] = [
 		title: "My Activity",
 		items: [
 			{ title: "My Watchlist", href: "/dashboard/watchlist", icon: Bookmark },
-			{ title: "My Reviews", href: "/dashboard/reviews", icon: Star },
+			{ title: "My Reviews", href: "/dashboard/reviews", icon: MessageSquare },
 		],
 	},
 	{

@@ -1,5 +1,6 @@
 import { getMovies } from "@/services/movie.services";
 import { IMovie } from "@/types/movie.types";
+import Image from "next/image";
 import Link from "next/link";
 
 const COLORS = ["#E2E1FB", "#FDF1D5", "#DDF4E5", "#DBEAFE"];
@@ -18,7 +19,6 @@ const SimilarMovies = async ({ genres, currentId }: Props) => {
 	const similar = (res?.data ?? []).filter((m: IMovie) => m.id !== currentId).slice(0, 3);
 
 	if (similar.length === 0) return null;
-
 	return (
 		<div className="bg-white rounded-[14px] border border-line-2 p-5">
 			<p className="text-[11px] font-bold tracking-[0.12em] text-text-muted uppercase mb-4">Similar Movies</p>
@@ -29,11 +29,23 @@ const SimilarMovies = async ({ genres, currentId }: Props) => {
 						href={`/movies/${m.id}`}
 						className="flex items-center gap-3 hover:opacity-80 transition-opacity"
 					>
-						<div
-							className="w-12 h-12 rounded-[10px] flex items-center justify-center shrink-0"
-							style={{ background: COLORS[i % COLORS.length] }}
-						>
-							<div className="w-6 h-6 rounded-full" style={{ background: DOTS[i % DOTS.length] }} />
+						<div className="w-12 h-12 rounded-[10px] overflow-hidden shrink-0 bg-bg-2">
+							{m.posterImage ? (
+								<Image
+									src={m.posterImage}
+									alt={m.title}
+									width={48}
+									height={48}
+									className="object-cover w-full h-full"
+								/>
+							) : (
+								<div
+									className="w-full h-full flex items-center justify-center"
+									style={{ background: COLORS[i % COLORS.length] }}
+								>
+									<div className="w-5 h-5 rounded-full" style={{ background: DOTS[i % DOTS.length] }} />
+								</div>
+							)}
 						</div>
 						<div className="flex-1 min-w-0">
 							<p className="text-[13px] font-semibold text-ink truncate">{m.title}</p>

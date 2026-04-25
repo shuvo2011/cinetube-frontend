@@ -3,6 +3,7 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getUserStats } from "@/services/stats.services";
+import CommonLoader from "@/components/shared/CommonLoader";
 
 const fmtCurrency = (n: number) => `$${n.toFixed(2)}`;
 
@@ -20,11 +21,7 @@ const UserDashboardClient = () => {
 	const data = res?.data ?? null;
 
 	if (isLoading) {
-		return (
-			<div className="flex items-center justify-center h-48">
-				<p className="text-text-muted">Loading your dashboard...</p>
-			</div>
-		);
+		return <CommonLoader />;
 	}
 
 	if (!data) {

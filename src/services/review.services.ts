@@ -62,7 +62,7 @@ export const updateReviewStatusAction = async (id: string, status: string): Prom
 
 export const getReviewsByMovie = async (movieId: string, page = 1) => {
 	try {
-		const result = await httpClient.get<any>(`/reviews/movie/${movieId}?limit=10&page=${page}`);
+		const result = await httpClient.get<any>(`/reviews/movie/${movieId}?limit=5&page=${page}`);
 		return {
 			data: result.data?.data ?? [],
 			meta: result.data?.meta ?? {},

@@ -6,8 +6,6 @@ import { useState } from "react";
 import CommentCard from "./CommentCard";
 import { createCommentAction, deleteCommentAction, getCommentsAction } from "@/services/comment.services";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL;
-
 interface Props {
 	reviewId: string;
 	currentUser: any;

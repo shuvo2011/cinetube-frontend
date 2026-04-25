@@ -36,7 +36,7 @@ const MoviesHero = ({ total }: MoviesHeroProps) => {
 						All Movies &amp; Series
 					</h1>
 					<span className="text-[15px] text-text-muted whitespace-nowrap">
-						Showing <strong className="text-ink font-bold">{total}</strong> titles
+						Showing <strong className="text-ink font-bold">{total}</strong> results
 					</span>
 				</div>
 

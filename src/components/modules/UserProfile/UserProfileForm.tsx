@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { updateProfileZodSchema as profileSchema } from "@/zod/profile.validation";
 import Image from "next/image";
 import { uploadImageToCloudinary } from "@/lib/uploadImageToCloudinary";
+import CommonLoader from "@/components/shared/CommonLoader";
 
 const UserProfileForm = () => {
 	const qc = useQueryClient();
@@ -142,7 +143,7 @@ const UserProfileForm = () => {
 		}
 	};
 
-	if (isLoading) return <div>Loading...</div>;
+	if (isLoading) return <CommonLoader />;
 
 	const isImageUploading = isLocalImageUploading || imageMutation.isPending;
 

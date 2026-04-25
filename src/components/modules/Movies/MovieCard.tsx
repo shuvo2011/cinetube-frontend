@@ -86,7 +86,7 @@ const MovieCard = ({ movie, index }: MovieCardProps) => {
 				</div>
 			</div>
 
-			<div className="px-[18px] py-3 border-t border-line-2 flex items-center justify-between">
+			<div className="px-4.5 py-3 border-t border-line-2 flex items-center justify-between">
 				<span className="text-[12px] text-text-muted truncate">{movie.director}</span>
 			</div>
 		</Link>

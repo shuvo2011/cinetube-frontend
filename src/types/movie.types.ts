@@ -19,6 +19,8 @@ export interface IMovie {
 	_count?: {
 		watchlists: number;
 	};
+	totalWatchlists: number;
+	totalComments: number;
 	rentDuration: string | null;
 	genres: {
 		genre: {
