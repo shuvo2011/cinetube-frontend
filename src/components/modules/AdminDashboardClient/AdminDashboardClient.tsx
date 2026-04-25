@@ -136,11 +136,6 @@ const PendingReviewRow = ({ review, onAction }: { review: IAdminReview; onAction
 		onAction();
 	};
 
-	const handleReject = async () => {
-		await approveReview(review.id, "UNPUBLISHED");
-		onAction();
-	};
-
 	return (
 		<tr className="border-b border-line-2 last:border-0">
 			<td className="py-3 pr-4">
@@ -168,12 +163,6 @@ const PendingReviewRow = ({ review, onAction }: { review: IAdminReview; onAction
 						className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-green/10 text-green hover:bg-green/20 transition-colors"
 					>
 						✓ Approve
-					</button>
-					<button
-						onClick={handleReject}
-						className="text-[11px] font-medium px-2.5 py-1 rounded-md bg-brand/10 text-brand hover:bg-brand/20 transition-colors"
-					>
-						✕ Reject
 					</button>
 				</div>
 			</td>
