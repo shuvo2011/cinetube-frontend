@@ -78,7 +78,7 @@ const SubscribePlanButton = ({ planType, isLoggedIn, hasActiveSub, highlighted }
 			onClick={handleSubscribe}
 			disabled={loading}
 			className={cn(
-				"w-full flex items-center justify-center gap-2 font-semibold text-sm py-3.5 rounded-[10px] transition-colors disabled:opacity-70",
+				"w-full flex items-center justify-center gap-2 font-semibold text-sm py-3.5 rounded-[10px] transition-colors disabled:opacity-70 cursor-pointer",
 				highlighted ? "bg-brand hover:bg-brand/90 text-white" : "bg-bg border border-line hover:bg-line-2 text-ink",
 			)}
 		>

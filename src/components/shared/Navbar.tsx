@@ -147,7 +147,7 @@ const Navbar = ({ userInfo }: NavbarProps) => {
 										<div className="border-t border-line-2 py-1">
 											<button
 												onClick={() => handleLogout()}
-												className="w-full flex items-center gap-2.5 px-4 py-2 text-[13px] text-red-500 hover:bg-red-50 transition-colors"
+												className="w-full flex items-center gap-2.5 px-4 py-2 text-[13px] text-red-500 hover:bg-red-50 transition-colors cursor-pointer"
 											>
 												Logout
 											</button>

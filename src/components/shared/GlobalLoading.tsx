@@ -1,4 +1,5 @@
 import { Loader2 } from "lucide-react";
+import Logo from "./Logo/Logo";
 
 const GlobalLoading = () => {
 	return (
@@ -6,8 +7,7 @@ const GlobalLoading = () => {
 			<div className="flex flex-col items-center gap-4">
 				<div className="relative">
 					<span className="text-2xl font-medium tracking-wide">
-						<span className="text-foreground">Cine</span>
-						<span className="text-destructive">Tube</span>
+						<Logo />
 					</span>
 				</div>
 				<Loader2 className="text-destructive h-8 w-8 animate-spin" />

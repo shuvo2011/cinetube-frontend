@@ -1,5 +1,6 @@
 "use client";
 
+import CommonLoader from "@/components/shared/CommonLoader";
 import { getCommentsForAdmin } from "@/services/comment.services";
 import { approveReview, getReviewsForAdmin, IAdminReview } from "@/services/review.services";
 import { getDashboardStats } from "@/services/stats.services";
@@ -208,11 +209,7 @@ const AdminDashboardClient = () => {
 	};
 
 	if (isLoading) {
-		return (
-			<div className="flex items-center justify-center h-64">
-				<p className="text-text-muted text-[14px]">Loading dashboard...</p>
-			</div>
-		);
+		return <CommonLoader />;
 	}
 
 	const totalReviews =
